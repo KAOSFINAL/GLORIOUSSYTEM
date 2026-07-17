@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/GLORIOUSSYSTEM.App/GLORIOUSSYSTEM.App.csproj" />
     <Project Path="src/GLORIOUSSYSTEM.ConsoleTest/GLORIOUSSYSTEM.ConsoleTest.csproj" />
     <Project Path="src/GLORIOUSSYSTEM.Data/GLORIOUSSYSTEM.Data.csproj" />
   </Folder>
