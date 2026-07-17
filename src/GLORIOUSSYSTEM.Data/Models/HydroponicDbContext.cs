@@ -88,7 +88,7 @@ public partial class HydroponicDbContext : DbContext
         {
             entity.HasIndex(e => new { e.SensorId, e.Timestamp }, "idx_readings_sensor_time");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Sensor).WithMany(p => p.Readings)
                 .HasForeignKey(d => d.SensorId)
