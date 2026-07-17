@@ -39,7 +39,7 @@ public partial class HydroponicDbContext : DbContext
     {
         modelBuilder.Entity<Actuator>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Node).WithMany(p => p.Actuators)
                 .HasForeignKey(d => d.NodeId)
@@ -48,7 +48,7 @@ public partial class HydroponicDbContext : DbContext
 
         modelBuilder.Entity<ActuatorEvent>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Actuator).WithMany(p => p.ActuatorEvents)
                 .HasForeignKey(d => d.ActuatorId)
@@ -57,13 +57,13 @@ public partial class HydroponicDbContext : DbContext
 
         modelBuilder.Entity<Camera>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Model).HasDefaultValue("Logitech C920");
         });
 
         modelBuilder.Entity<LeafClassification>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Camera).WithMany(p => p.LeafClassifications)
                 .HasForeignKey(d => d.CameraId)
@@ -74,7 +74,7 @@ public partial class HydroponicDbContext : DbContext
 
         modelBuilder.Entity<Node>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Pipe>(entity =>
@@ -97,7 +97,7 @@ public partial class HydroponicDbContext : DbContext
 
         modelBuilder.Entity<Sensor>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Enabled).HasDefaultValue(1);
 
             entity.HasOne(d => d.Node).WithMany(p => p.Sensors)
