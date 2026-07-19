@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mc="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="GLORIOUSSYSTEM.App.ReportsPage"
+             BackgroundColor="{StaticResource BgDark}">
+    <Grid RowDefinitions="Auto,Auto,*" Padding="24">
+        <Label Grid.Row="0" Text="Reports" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+        <HorizontalStackLayout Grid.Row="1" Spacing="20" Margin="0,0,0,20" x:Name="SummaryBar"/>
+        <mc:ChartView Grid.Row="2" x:Name="ReadingsChart" HeightRequest="300"/>
+    </Grid>
+</ContentPage>

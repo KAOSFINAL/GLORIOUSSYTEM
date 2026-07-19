@@ -81,7 +81,7 @@ public partial class HydroponicDbContext : DbContext
         {
             entity.HasIndex(e => e.PipeNumber, "IX_Pipes_PipeNumber").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Reading>(entity =>

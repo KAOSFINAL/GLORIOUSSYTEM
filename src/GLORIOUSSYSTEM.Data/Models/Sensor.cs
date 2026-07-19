@@ -23,6 +23,10 @@ public partial class Sensor
 
     public int Enabled { get; set; }
 
+    public double? MinThreshold { get; set; }
+
+    public double? MaxThreshold { get; set; }
+
     public virtual Node Node { get; set; } = null!;
 
     public virtual Pipe? Pipe { get; set; }

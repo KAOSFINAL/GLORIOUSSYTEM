@@ -113,13 +113,7 @@ INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
 INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
     (2, 'BME280 #1', 'BME280', 'BME280', 1),
     (2, 'BME280 #2', 'BME280', 'BME280', 2),
-    (2, 'BME280 #3', 'BME280', 'BME280', 3),
-    (2, 'BME280 #4', 'BME280', 'BME280', 4),
     (2, 'BH1750 #1', 'BH1750', 'BH1750', 1),
-    (2, 'BH1750 #2', 'BH1750', 'BH1750', 2),
-    (2, 'BH1750 #3', 'BH1750', 'BH1750', 3),
-    (2, 'BH1750 #4', 'BH1750', 'BH1750', 4),
-    (2, 'BH1750 #5', 'BH1750', 'BH1750', 5);
 
 -- Flow sensors, one per pipe
 INSERT INTO Sensors (NodeId, Name, Type, Model, PipeId) VALUES

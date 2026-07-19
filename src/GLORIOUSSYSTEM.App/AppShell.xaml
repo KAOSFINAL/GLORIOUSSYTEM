@@ -1,14 +1,42 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="GLORIOUSSYSTEM.App.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
-    Title="GLORIOUSSYSTEM.App">
+<?xml version="1.0" encoding="utf-8"?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
+       x:Class="GLORIOUSSYSTEM.App.AppShell"
+       FlyoutBehavior="Locked"
+       FlyoutBackgroundColor="{StaticResource SurfaceDark}"
+       Title="GLORIOUSSYSTEM.App">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.FlyoutHeader>
+        <VerticalStackLayout Padding="24,30,24,20" Spacing="2">
+            <Label Text="GLORIOUS SYSTEM" FontSize="13" TextColor="{StaticResource AccentGreen}" FontAttributes="Bold" CharacterSpacing="2"/>
+            <Label Text="Lettuce Monitoring" FontSize="18" TextColor="{StaticResource TextPrimary}" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
 
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Label Text="{Binding Title}" TextColor="{StaticResource TextPrimary}" FontSize="16" Padding="24,14"/>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <FlyoutItem Title="Dashboard" Route="dashboard">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Webcam" Route="webcam">
+        <ShellContent ContentTemplate="{DataTemplate local:WebcamPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Reports" Route="reports">
+        <ShellContent ContentTemplate="{DataTemplate local:ReportsPage}" />
+    </FlyoutItem>
+<FlyoutItem Title="Settings" Route="settings">
+    <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
+</FlyoutItem>
+
+    <Shell.FlyoutFooter>
+        <Button Text="Log out" Clicked="OnLogoutClicked"
+                BackgroundColor="Transparent" TextColor="#F87171"
+                BorderColor="#F87171" BorderWidth="1" CornerRadius="8"
+                Margin="24,10,24,24" Padding="0,10"/>
+    </Shell.FlyoutFooter>
 </Shell>

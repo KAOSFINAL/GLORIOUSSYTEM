@@ -1,19 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GLORIOUSSYSTEM.App.MainPage">
-    <Grid RowDefinitions="Auto,*" Margin="20">
-        <Button Grid.Row="0" Text="Refresh" Clicked="OnRefreshClicked" HorizontalOptions="End" Margin="0,0,0,10"/>
+             x:Class="GLORIOUSSYSTEM.App.MainPage"
+             BackgroundColor="{StaticResource BgDark}">
+    <Grid RowDefinitions="Auto,*" Padding="24">
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+            <VerticalStackLayout Grid.Column="0">
+                <Label Text="GLORIOUS SYSTEM" FontSize="14" TextColor="{StaticResource AccentGreen}" FontAttributes="Bold" CharacterSpacing="2"/>
+                <Label Text="Lettuce Monitoring" FontSize="28" TextColor="{StaticResource TextPrimary}" FontAttributes="Bold"/>
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="⟳ Refresh" Clicked="OnRefreshClicked"
+                    BackgroundColor="{StaticResource SurfaceDark}" TextColor="{StaticResource AccentGreen}"
+                    BorderColor="{StaticResource AccentGreen}" BorderWidth="1" CornerRadius="8"
+                    VerticalOptions="Center" Padding="16,8"/>
+        </Grid>
 
-        <CollectionView Grid.Row="1" x:Name="SensorList">
+   
+        <!-- Grouped sensor list -->
+        <CollectionView Grid.Row="1" x:Name="SensorList" IsGrouped="True">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding CategoryName}" FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource TextSecondary}" CharacterSpacing="1.5"
+                           Margin="0,20,0,8"/>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Stroke="LightGray" StrokeThickness="1" Padding="12" Margin="0,4">
-                        <StackLayout Spacing="4">
-                            <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold"/>
-                            <Label Text="{Binding Type}" FontSize="12" TextColor="Gray"/>
-                            <Label Text="{Binding LatestValueText}" FontSize="16" TextColor="DarkGreen" FontAttributes="Bold"/>
-                        </StackLayout>
+                    <Border BackgroundColor="{StaticResource SurfaceDark}" StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent" Padding="16" Margin="0,0,0,10">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <BoxView Grid.Column="0" Color="{Binding StatusColor}" WidthRequest="8"
+                                     CornerRadius="4" VerticalOptions="Fill" Margin="0,0,14,0"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                                <Label Text="{Binding SubText}" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text="{Binding ValueText}" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{Binding StatusColor}" VerticalOptions="Center"/>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -5,6 +5,13 @@
              x:Class="GLORIOUSSYSTEM.App.App">
     <Application.Resources>
         <ResourceDictionary>
+<Color x:Key="BgDark">#0F172A</Color>
+<Color x:Key="SurfaceDark">#1E293B</Color>
+<Color x:Key="AccentGreen">#22C55E</Color>
+<Color x:Key="AccentBlue">#38BDF8</Color>
+<Color x:Key="AccentAmber">#FBBF24</Color>
+<Color x:Key="TextPrimary">#F1F5F9</Color>
+<Color x:Key="TextSecondary">#94A3B8</Color>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />

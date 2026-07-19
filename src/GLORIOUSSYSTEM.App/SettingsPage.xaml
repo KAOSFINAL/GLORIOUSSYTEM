@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GLORIOUSSYSTEM.App.SettingsPage"
+             BackgroundColor="{StaticResource BgDark}">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24">
+        <Label Grid.Row="0" Text="Settings" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+
+        <CollectionView Grid.Row="1" x:Name="SettingsList">
+            <CollectionView.ItemTemplate>
+               <DataTemplate>
+    <Border BackgroundColor="{StaticResource SurfaceDark}" StrokeShape="RoundRectangle 12" Stroke="Transparent" Padding="16" Margin="0,0,0,10">
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+            <Entry Grid.Row="0" Grid.Column="0" Text="{Binding Name}" TextColor="{StaticResource TextPrimary}" FontAttributes="Bold" FontSize="16"/>
+            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Model}" TextColor="{StaticResource TextSecondary}" FontSize="12"/>
+            <Switch Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" IsToggled="{Binding Enabled}" VerticalOptions="Center"/>
+
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto,*" Margin="0,10,0,0">
+                <Label Grid.Column="0" Text="Min" TextColor="{StaticResource TextSecondary}" FontSize="12" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Text="{Binding MinThreshold}" Keyboard="Numeric" TextColor="{StaticResource TextPrimary}" Margin="6,0"/>
+                <Label Grid.Column="2" Text="Max" TextColor="{StaticResource TextSecondary}" FontSize="12" VerticalOptions="Center"/>
+                <Entry Grid.Column="3" Text="{Binding MaxThreshold}" Keyboard="Numeric" TextColor="{StaticResource TextPrimary}" Margin="6,0"/>
+            </Grid>
+        </Grid>
+    </Border>
+</DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2" Text="Save Changes" Clicked="OnSaveClicked"
+                BackgroundColor="{StaticResource AccentGreen}" TextColor="#0F172A" FontAttributes="Bold"
+                CornerRadius="8" Padding="0,12" Margin="0,16,0,0"/>
+    </Grid>
+</ContentPage>
