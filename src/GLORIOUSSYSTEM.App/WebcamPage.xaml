@@ -3,8 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.WebcamPage"
              BackgroundColor="{StaticResource BgDark}">
-    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
-        <Label Text="Webcam feed will appear here" FontSize="18" TextColor="{StaticResource TextPrimary}" HorizontalTextAlignment="Center"/>
-        <Label Text="Connect once the cameras are wired to the Pi" FontSize="13" TextColor="{StaticResource TextSecondary}" HorizontalTextAlignment="Center"/>
+    <VerticalStackLayout Padding="24" Spacing="16">
+        <Label Text="Leaf Classifier Test" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+        <Label Text="Pick a leaf photo to test the CNN model" FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+
+        <Button Text="Choose Photo" Clicked="OnChoosePhotoClicked"
+                BackgroundColor="{StaticResource AccentGreen}" TextColor="#0F172A" FontAttributes="Bold"
+                CornerRadius="8" Padding="0,12" WidthRequest="200" HorizontalOptions="Start"/>
+
+        <Image x:Name="PreviewImage" HeightRequest="250" WidthRequest="250" HorizontalOptions="Start" Aspect="AspectFit"/>
+
+        <Label x:Name="ResultLabel" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource AccentGreen}"/>
+        <Label x:Name="DetailLabel" FontSize="13" TextColor="{StaticResource TextSecondary}"/>
     </VerticalStackLayout>
 </ContentPage>

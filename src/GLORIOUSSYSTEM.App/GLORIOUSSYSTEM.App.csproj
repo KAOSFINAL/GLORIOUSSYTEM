@@ -69,10 +69,15 @@
 		<PackageReference Include="Microcharts.Maui" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.27.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\GLORIOUSSYSTEM.Data\GLORIOUSSYSTEM.Data.csproj" />
 	</ItemGroup>
 
+<ItemGroup>
+  <None Include="Models\leaf_model.onnx" CopyToOutputDirectory="PreserveNewest" />
+  <None Include="Models\leaf_model.onnx.data" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
 </Project>
