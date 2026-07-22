@@ -36,4 +36,21 @@ public partial class ReportsPage : ContentPage
 
         ReadingsChart.Chart = new LineChart { Entries = entries, LineMode = LineMode.Straight, BackgroundColor = SKColor.Parse("#1E293B") };
     }
+
+    async void OnTestApiClicked(object sender, EventArgs e)
+    {
+        ApiResultLabel.Text = "Connecting to API...";
+        try
+        {
+            var api = new ApiSensorService();
+            var readings = await api.GetLatestAsync();
+            var withData = readings.Count(r => r.LatestValue.HasValue);
+            ApiResultLabel.Text = $"API connected! {readings.Count} sensors returned, {withData} with live readings. " +
+                                   $"First sensor: {readings.First().Name} = {readings.First().LatestValue?.ToString() ?? "no data"}";
+        }
+        catch (Exception ex)
+        {
+            ApiResultLabel.Text = $"API connection failed: {ex.Message}";
+        }
+    }
 }

@@ -8,5 +8,12 @@
         <Label Grid.Row="0" Text="Reports" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
         <HorizontalStackLayout Grid.Row="1" Spacing="20" Margin="0,0,0,20" x:Name="SummaryBar"/>
         <mc:ChartView Grid.Row="2" x:Name="ReadingsChart" HeightRequest="300"/>
+	<VerticalStackLayout Grid.Row="3" Margin="0,20,0,0" Spacing="8">
+    <Button Text="Test API Connection" Clicked="OnTestApiClicked"
+            BackgroundColor="{StaticResource SurfaceDark}" TextColor="{StaticResource AccentBlue}"
+            BorderColor="{StaticResource AccentBlue}" BorderWidth="1" CornerRadius="8"
+            Padding="16,10" HorizontalOptions="Start"/>
+    <Label x:Name="ApiResultLabel" FontSize="13" TextColor="{StaticResource TextSecondary}"/>
+</VerticalStackLayout>
     </Grid>
 </ContentPage>
