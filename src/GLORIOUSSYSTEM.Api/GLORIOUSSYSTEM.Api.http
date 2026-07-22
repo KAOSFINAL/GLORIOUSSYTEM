@@ -1,0 +1,6 @@
+@GLORIOUSSYSTEM.Api_HostAddress = http://localhost:5053
+
+GET {{GLORIOUSSYSTEM.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
