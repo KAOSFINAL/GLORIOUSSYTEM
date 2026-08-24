@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GLORIOUSSYSTEM.App.LoginPage"
+             BackgroundColor="{AppThemeBinding Light={DynamicResource Surface}, Dark={DynamicResource SurfaceDark}}"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto,*" RowSpacing="0" Padding="24">
+        <!-- Top spacing -->
+        <BoxView Grid.Row="0" />
+
+        <!-- Login Card -->
+        <Border Grid.Row="1" Style="{DynamicResource ElevatedCard}" Padding="32" Margin="0">
+            <VerticalStackLayout Spacing="24" WidthRequest="360">
+
+                <!-- Logo / Brand -->
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="🌿" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="GLORIOUS SYSTEM"
+                           Style="{DynamicResource HeadlineSmall}"
+                           FontAttributes="Bold"
+                           CharacterSpacing="2"
+                           TextTransform="Uppercase"
+                           TextColor="{DynamicResource Primary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Hydroponic Lettuce Monitoring"
+                           Style="{DynamicResource BodyMedium}"
+                           TextColor="{DynamicResource OnSurfaceVariant}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Login Form -->
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Sign In" Style="{DynamicResource TitleLarge}" HorizontalOptions="Center"/>
+
+                    <!-- Email Field -->
+                    <Entry x:Name="EmailEntry"
+                           Placeholder="Email"
+                           Keyboard="Email"
+                           Style="{DynamicResource EntryStyle}"
+                           TextChanged="OnFieldChanged"
+                           ReturnType="Next"
+                           Completed="OnEmailCompleted"/>
+
+                    <!-- Password Field -->
+                    <Entry x:Name="PasswordEntry"
+                           Placeholder="Password"
+                           IsPassword="True"
+                           Style="{DynamicResource EntryStyle}"
+                           TextChanged="OnFieldChanged"
+                           ReturnType="Done"
+                           Completed="OnPasswordCompleted"/>
+
+                    <!-- Remember Me / Forgot Password -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                            <CheckBox x:Name="RememberMeCheckBox"
+                                      Color="{DynamicResource Primary}"/>
+                            <Label Text="Remember me"
+                                   Style="{DynamicResource BodySmall}"
+                                   VerticalOptions="Center"
+                                   TextColor="{DynamicResource OnSurfaceVariant}"/>
+                        </HorizontalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="Forgot Password?"
+                                Style="{DynamicResource TertiaryButton}"
+                                Clicked="OnForgotPasswordClicked"
+                                Padding="0"
+                                HeightRequest="36"
+                                FontSize="12"
+                                VerticalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Error Message -->
+                    <Label x:Name="ErrorLabel"
+                           Text=""
+                           Style="{DynamicResource BodySmall}"
+                           TextColor="{DynamicResource Error}"
+                           IsVisible="False"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Login Button -->
+                    <Button x:Name="LoginButton"
+                            Text="Sign In"
+                            Style="{DynamicResource PrimaryButton}"
+                            Clicked="OnLoginClicked"
+                            IsEnabled="False"
+                            HorizontalOptions="Fill"
+                            HeightRequest="48">
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="🔐" Size="18"/>
+                        </Button.ImageSource>
+                    </Button>
+
+                    <!-- Demo Notice -->
+                    <Label Text="Demo: admin@glorious.com / password123"
+                           Style="{DynamicResource LabelSmall}"
+                           TextColor="{DynamicResource OnSurfaceVariant}"
+                           HorizontalOptions="Center"
+                           FontAttributes="Italic"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Bottom spacing -->
+        <BoxView Grid.Row="2" />
+    </Grid>
+</ContentPage>

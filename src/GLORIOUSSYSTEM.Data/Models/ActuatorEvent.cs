@@ -9,7 +9,7 @@ public partial class ActuatorEvent
 
     public int ActuatorId { get; set; }
 
-    public string Timestamp { get; set; } = null!;
+    public DateTime Timestamp { get; set; }
 
     public string Action { get; set; } = null!;
 

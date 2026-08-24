@@ -11,7 +11,7 @@ public partial class LeafClassification
 
     public int? PipeId { get; set; }
 
-    public string Timestamp { get; set; } = null!;
+    public DateTime Timestamp { get; set; }
 
     public string? ImagePath { get; set; }
 

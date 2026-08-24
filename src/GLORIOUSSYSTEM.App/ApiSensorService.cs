@@ -12,7 +12,7 @@ public class ApiSensorReading
     public double? MaxThreshold { get; set; }
     public double? LatestValue { get; set; }
     public string? LatestMetric { get; set; }
-    public string? LatestTimestamp { get; set; }
+    public DateTime? LatestTimestamp { get; set; }
 }
 
 public class ApiSensorService

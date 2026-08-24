@@ -9,7 +9,7 @@ public partial class Reading
 
     public int SensorId { get; set; }
 
-    public string Timestamp { get; set; } = null!;
+    public DateTime Timestamp { get; set; }
 
     public string Metric { get; set; } = null!;
 

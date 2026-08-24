@@ -15,5 +15,7 @@ public partial class Node
 
     public virtual ICollection<Actuator> Actuators { get; set; } = new List<Actuator>();
 
+    public virtual ICollection<Display> Displays { get; set; } = new List<Display>();
+
     public virtual ICollection<Sensor> Sensors { get; set; } = new List<Sensor>();
 }

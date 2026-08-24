@@ -23,10 +23,10 @@ CREATE TABLE Sensors (
     Id INTEGER PRIMARY KEY,
     NodeId INTEGER NOT NULL,
     Name TEXT NOT NULL,
-    Type TEXT NOT NULL,            -- 'pH','TDS','WaterTemp','UltrasonicLevel','BME280','BH1750','FlowRate'
-    Model TEXT,                    -- 'PH-4502C','SEN0244','DS18B20','JSN-SR04T','BME280','BH1750','YF-S201'
+    Type TEXT NOT NULL,            -- 'pH','TDS','WaterTemp','UltrasonicLevel','BME280','FlowRate'
+    Model TEXT,                    -- 'PH-4502C','DFR0300','DS18B20','JSN-SR04T','BME280','YF-S201'
     PipeId INTEGER,                -- set for flow sensors (one per pipe)
-    PositionIndex INTEGER,         -- set for BME280/BH1750 arrays, tracks physical placement
+    PositionIndex INTEGER,         -- set for BME280 arrays, tracks physical placement
     Notes TEXT,
     Enabled INTEGER NOT NULL DEFAULT 1,
     FOREIGN KEY (NodeId) REFERENCES Nodes(Id),
@@ -38,7 +38,7 @@ CREATE TABLE Readings (
     Id INTEGER PRIMARY KEY,
     SensorId INTEGER NOT NULL,
     Timestamp TEXT NOT NULL,       -- ISO8601
-    Metric TEXT NOT NULL,          -- 'pH','PPM','Celsius','cm','hPa','Lux','LPerMin'
+    Metric TEXT NOT NULL,          -- 'pH','PPM','Celsius','cm','hPa','Lux','LPerMin','GasResistance','IAQ'
     Value REAL NOT NULL,
     FOREIGN KEY (SensorId) REFERENCES Sensors(Id)
 );
@@ -49,7 +49,7 @@ CREATE TABLE Cameras (
     Id INTEGER PRIMARY KEY,
     Name TEXT NOT NULL,
     Angle TEXT,                    -- e.g. 'Left, 45 deg', 'Top-down'
-    Model TEXT DEFAULT 'Logitech C920'
+    Model TEXT DEFAULT 'EMEET C950'
 );
 
 -- CNN leaf classification results
@@ -84,6 +84,31 @@ CREATE TABLE ActuatorEvents (
     FOREIGN KEY (ActuatorId) REFERENCES Actuators(Id)
 );
 
+-- Display/Output devices (TFT, LEDs, etc.)
+CREATE TABLE Displays (
+    Id INTEGER PRIMARY KEY,
+    NodeId INTEGER NOT NULL,
+    Name TEXT NOT NULL,
+    Type TEXT NOT NULL,            -- 'TFT', 'LCD', 'OLED', 'LEDMatrix'
+    Model TEXT,                    -- '4inch TFT Touch', 'SSD1306', etc.
+    Width INTEGER,
+    Height INTEGER,
+    TouchEnabled INTEGER DEFAULT 0,
+    FOREIGN KEY (NodeId) REFERENCES Nodes(Id)
+);
+
+-- Users for authentication
+CREATE TABLE Users (
+    Id INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL,
+    Email TEXT NOT NULL UNIQUE,
+    PasswordHash TEXT NOT NULL,
+    IsActive INTEGER NOT NULL DEFAULT 1,
+    CreatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+    LastLoginAt TEXT,
+    Role TEXT DEFAULT 'User'
+);
+
 -- ==========================================================
 -- Seed data based on your component list
 -- ==========================================================
@@ -104,20 +129,25 @@ INSERT INTO Cameras (Id, Name, Angle) VALUES
 
 -- Water quality sensors (Node 1)
 INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
-    (1, 'Reservoir pH', 'pH', 'PH-4502C', 'Analog, reservoir'),
-    (1, 'Reservoir TDS', 'TDS', 'SEN0244', 'Analog, reservoir'),
+    (1, 'Reservoir pH (BNC)', 'pH', 'PH-4502C', 'Analog, reservoir, E201-BNC electrode'),
+    (1, 'Channel pH (Gravity)', 'pH', 'PH-4502C', 'Analog, NFT channel, Gravity module'),
+    (1, 'Reservoir TDS', 'TDS', 'DFR0300', 'Analog, reservoir, Gravity module'),
     (1, 'Water Temperature', 'WaterTemp', 'DS18B20', '1-Wire, reservoir'),
     (1, 'Reservoir Level', 'UltrasonicLevel', 'JSN-SR04T', 'Waterproof, reservoir');
 
--- Environmental sensors (Node 2) - 4x BME280, 5x BH1750
+-- Environmental sensors (Node 2) - 1x BME280
 INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
     (2, 'BME280 #1', 'BME280', 'BME280', 1),
-    (2, 'BME280 #2', 'BME280', 'BME280', 2),
-    (2, 'BH1750 #1', 'BH1750', 'BH1750', 1),
 
--- Flow sensors, one per pipe
+-- Flow sensor (single unit on main supply)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PipeId) VALUES
-    (2, 'Flow Pipe 1', 'FlowRate', 'YF-S201', 1),
-    (2, 'Flow Pipe 2', 'FlowRate', 'YF-S201', 2),
-    (2, 'Flow Pipe 3', 'FlowRate', 'YF-S201', 3),
-    (2, 'Flow Pipe 4', 'FlowRate', 'YF-S201', 4);
+    (2, 'Flow Main Supply', 'FlowRate', 'YF-S201', NULL);
+
+-- Display/Output devices
+INSERT INTO Displays (NodeId, Name, Type, Model, Width, Height, TouchEnabled) VALUES
+    (2, 'Main TFT Touch', 'TFT', '4inch TFT Touch', 480, 320, 1);
+
+-- Default admin user (password: password123)
+-- BCrypt hash of 'password123' with cost 12
+INSERT INTO Users (Id, Name, Email, PasswordHash, IsActive, Role) VALUES
+    (1, 'Admin', 'admin@glorious.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/RK.PZvO.S', 1, 'Admin');

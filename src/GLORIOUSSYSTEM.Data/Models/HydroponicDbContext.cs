@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace GLORIOUSSYSTEM.Data.Models;
 
@@ -15,11 +18,29 @@ public partial class HydroponicDbContext : DbContext
     {
     }
 
+    private static string GetConnectionString()
+    {
+        var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+            ?? Directory.GetCurrentDirectory();
+
+        var config = new ConfigurationBuilder()
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        return config.GetConnectionString("HydroponicDb")
+            ?? "Data Source=C:\\Dev\\GLORIOUSSYSTEM\\database\\hydroponic.db";
+    }
+
     public virtual DbSet<Actuator> Actuators { get; set; }
 
     public virtual DbSet<ActuatorEvent> ActuatorEvents { get; set; }
 
     public virtual DbSet<Camera> Cameras { get; set; }
+
+    public virtual DbSet<Display> Displays { get; set; }
 
     public virtual DbSet<LeafClassification> LeafClassifications { get; set; }
 
@@ -31,9 +52,16 @@ public partial class HydroponicDbContext : DbContext
 
     public virtual DbSet<Sensor> Sensors { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite(@"Data Source=C:\Dev\GLORIOUSSYSTEM\database\hydroponic.db");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = GetConnectionString();
+            optionsBuilder.UseSqlite(connectionString);
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,7 +86,16 @@ public partial class HydroponicDbContext : DbContext
         modelBuilder.Entity<Camera>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
-            entity.Property(e => e.Model).HasDefaultValue("Logitech C920");
+            entity.Property(e => e.Model).HasDefaultValue("EMEET C950");
+        });
+
+        modelBuilder.Entity<Display>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.Node).WithMany(p => p.Displays)
+                .HasForeignKey(d => d.NodeId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<LeafClassification>(entity =>
@@ -105,6 +142,12 @@ public partial class HydroponicDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Pipe).WithMany(p => p.Sensors).HasForeignKey(d => d.PipeId);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasIndex(e => e.Email).IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,320 @@
+{
+  "GLORIOUSSYSTEM.slnx": {
+    "mtime": 1784686715.0043387,
+    "seen": 1787459490.0378883,
+    "ast_hash": "212bb9a6804e79d3bf42a823faf9ded1",
+    "semantic_hash": "212bb9a6804e79d3bf42a823faf9ded1"
+  },
+  "cnn-training/balance_data.py": {
+    "mtime": 1784677738.0906096,
+    "seen": 1787459490.037895,
+    "ast_hash": "ca6e5cd48cfd3e743bf91adced0c442d",
+    "semantic_hash": "ca6e5cd48cfd3e743bf91adced0c442d"
+  },
+  "cnn-training/evaluate.py": {
+    "mtime": 1784684530.46438,
+    "seen": 1787459490.0378983,
+    "ast_hash": "e2711fc8068156a5c827b9c30473a9f5",
+    "semantic_hash": "e2711fc8068156a5c827b9c30473a9f5"
+  },
+  "cnn-training/export_onnx.py": {
+    "mtime": 1784684887.0865993,
+    "seen": 1787459490.0379007,
+    "ast_hash": "d663cec4b3315092630d8cae2fde315f",
+    "semantic_hash": "d663cec4b3315092630d8cae2fde315f"
+  },
+  "cnn-training/sort_npk.py": {
+    "mtime": 1784677385.1762636,
+    "seen": 1787459490.037903,
+    "ast_hash": "00897ccdddb7e04de3a278e664531740",
+    "semantic_hash": "00897ccdddb7e04de3a278e664531740"
+  },
+  "cnn-training/train.py": {
+    "mtime": 1784677855.2056887,
+    "seen": 1787459490.037905,
+    "ast_hash": "e03947ba3c38eda923e6c9d708389cb5",
+    "semantic_hash": "e03947ba3c38eda923e6c9d708389cb5"
+  },
+  "src/GLORIOUSSYSTEM.Api/Controllers/ReadingsController.cs": {
+    "mtime": 1784687146.49955,
+    "seen": 1787459490.0379074,
+    "ast_hash": "d75abc0bbc0d154ee3780ad08867930c",
+    "semantic_hash": "d75abc0bbc0d154ee3780ad08867930c"
+  },
+  "src/GLORIOUSSYSTEM.Api/GLORIOUSSYSTEM.Api.csproj": {
+    "mtime": 1786672896.654992,
+    "seen": 1787459490.0379095,
+    "ast_hash": "2ff98ed89ff19dc81d37f6ef565cfbd7",
+    "semantic_hash": "2ff98ed89ff19dc81d37f6ef565cfbd7"
+  },
+  "src/GLORIOUSSYSTEM.Api/Program.cs": {
+    "mtime": 1784686907.3593996,
+    "seen": 1787459490.037912,
+    "ast_hash": "84ae117cd3fbca29f57607bd9501dda0",
+    "semantic_hash": "84ae117cd3fbca29f57607bd9501dda0"
+  },
+  "src/GLORIOUSSYSTEM.Api/Properties/launchSettings.json": {
+    "mtime": 1784686711.6910632,
+    "seen": 1787459490.037914,
+    "ast_hash": "869e90bda8a11cead36e89f4601d255f",
+    "semantic_hash": "869e90bda8a11cead36e89f4601d255f"
+  },
+  "src/GLORIOUSSYSTEM.Api/appsettings.Development.json": {
+    "mtime": 1784686711.6931813,
+    "seen": 1787459490.0379162,
+    "ast_hash": "804b473502a4c415cf75db61c56c32aa",
+    "semantic_hash": "804b473502a4c415cf75db61c56c32aa"
+  },
+  "src/GLORIOUSSYSTEM.Api/appsettings.json": {
+    "mtime": 1784686711.7136095,
+    "seen": 1787459490.0379188,
+    "ast_hash": "f7e65dde4e5533740a0d57ac9355c0e8",
+    "semantic_hash": "f7e65dde4e5533740a0d57ac9355c0e8"
+  },
+  "src/GLORIOUSSYSTEM.App/ApiSensorService.cs": {
+    "mtime": 1784687455.5224664,
+    "seen": 1787459490.037921,
+    "ast_hash": "13009fba13575b9e5ec6e88d1ba40219",
+    "semantic_hash": "13009fba13575b9e5ec6e88d1ba40219"
+  },
+  "src/GLORIOUSSYSTEM.App/App.xaml": {
+    "mtime": 1784444831.830318,
+    "seen": 1787459490.037923,
+    "ast_hash": "7ed38cad5675227a1475b42d8ab4bc33",
+    "semantic_hash": "7ed38cad5675227a1475b42d8ab4bc33"
+  },
+  "src/GLORIOUSSYSTEM.App/App.xaml.cs": {
+    "mtime": 1784250315.4705646,
+    "seen": 1787459490.037925,
+    "ast_hash": "3414ddce5ddf97e44ffd6e5e4179b6f6",
+    "semantic_hash": "3414ddce5ddf97e44ffd6e5e4179b6f6"
+  },
+  "src/GLORIOUSSYSTEM.App/AppShell.xaml": {
+    "mtime": 1784447018.0026298,
+    "seen": 1787459490.0379274,
+    "ast_hash": "bc9460a56efe79d838b80b6d72a79362",
+    "semantic_hash": "bc9460a56efe79d838b80b6d72a79362"
+  },
+  "src/GLORIOUSSYSTEM.App/AppShell.xaml.cs": {
+    "mtime": 1784445920.8722582,
+    "seen": 1787459490.0379295,
+    "ast_hash": "308e3844ce2c3717fd9217bba29da036",
+    "semantic_hash": "308e3844ce2c3717fd9217bba29da036"
+  },
+  "src/GLORIOUSSYSTEM.App/GLORIOUSSYSTEM.App.csproj": {
+    "mtime": 1784686465.2173445,
+    "seen": 1787459490.0379317,
+    "ast_hash": "ea3fb52724b404cff82a4e4e941a1d42",
+    "semantic_hash": "ea3fb52724b404cff82a4e4e941a1d42"
+  },
+  "src/GLORIOUSSYSTEM.App/LeafClassifierService.cs": {
+    "mtime": 1784685971.0651321,
+    "seen": 1787459490.0379338,
+    "ast_hash": "538d7426e95d6309550e42575b47d826",
+    "semantic_hash": "538d7426e95d6309550e42575b47d826"
+  },
+  "src/GLORIOUSSYSTEM.App/MainPage.xaml": {
+    "mtime": 1784450113.1083722,
+    "seen": 1787459490.037936,
+    "ast_hash": "117fd7b3d0106d69086e85b349b32591",
+    "semantic_hash": "117fd7b3d0106d69086e85b349b32591"
+  },
+  "src/GLORIOUSSYSTEM.App/MainPage.xaml.cs": {
+    "mtime": 1784450113.1172626,
+    "seen": 1787459490.0379379,
+    "ast_hash": "34c210d05891417d5f3712c9188fb281",
+    "semantic_hash": "34c210d05891417d5f3712c9188fb281"
+  },
+  "src/GLORIOUSSYSTEM.App/MauiProgram.cs": {
+    "mtime": 1784447493.0812588,
+    "seen": 1787459490.03794,
+    "ast_hash": "628e64be82b724f96551a62908fcb12e",
+    "semantic_hash": "628e64be82b724f96551a62908fcb12e"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/Android/MainActivity.cs": {
+    "mtime": 1784250315.5147552,
+    "seen": 1787459490.0379424,
+    "ast_hash": "1af705707c11baf4bfc66c2bcecfb7aa",
+    "semantic_hash": "1af705707c11baf4bfc66c2bcecfb7aa"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/Android/MainApplication.cs": {
+    "mtime": 1784250315.5157664,
+    "seen": 1787459490.0379446,
+    "ast_hash": "d1cf7f11b9cbfbdfc78c82235cfe476c",
+    "semantic_hash": "d1cf7f11b9cbfbdfc78c82235cfe476c"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/MacCatalyst/AppDelegate.cs": {
+    "mtime": 1784250315.5356052,
+    "seen": 1787459490.0379467,
+    "ast_hash": "55607fe26cf0882877652335df6e4c85",
+    "semantic_hash": "55607fe26cf0882877652335df6e4c85"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/MacCatalyst/Program.cs": {
+    "mtime": 1784250315.5461142,
+    "seen": 1787459490.037948,
+    "ast_hash": "c5472524731d06ef04d0b4fef8740274",
+    "semantic_hash": "c5472524731d06ef04d0b4fef8740274"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/Windows/App.xaml": {
+    "mtime": 1784250315.5525186,
+    "seen": 1787459490.0379503,
+    "ast_hash": "096adeeada6e2f3f6206a8df82a151d9",
+    "semantic_hash": "096adeeada6e2f3f6206a8df82a151d9"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/Windows/App.xaml.cs": {
+    "mtime": 1784250315.5548048,
+    "seen": 1787459490.037952,
+    "ast_hash": "21e4826da60c927e263f0cc319d299db",
+    "semantic_hash": "21e4826da60c927e263f0cc319d299db"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/iOS/AppDelegate.cs": {
+    "mtime": 1784250315.5216222,
+    "seen": 1787459490.037954,
+    "ast_hash": "55607fe26cf0882877652335df6e4c85",
+    "semantic_hash": "55607fe26cf0882877652335df6e4c85"
+  },
+  "src/GLORIOUSSYSTEM.App/Platforms/iOS/Program.cs": {
+    "mtime": 1784250315.5267253,
+    "seen": 1787459490.0379558,
+    "ast_hash": "c5472524731d06ef04d0b4fef8740274",
+    "semantic_hash": "c5472524731d06ef04d0b4fef8740274"
+  },
+  "src/GLORIOUSSYSTEM.App/Properties/launchSettings.json": {
+    "mtime": 1784250315.5655313,
+    "seen": 1787459490.0379577,
+    "ast_hash": "4e57b643958c5bf8b3edc47dc24a9cec",
+    "semantic_hash": "4e57b643958c5bf8b3edc47dc24a9cec"
+  },
+  "src/GLORIOUSSYSTEM.App/ReportsPage.xaml": {
+    "mtime": 1784687640.826847,
+    "seen": 1787459490.0379596,
+    "ast_hash": "420470ab38b0b5807d495ccdd5946cb5",
+    "semantic_hash": "420470ab38b0b5807d495ccdd5946cb5"
+  },
+  "src/GLORIOUSSYSTEM.App/ReportsPage.xaml.cs": {
+    "mtime": 1784687845.5383544,
+    "seen": 1787459490.0379615,
+    "ast_hash": "10e6bf1e8e9b3b23b66108f9a466f1f1",
+    "semantic_hash": "10e6bf1e8e9b3b23b66108f9a466f1f1"
+  },
+  "src/GLORIOUSSYSTEM.App/Resources/Styles/Colors.xaml": {
+    "mtime": 1784250315.5897076,
+    "seen": 1787459490.037963,
+    "ast_hash": "c574260a92de815c35d74e0e0a3d69e6",
+    "semantic_hash": "c574260a92de815c35d74e0e0a3d69e6"
+  },
+  "src/GLORIOUSSYSTEM.App/Resources/Styles/Styles.xaml": {
+    "mtime": 1784250315.602007,
+    "seen": 1787459490.0379648,
+    "ast_hash": "c75e830dac11f65b6640bcbc8bfcd3e8",
+    "semantic_hash": "c75e830dac11f65b6640bcbc8bfcd3e8"
+  },
+  "src/GLORIOUSSYSTEM.App/SettingsPage.xaml": {
+    "mtime": 1784450113.1033077,
+    "seen": 1787459490.0379665,
+    "ast_hash": "d1ad0f63c5742492f6b48eaa427c0e07",
+    "semantic_hash": "d1ad0f63c5742492f6b48eaa427c0e07"
+  },
+  "src/GLORIOUSSYSTEM.App/SettingsPage.xaml.cs": {
+    "mtime": 1784450113.0981135,
+    "seen": 1787459490.0379684,
+    "ast_hash": "8df40913083e9ac40e2abf76cb54ac63",
+    "semantic_hash": "8df40913083e9ac40e2abf76cb54ac63"
+  },
+  "src/GLORIOUSSYSTEM.App/WebcamPage.xaml": {
+    "mtime": 1784686085.468237,
+    "seen": 1787459490.0379698,
+    "ast_hash": "073286b24d488bb0d33b32a876e74e35",
+    "semantic_hash": "073286b24d488bb0d33b32a876e74e35"
+  },
+  "src/GLORIOUSSYSTEM.App/WebcamPage.xaml.cs": {
+    "mtime": 1784686268.0655193,
+    "seen": 1787459490.0379717,
+    "ast_hash": "390f5011569ba61158dadb1501624cef",
+    "semantic_hash": "390f5011569ba61158dadb1501624cef"
+  },
+  "src/GLORIOUSSYSTEM.ConsoleTest/GLORIOUSSYSTEM.ConsoleTest.csproj": {
+    "mtime": 1784248743.1636467,
+    "seen": 1787459490.0379736,
+    "ast_hash": "1c6614da47cf8299ede4ee8c7dc57010",
+    "semantic_hash": "1c6614da47cf8299ede4ee8c7dc57010"
+  },
+  "src/GLORIOUSSYSTEM.ConsoleTest/Program.cs": {
+    "mtime": 1784248739.6587985,
+    "seen": 1787459490.0379758,
+    "ast_hash": "d8fbe1fbe0175b96dc9d63864c1d281e",
+    "semantic_hash": "d8fbe1fbe0175b96dc9d63864c1d281e"
+  },
+  "src/GLORIOUSSYSTEM.Data/Class1.cs": {
+    "mtime": 1784246449.347028,
+    "seen": 1787459490.0379777,
+    "ast_hash": "6dffad930f03b176a71e2a4d6b7708bb",
+    "semantic_hash": "6dffad930f03b176a71e2a4d6b7708bb"
+  },
+  "src/GLORIOUSSYSTEM.Data/GLORIOUSSYSTEM.Data.csproj": {
+    "mtime": 1786672870.0279453,
+    "seen": 1787459490.0379791,
+    "ast_hash": "b158178df9b38ecefb999fb47ab43afc",
+    "semantic_hash": "b158178df9b38ecefb999fb47ab43afc"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Actuator.cs": {
+    "mtime": 1784448571.2182553,
+    "seen": 1787459490.0379817,
+    "ast_hash": "0c8c0b70db8a7052e92d358ecbee54a2",
+    "semantic_hash": "0c8c0b70db8a7052e92d358ecbee54a2"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/ActuatorEvent.cs": {
+    "mtime": 1784448571.2192621,
+    "seen": 1787459490.0379834,
+    "ast_hash": "b34309fb7729c3674072afb6251fea98",
+    "semantic_hash": "b34309fb7729c3674072afb6251fea98"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Camera.cs": {
+    "mtime": 1784448571.2192621,
+    "seen": 1787459490.0379853,
+    "ast_hash": "fd3cc31e9118ce98850312414c15bc40",
+    "semantic_hash": "fd3cc31e9118ce98850312414c15bc40"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/HydroponicDbContext.cs": {
+    "mtime": 1784448764.93265,
+    "seen": 1787459490.0379868,
+    "ast_hash": "b3f661771cdba330689507f0d6c47719",
+    "semantic_hash": "b3f661771cdba330689507f0d6c47719"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/LeafClassification.cs": {
+    "mtime": 1784448571.2192621,
+    "seen": 1787459490.0379882,
+    "ast_hash": "3a04364b188317273de88e3426ab7412",
+    "semantic_hash": "3a04364b188317273de88e3426ab7412"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Node.cs": {
+    "mtime": 1784448571.2192621,
+    "seen": 1787459490.0379894,
+    "ast_hash": "a0e6cfe5f9d6d7c09da1dc03642b513c",
+    "semantic_hash": "a0e6cfe5f9d6d7c09da1dc03642b513c"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Pipe.cs": {
+    "mtime": 1784448571.2202897,
+    "seen": 1787459490.0379908,
+    "ast_hash": "38e269a629aa71404af36edb3b340373",
+    "semantic_hash": "38e269a629aa71404af36edb3b340373"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Reading.cs": {
+    "mtime": 1784448571.2202897,
+    "seen": 1787459490.0379927,
+    "ast_hash": "1fe32377706bbc6db2110d10a083bf3d",
+    "semantic_hash": "1fe32377706bbc6db2110d10a083bf3d"
+  },
+  "src/GLORIOUSSYSTEM.Data/Models/Sensor.cs": {
+    "mtime": 1784448571.2214055,
+    "seen": 1787459490.037994,
+    "ast_hash": "c8e10420cfcca2d458808a59eddb06fb",
+    "semantic_hash": "c8e10420cfcca2d458808a59eddb06fb"
+  },
+  "database/hydroponic_schema.sql": {
+    "mtime": 1784446624.0844493,
+    "seen": 1787459781.7516778,
+    "ast_hash": "c06bd24e8d82752dc04a28f635e72507",
+    "semantic_hash": "c06bd24e8d82752dc04a28f635e72507"
+  }
+}

@@ -1,48 +1,140 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.MainPage"
-             BackgroundColor="{StaticResource BgDark}">
-    <Grid RowDefinitions="Auto,*" Padding="24">
-        <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
-            <VerticalStackLayout Grid.Column="0">
-                <Label Text="GLORIOUS SYSTEM" FontSize="14" TextColor="{StaticResource AccentGreen}" FontAttributes="Bold" CharacterSpacing="2"/>
-                <Label Text="Lettuce Monitoring" FontSize="28" TextColor="{StaticResource TextPrimary}" FontAttributes="Bold"/>
-            </VerticalStackLayout>
-            <Button Grid.Column="1" Text="⟳ Refresh" Clicked="OnRefreshClicked"
-                    BackgroundColor="{StaticResource SurfaceDark}" TextColor="{StaticResource AccentGreen}"
-                    BorderColor="{StaticResource AccentGreen}" BorderWidth="1" CornerRadius="8"
-                    VerticalOptions="Center" Padding="16,8"/>
-        </Grid>
+             BackgroundColor="{AppThemeBinding Light={DynamicResource Surface}, Dark={DynamicResource SurfaceDark}}"
+             Title="Dashboard">
 
-   
-        <!-- Grouped sensor list -->
-        <CollectionView Grid.Row="1" x:Name="SensorList" IsGrouped="True">
+    <RefreshView x:Name="RefreshView" RefreshColor="{DynamicResource Primary}" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <CollectionView x:Name="SensorList" IsGrouped="True" ItemsLayout="VerticalList" EmptyView="No sensors configured">
+
+            <!-- Group Header Template -->
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate>
-                    <Label Text="{Binding CategoryName}" FontSize="13" FontAttributes="Bold"
-                           TextColor="{StaticResource TextSecondary}" CharacterSpacing="1.5"
-                           Margin="0,20,0,8"/>
+                    <Grid Padding="20,16,20,8" BackgroundColor="{AppThemeBinding Light={DynamicResource SurfaceContainer}, Dark={DynamicResource SurfaceContainerDark}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Category Icon -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryContainer}, Dark={DynamicResource PrimaryContainerDark}}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="8"
+                                Margin="0,0,12,0"
+                                WidthRequest="36" HeightRequest="36">
+                            <Label Text="{Binding CategoryIcon}"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={DynamicResource OnPrimaryContainer}, Dark={DynamicResource OnPrimaryContainerDark}}"/>
+                        </Border>
+
+                        <!-- Category Title -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="{Binding CategoryName}"
+                                   Style="{StaticResource LabelLarge}"
+                                   TextTransform="Uppercase"
+                                   CharacterSpacing="1.2"/>
+                            <Label Text="{Binding SensorCount, StringFormat='{0} sensors'}"
+                                   Style="{StaticResource BodySmall}"/>
+                        </VerticalStackLayout>
+
+                        <!-- Category Status Summary -->
+                        <HorizontalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center" Margin="0,0,8,0">
+                            <Border Style="{DynamicResource StatusPill}" BackgroundColor="{Binding OnlineColor}" IsVisible="{Binding HasOnline}">
+                                <Label Text="{Binding OnlineCount}" Style="{StaticResource LabelSmall}" TextColor="{AppThemeBinding Light={DynamicResource OnPrimaryContainer}, Dark={DynamicResource OnPrimaryContainerDark}}" FontAttributes="Bold"/>
+                            </Border>
+                            <Border Style="{DynamicResource StatusPill}" BackgroundColor="{Binding WarningColor}" IsVisible="{Binding HasWarning}">
+                                <Label Text="{Binding WarningCount}" Style="{StaticResource LabelSmall}" TextColor="{AppThemeBinding Light={DynamicResource OnTertiaryContainer}, Dark={DynamicResource OnTertiaryContainerDark}}" FontAttributes="Bold"/>
+                            </Border>
+                            <Border Style="{DynamicResource StatusPill}" BackgroundColor="{Binding CriticalColor}" IsVisible="{Binding HasCritical}">
+                                <Label Text="{Binding CriticalCount}" Style="{StaticResource LabelSmall}" TextColor="{AppThemeBinding Light={DynamicResource OnErrorContainer}, Dark={DynamicResource OnErrorContainerDark}}" FontAttributes="Bold"/>
+                            </Border>
+                        </HorizontalStackLayout>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>
+
+            <!-- Sensor Item Template -->
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border BackgroundColor="{StaticResource SurfaceDark}" StrokeShape="RoundRectangle 12"
-                            Stroke="Transparent" Padding="16" Margin="0,0,0,10">
-                        <Grid ColumnDefinitions="Auto,*,Auto">
-                            <BoxView Grid.Column="0" Color="{Binding StatusColor}" WidthRequest="8"
-                                     CornerRadius="4" VerticalOptions="Fill" Margin="0,0,14,0"/>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
-                                <Label Text="{Binding SubText}" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
+                    <Border Style="{DynamicResource ElevatedCard}"
+                            Margin="20,0,20,8"
+                            Padding="16">
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="4">
+
+                            <!-- Status Indicator Column -->
+                            <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                     Style="{DynamicResource StatusDot}"
+                                     Color="{Binding StatusColor}"
+                                     WidthRequest="10" HeightRequest="10"
+                                     Margin="0,0,12,0"
+                                     VerticalOptions="Center"/>
+
+                            <!-- Sensor Info Column -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding Name}" Style="{StaticResource SensorNameLabel}"/>
+                                <Label Text="{Binding SubText}" Style="{StaticResource SensorSubTextLabel}"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="2" Text="{Binding ValueText}" FontSize="18" FontAttributes="Bold"
-                                   TextColor="{Binding StatusColor}" VerticalOptions="Center"/>
+
+                            <!-- Value Column -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Spacing="0" HorizontalOptions="End" VerticalOptions="Center">
+                                <Label Text="{Binding ValueText}" Style="{StaticResource SensorValueLabel}" TextColor="{Binding ValueColor}"/>
+                                <Label Text="{Binding UnitText}" Style="{StaticResource BodySmall}" TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}" IsVisible="{Binding HasUnit}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Threshold Bar (shown when thresholds exist) -->
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0" IsVisible="{Binding HasThresholds}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Column="0" Text="{Binding MinThresholdText}" Style="{StaticResource LabelSmall}" VerticalOptions="Center" Margin="0,0,8,0"/>
+
+                                <ProgressBar Grid.Column="1"
+                                             Progress="{Binding ThresholdProgress}"
+                                             ProgressColor="{Binding ThresholdProgressColor}"
+                                             HeightRequest="6"
+                                             VerticalOptions="Center"
+                                             MinimumHeightRequest="6"/>
+
+                                <Label Grid.Column="2" Text="{Binding MaxThresholdText}" Style="{StaticResource LabelSmall}" VerticalOptions="Center" Margin="8,0,0,0"/>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
+            <!-- Footer - Last Updated + Refresh Button -->
+            <CollectionView.Footer>
+                <Grid Padding="20,16,20,32" BackgroundColor="Transparent" ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="8" VerticalOptions="Center">
+                        <Label Text="Last updated" Style="{StaticResource BodySmall}"/>
+                        <Label x:Name="LastUpdatedLabel" Text="--" Style="{StaticResource LabelSmall}" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/>
+                    </HorizontalStackLayout>
+
+                    <!-- Refresh Button in Footer -->
+                    <Button Grid.Column="1" Text="⟳"
+                            Style="{DynamicResource PrimaryButton}"
+                            CornerRadius="28"
+                            WidthRequest="56" HeightRequest="56"
+                            FontSize="24"
+                            Padding="0"
+                            Clicked="OnRefreshClicked"
+                            HorizontalOptions="End" VerticalOptions="End"
+                            Margin="0">
+                        <Button.Shadow>
+                            <Shadow Brush="{DynamicResource Shadow}" Radius="12" Opacity="0.3" Offset="0,4"/>
+                        </Button.Shadow>
+                    </Button>
+                </Grid>
+            </CollectionView.Footer>
+
         </CollectionView>
-    </Grid>
+    </RefreshView>
 </ContentPage>

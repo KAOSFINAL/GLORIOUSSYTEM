@@ -1,17 +1,10 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
              x:Class="GLORIOUSSYSTEM.App.App">
     <Application.Resources>
         <ResourceDictionary>
-<Color x:Key="BgDark">#0F172A</Color>
-<Color x:Key="SurfaceDark">#1E293B</Color>
-<Color x:Key="AccentGreen">#22C55E</Color>
-<Color x:Key="AccentBlue">#38BDF8</Color>
-<Color x:Key="AccentAmber">#FBBF24</Color>
-<Color x:Key="TextPrimary">#F1F5F9</Color>
-<Color x:Key="TextSecondary">#94A3B8</Color>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
