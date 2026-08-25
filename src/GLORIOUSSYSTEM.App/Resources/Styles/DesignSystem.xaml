@@ -3,11 +3,15 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- ================================================================
-         GLORIOUS SYSTEM — Shared Design System
-         One visual language for Dashboard, Reports, Settings, Webcam,
-         Login, and future pages.
-         ================================================================ -->
+    <!--
+        GLORIOUS SYSTEM — Shared page-level design language.
+
+        IMPORTANT:
+        Colors and common component styles are defined centrally in
+        Colors.xaml and Styles.xaml. This dictionary intentionally contains
+        only GS-prefixed styles and layout resources so there are no duplicate
+        ResourceDictionary keys competing with Styles.xaml.
+    -->
 
     <!-- Layout -->
     <x:Double x:Key="PageHorizontalPadding">24</x:Double>
@@ -66,7 +70,7 @@
         <Setter Property="FontSize" Value="30" />
     </Style>
 
-    <!-- Cards -->
+    <!-- Cards: GS-prefixed to avoid colliding with Styles.xaml -->
     <Style x:Key="GSCard" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
         <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
@@ -80,105 +84,6 @@
         <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
         <Setter Property="Stroke" Value="Transparent" />
         <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="Margin" Value="0,0,0,16" />
-    </Style>
-
-    <!-- ================================================================
-         Compatibility aliases
-         Existing pages use these names. Keeping them here means every
-         page automatically gets the same component language.
-         ================================================================ -->
-
-    <Style x:Key="PrimaryButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
-        <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BorderWidth" Value="0" />
-        <Setter Property="Padding" Value="20,12" />
-        <Setter Property="MinimumHeightRequest" Value="44" />
-    </Style>
-
-    <Style x:Key="SecondaryButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
-        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BorderColor" Value="{DynamicResource OutlineVariant}" />
-        <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="Padding" Value="20,12" />
-        <Setter Property="MinimumHeightRequest" Value="44" />
-    </Style>
-
-    <Style x:Key="TertiaryButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BorderWidth" Value="0" />
-        <Setter Property="Padding" Value="16,12" />
-        <Setter Property="MinimumHeightRequest" Value="44" />
-    </Style>
-
-    <Style x:Key="DangerButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{DynamicResource Error}" />
-        <Setter Property="TextColor" Value="{DynamicResource OnError}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BorderWidth" Value="0" />
-        <Setter Property="Padding" Value="20,12" />
-        <Setter Property="MinimumHeightRequest" Value="44" />
-    </Style>
-
-    <Style x:Key="IconButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="20" />
-        <Setter Property="CornerRadius" Value="24" />
-        <Setter Property="BorderWidth" Value="0" />
-        <Setter Property="Padding" Value="12" />
-        <Setter Property="MinimumHeightRequest" Value="48" />
-        <Setter Property="MinimumWidthRequest" Value="48" />
-    </Style>
-
-    <Style x:Key="EntryStyle" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerHigh}" />
-        <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="MinimumHeightRequest" Value="40" />
-    </Style>
-
-    <Style x:Key="ElevatedCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
-        <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
-        <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="Margin" Value="0,0,0,16" />
-    </Style>
-
-    <Style x:Key="FilledCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
-        <Setter Property="Stroke" Value="Transparent" />
-        <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="Margin" Value="0,0,0,16" />
-    </Style>
-
-    <Style x:Key="OutlinedCard" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
-        <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
-        <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="StrokeShape" Value="RoundRectangle 16" />
         <Setter Property="Padding" Value="20" />
         <Setter Property="Margin" Value="0,0,0,16" />
