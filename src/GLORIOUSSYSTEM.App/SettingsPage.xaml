@@ -3,111 +3,127 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
              x:Class="GLORIOUSSYSTEM.App.SettingsPage"
-             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#0F1115}"
+             BackgroundColor="{DynamicResource Surface}"
              Title="Settings">
+
     <ContentPage.Resources>
         <local:NotZeroConverter x:Key="NotZeroConverter" />
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="24,22,24,34" Spacing="20">
+    <ScrollView BackgroundColor="{DynamicResource Surface}">
+        <VerticalStackLayout Padding="24,24,24,36" Spacing="20">
 
             <!-- Header -->
             <VerticalStackLayout Spacing="4">
-                <Label Text="Settings" FontSize="30" FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light=#151A21, Dark=#F5F7FA}" />
+                <Label Text="Settings" Style="{DynamicResource GSPageTitle}" />
                 <Label Text="Manage sensors, appearance, and system preferences"
-                       FontSize="14"
-                       TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                       Style="{DynamicResource GSPageSubtitle}" />
             </VerticalStackLayout>
 
             <!-- Sensor Settings -->
-            <Border Padding="18" StrokeThickness="1"
-                    Stroke="{AppThemeBinding Light=#E3E7ED, Dark=#292F38}"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
-                    StrokeShape="RoundRectangle 18">
-                <VerticalStackLayout Spacing="14">
+            <Border Style="{DynamicResource GSCard}">
+                <VerticalStackLayout Spacing="16">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Sensor Settings" FontSize="20" FontAttributes="Bold" />
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Sensor Settings" Style="{DynamicResource GSSectionTitle}" />
                             <Label Text="Configure thresholds and monitoring status"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                                   Style="{DynamicResource GSMuted}" />
                         </VerticalStackLayout>
-                        <Border Grid.Column="1" Padding="9,5" StrokeThickness="0"
-                                BackgroundColor="{AppThemeBinding Light=#EEF8F4, Dark=#173229}"
-                                StrokeShape="RoundRectangle 10">
-                            <Label Text="LIVE" FontSize="10" FontAttributes="Bold"
-                                   TextColor="{DynamicResource StatusOnline}" />
+                        <Border Grid.Column="1"
+                                Style="{DynamicResource GSStatusPill}"
+                                VerticalOptions="Start">
+                            <Label Text="LIVE"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Primary}" />
                         </Border>
                     </Grid>
 
-                    <CollectionView x:Name="SettingsList" ItemsLayout="VerticalList"
-                                    EmptyView="No sensors configured" HeightRequest="400">
+                    <CollectionView x:Name="SettingsList"
+                                    ItemsLayout="VerticalList"
+                                    EmptyView="No sensors configured"
+                                    HeightRequest="400">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Padding="15" Margin="0,0,0,10"
+                                <Border BackgroundColor="{DynamicResource SurfaceContainer}"
+                                        Stroke="{DynamicResource OutlineVariant}"
                                         StrokeThickness="1"
-                                        Stroke="{AppThemeBinding Light=#E7EAF0, Dark=#2A3039}"
-                                        BackgroundColor="{AppThemeBinding Light=#FAFBFC, Dark=#15181D}"
-                                        StrokeShape="RoundRectangle 14">
+                                        StrokeShape="RoundRectangle 14"
+                                        Padding="15"
+                                        Margin="0,0,0,10">
                                     <VerticalStackLayout Spacing="12">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                             <VerticalStackLayout Spacing="5">
-                                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
+                                                <Label Text="{Binding Name}"
+                                                       Style="{DynamicResource TitleMedium}" />
                                                 <HorizontalStackLayout Spacing="7">
-                                                    <Border Padding="7,3" StrokeThickness="0"
-                                                            BackgroundColor="{AppThemeBinding Light=#E8F7F1, Dark=#17352A}"
-                                                            StrokeShape="RoundRectangle 7">
-                                                        <Label Text="{Binding Type}" FontSize="10" FontAttributes="Bold"
-                                                               TextColor="{DynamicResource Primary}" />
+                                                    <Border BackgroundColor="{DynamicResource PrimaryContainer}"
+                                                            StrokeThickness="0"
+                                                            StrokeShape="RoundRectangle 7"
+                                                            Padding="7,3">
+                                                        <Label Text="{Binding Type}"
+                                                               FontSize="10"
+                                                               FontAttributes="Bold"
+                                                               TextColor="{DynamicResource OnPrimaryContainer}" />
                                                     </Border>
-                                                    <Label Text="{Binding Model}" FontSize="11" VerticalOptions="Center"
-                                                           TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                                                    <Label Text="{Binding Model}"
+                                                           Style="{DynamicResource GSMuted}"
+                                                           VerticalOptions="Center" />
                                                 </HorizontalStackLayout>
                                             </VerticalStackLayout>
                                             <Switch Grid.Column="1"
                                                     IsToggled="{Binding Enabled, Mode=TwoWay}"
-                                                    VerticalOptions="Center"
                                                     OnColor="{DynamicResource Primary}"
-                                                    ThumbColor="{DynamicResource OnPrimary}" />
+                                                    ThumbColor="{DynamicResource OnPrimary}"
+                                                    VerticalOptions="Center" />
                                         </Grid>
 
-                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                                        <Grid ColumnDefinitions="*,*"
+                                              ColumnSpacing="10"
                                               IsVisible="{Binding HasThresholds}">
                                             <VerticalStackLayout Spacing="5">
-                                                <Label Text="MINIMUM" FontSize="9" FontAttributes="Bold"
-                                                       CharacterSpacing="0.8"
-                                                       TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
-                                                <Border Padding="10,0" HeightRequest="42" StrokeThickness="1"
-                                                        Stroke="{AppThemeBinding Light=#DDE2E9, Dark=#303640}"
-                                                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1C2026}"
-                                                        StrokeShape="RoundRectangle 10">
+                                                <Label Text="MINIMUM"
+                                                       Style="{DynamicResource LabelMedium}" />
+                                                <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                                        Stroke="{DynamicResource OutlineVariant}"
+                                                        StrokeThickness="1"
+                                                        StrokeShape="RoundRectangle 10"
+                                                        Padding="10,0"
+                                                        HeightRequest="42">
                                                     <Entry Text="{Binding MinThreshold, Mode=TwoWay, StringFormat='{0:F1}'}"
-                                                           Keyboard="Numeric" Placeholder="Min" BackgroundColor="Transparent"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="Min"
+                                                           BackgroundColor="Transparent"
                                                            VerticalOptions="Center" />
                                                 </Border>
                                             </VerticalStackLayout>
                                             <VerticalStackLayout Grid.Column="1" Spacing="5">
-                                                <Label Text="MAXIMUM" FontSize="9" FontAttributes="Bold"
-                                                       CharacterSpacing="0.8"
-                                                       TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
-                                                <Border Padding="10,0" HeightRequest="42" StrokeThickness="1"
-                                                        Stroke="{AppThemeBinding Light=#DDE2E9, Dark=#303640}"
-                                                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1C2026}"
-                                                        StrokeShape="RoundRectangle 10">
+                                                <Label Text="MAXIMUM"
+                                                       Style="{DynamicResource LabelMedium}" />
+                                                <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                                        Stroke="{DynamicResource OutlineVariant}"
+                                                        StrokeThickness="1"
+                                                        StrokeShape="RoundRectangle 10"
+                                                        Padding="10,0"
+                                                        HeightRequest="42">
                                                     <Entry Text="{Binding MaxThreshold, Mode=TwoWay, StringFormat='{0:F1}'}"
-                                                           Keyboard="Numeric" Placeholder="Max" BackgroundColor="Transparent"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="Max"
+                                                           BackgroundColor="Transparent"
                                                            VerticalOptions="Center" />
                                                 </Border>
                                             </VerticalStackLayout>
                                         </Grid>
 
-                                        <Border Padding="9,5" StrokeThickness="0"
+                                        <Border Padding="9,5"
+                                                StrokeThickness="0"
                                                 BackgroundColor="{Binding ThresholdStatusColor}"
                                                 IsVisible="{Binding HasThresholds}"
-                                                HorizontalOptions="Start" StrokeShape="RoundRectangle 8">
-                                            <Label Text="{Binding ThresholdStatusText}" FontSize="10" FontAttributes="Bold"
+                                                HorizontalOptions="Start"
+                                                StrokeShape="RoundRectangle 8">
+                                            <Label Text="{Binding ThresholdStatusText}"
+                                                   FontSize="10"
+                                                   FontAttributes="Bold"
                                                    TextColor="{Binding ThresholdStatusTextColor}" />
                                         </Border>
                                     </VerticalStackLayout>
@@ -119,105 +135,140 @@
             </Border>
 
             <!-- Appearance -->
-            <Border Padding="18" StrokeThickness="1"
-                    Stroke="{AppThemeBinding Light=#E3E7ED, Dark=#292F38}"
-                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
-                    StrokeShape="RoundRectangle 18">
+            <Border Style="{DynamicResource GSCard}">
                 <VerticalStackLayout Spacing="18">
-                    <VerticalStackLayout Spacing="2">
-                        <Label Text="Appearance" FontSize="20" FontAttributes="Bold" />
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Appearance" Style="{DynamicResource GSSectionTitle}" />
                         <Label Text="Customize colors and display preferences"
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                               Style="{DynamicResource GSMuted}" />
                     </VerticalStackLayout>
 
                     <!-- Primary -->
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="PrimaryColorPreview" WidthRequest="42" HeightRequest="42"
+                        <Border x:Name="PrimaryColorPreview"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                BackgroundColor="{DynamicResource Primary}"
+                                Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1"
                                 StrokeShape="RoundRectangle 11"
-                                Stroke="{AppThemeBinding Light=#DDE2E9, Dark=#303640}" StrokeThickness="1"
-                                BackgroundColor="{DynamicResource Primary}" VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                            <Label Text="Primary Color" FontSize="14" FontAttributes="Bold" />
-                            <Label Text="Buttons, active states, and highlights" FontSize="11"
-                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
-                            <Picker x:Name="PrimaryColorPicker" Title="Select color" FontSize="12"
-                                    SelectedIndexChanged="OnPrimaryColorChanged" HeightRequest="38">
+                                VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Primary Color" Style="{DynamicResource TitleSmall}" />
+                            <Label Text="Buttons, active states, and highlights" Style="{DynamicResource GSMuted}" />
+                            <Picker x:Name="PrimaryColorPicker"
+                                    Title="Select color"
+                                    SelectedIndexChanged="OnPrimaryColorChanged"
+                                    HeightRequest="38">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
-                                        <x:String>Hydroponic Green (Default)</x:String><x:String>Ocean Blue</x:String><x:String>Sunset Orange</x:String><x:String>Deep Purple</x:String><x:String>Rose Pink</x:String><x:String>Teal</x:String><x:String>Indigo</x:String><x:String>Emerald</x:String>
+                                        <x:String>Hydroponic Green (Default)</x:String>
+                                        <x:String>Ocean Blue</x:String>
+                                        <x:String>Sunset Orange</x:String>
+                                        <x:String>Deep Purple</x:String>
+                                        <x:String>Rose Pink</x:String>
+                                        <x:String>Teal</x:String>
+                                        <x:String>Indigo</x:String>
+                                        <x:String>Emerald</x:String>
                                     </x:Array>
                                 </Picker.ItemsSource>
                             </Picker>
                         </VerticalStackLayout>
-                        <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}" WidthRequest="72"
-                                Clicked="OnResetPrimaryColor" VerticalOptions="Center" />
+                        <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}" WidthRequest="72" Clicked="OnResetPrimaryColor" VerticalOptions="Center" />
                     </Grid>
 
-                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#ECEEF2, Dark=#292F38}" />
+                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
                     <!-- Accent -->
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="AccentColorPreview" WidthRequest="42" HeightRequest="42"
+                        <Border x:Name="AccentColorPreview"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                BackgroundColor="{DynamicResource Secondary}"
+                                Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1"
                                 StrokeShape="RoundRectangle 11"
-                                Stroke="{AppThemeBinding Light=#DDE2E9, Dark=#303640}" StrokeThickness="1"
-                                BackgroundColor="{DynamicResource Secondary}" VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                            <Label Text="Accent Color" FontSize="14" FontAttributes="Bold" />
-                            <Label Text="Secondary actions and visual accents" FontSize="11"
-                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
-                            <Picker x:Name="AccentColorPicker" Title="Select color" FontSize="12"
-                                    SelectedIndexChanged="OnAccentColorChanged" HeightRequest="38">
+                                VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Accent Color" Style="{DynamicResource TitleSmall}" />
+                            <Label Text="Secondary actions and visual accents" Style="{DynamicResource GSMuted}" />
+                            <Picker x:Name="AccentColorPicker"
+                                    Title="Select color"
+                                    SelectedIndexChanged="OnAccentColorChanged"
+                                    HeightRequest="38">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
-                                        <x:String>Water Blue (Default)</x:String><x:String>Growth Green</x:String><x:String>Sun Amber</x:String><x:String>Alert Red</x:String><x:String>Purple</x:String><x:String>Cyan</x:String><x:String>Lime</x:String><x:String>Pink</x:String>
+                                        <x:String>Water Blue (Default)</x:String>
+                                        <x:String>Growth Green</x:String>
+                                        <x:String>Sun Amber</x:String>
+                                        <x:String>Alert Red</x:String>
+                                        <x:String>Purple</x:String>
+                                        <x:String>Cyan</x:String>
+                                        <x:String>Lime</x:String>
+                                        <x:String>Pink</x:String>
                                     </x:Array>
                                 </Picker.ItemsSource>
                             </Picker>
                         </VerticalStackLayout>
-                        <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}" WidthRequest="72"
-                                Clicked="OnResetAccentColor" VerticalOptions="Center" />
+                        <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}" WidthRequest="72" Clicked="OnResetAccentColor" VerticalOptions="Center" />
                     </Grid>
 
-                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#ECEEF2, Dark=#292F38}" />
+                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
                     <!-- Dark mode -->
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                            <Label Text="Dark Mode" FontSize="14" FontAttributes="Bold" />
-                            <Label Text="Use a darker interface for low-light environments" FontSize="11"
-                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                        <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+                            <Label Text="Dark Mode" Style="{DynamicResource TitleSmall}" />
+                            <Label Text="Use a darker interface for low-light environments" Style="{DynamicResource GSMuted}" />
                         </VerticalStackLayout>
-                        <Switch x:Name="DarkModeSwitch" Grid.Column="1"
+                        <Switch x:Name="DarkModeSwitch"
+                                Grid.Column="1"
                                 IsToggled="{Binding DarkModeEnabled, Mode=TwoWay}"
                                 Toggled="OnDarkModeToggled"
                                 OnColor="{DynamicResource Primary}"
-                                ThumbColor="{DynamicResource OnPrimary}" VerticalOptions="Center" />
+                                ThumbColor="{DynamicResource OnPrimary}"
+                                VerticalOptions="Center" />
                     </Grid>
 
-                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#ECEEF2, Dark=#292F38}" />
+                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
                     <!-- Background -->
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="BackgroundColorPreview" WidthRequest="42" HeightRequest="42"
+                        <Border x:Name="BackgroundColorPreview"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                BackgroundColor="{DynamicResource Surface}"
+                                Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1"
                                 StrokeShape="RoundRectangle 11"
-                                Stroke="{AppThemeBinding Light=#DDE2E9, Dark=#303640}" StrokeThickness="1"
-                                BackgroundColor="{DynamicResource Surface}" VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                            <Label Text="Background Style" FontSize="14" FontAttributes="Bold" />
-                            <Label Text="Choose the app background appearance" FontSize="11"
-                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
-                            <Picker x:Name="BackgroundColorPicker" Title="Select background" FontSize="12"
-                                    SelectedIndexChanged="OnBackgroundColorChanged" HeightRequest="38">
+                                VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Background Style" Style="{DynamicResource TitleSmall}" />
+                            <Label Text="Choose the app background appearance" Style="{DynamicResource GSMuted}" />
+                            <Picker x:Name="BackgroundColorPicker"
+                                    Title="Select background"
+                                    SelectedIndexChanged="OnBackgroundColorChanged"
+                                    HeightRequest="38">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
-                                        <x:String>Light Gray (Default)</x:String><x:String>Pure White</x:String><x:String>Warm White</x:String><x:String>Soft Green</x:String><x:String>Soft Blue</x:String><x:String>Dark Charcoal</x:String><x:String>Dark Navy</x:String><x:String>Custom Color</x:String>
+                                        <x:String>Light Gray (Default)</x:String>
+                                        <x:String>Pure White</x:String>
+                                        <x:String>Warm White</x:String>
+                                        <x:String>Soft Green</x:String>
+                                        <x:String>Soft Blue</x:String>
+                                        <x:String>Dark Charcoal</x:String>
+                                        <x:String>Dark Navy</x:String>
+                                        <x:String>Custom Color</x:String>
                                     </x:Array>
                                 </Picker.ItemsSource>
                             </Picker>
                         </VerticalStackLayout>
-                        <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}" WidthRequest="72"
-                                Clicked="OnResetBackgroundColor" VerticalOptions="Center"
+                        <Button Grid.Column="2"
+                                Text="Reset"
+                                Style="{DynamicResource TertiaryButton}"
+                                WidthRequest="72"
+                                Clicked="OnResetBackgroundColor"
+                                VerticalOptions="Center"
                                 IsVisible="{Binding Source={x:Reference BackgroundColorPicker}, Path=SelectedIndex, Converter={StaticResource NotZeroConverter}}" />
                     </Grid>
                 </VerticalStackLayout>
@@ -225,10 +276,19 @@
 
             <!-- Actions -->
             <VerticalStackLayout Spacing="10">
-                <Button x:Name="SaveButton" Text="Save Changes" Style="{DynamicResource PrimaryButton}"
-                        Clicked="OnSaveClicked" HorizontalOptions="Fill" IsEnabled="{Binding HasChanges}" HeightRequest="50" />
-                <Button x:Name="ResetButton" Text="Reset to Defaults" Style="{DynamicResource TertiaryButton}"
-                        Clicked="OnResetAllClicked" HorizontalOptions="Fill" HeightRequest="46" />
+                <Button x:Name="SaveButton"
+                        Text="Save Changes"
+                        Style="{DynamicResource PrimaryButton}"
+                        Clicked="OnSaveClicked"
+                        HorizontalOptions="Fill"
+                        IsEnabled="{Binding HasChanges}"
+                        HeightRequest="50" />
+                <Button x:Name="ResetButton"
+                        Text="Reset to Defaults"
+                        Style="{DynamicResource TertiaryButton}"
+                        Clicked="OnResetAllClicked"
+                        HorizontalOptions="Fill"
+                        HeightRequest="46" />
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
