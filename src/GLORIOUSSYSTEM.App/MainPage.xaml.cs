@@ -133,10 +133,38 @@ public partial class MainPage : ContentPage
     bool _isRefreshing = false;
     bool _isFirstLoad = true;
 
+    private static void LogToFile(string message)
+    {
+        try
+        {
+            var logPath = Path.Combine(AppContext.BaseDirectory, "startup_log.txt");
+            var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            File.AppendAllText(logPath, $"[{timestamp}] {message}\n");
+        }
+        catch { }
+    }
+
     public MainPage()
     {
-        InitializeComponent();
-        LoadSensors();
+        LogToFile("=== MainPage constructor STARTED ===");
+        System.Diagnostics.Debug.WriteLine("=== MainPage constructor STARTED ===");
+        try
+        {
+            InitializeComponent();
+            LogToFile("=== MainPage InitializeComponent COMPLETED ===");
+            System.Diagnostics.Debug.WriteLine("=== MainPage InitializeComponent COMPLETED ===");
+            LoadSensors();
+            LogToFile("=== MainPage LoadSensors CALLED ===");
+            System.Diagnostics.Debug.WriteLine("=== MainPage LoadSensors CALLED ===");
+        }
+        catch (Exception ex)
+        {
+            LogToFile($"!!! MainPage constructor FAILED: {ex}");
+            System.Diagnostics.Debug.WriteLine($"!!! MainPage constructor FAILED: {ex}");
+            throw;
+        }
+        LogToFile("=== MainPage constructor COMPLETED ===");
+        System.Diagnostics.Debug.WriteLine("=== MainPage constructor COMPLETED ===");
     }
 
     public bool IsRefreshing

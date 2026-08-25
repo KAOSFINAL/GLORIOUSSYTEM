@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
@@ -9,96 +9,66 @@ namespace GLORIOUSSYSTEM.App;
 
 public partial class App : Application
 {
-	public static IServiceProvider? Services { get; private set; }
+    public static IServiceProvider? Services { get; private set; }
 
-	public App()
-	{
-		try
-		{
-			InitializeComponent();
-			ConfigureServices();
-			System.Diagnostics.Debug.WriteLine("App constructor completed successfully");
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine($"App constructor failed: {ex}");
-			throw;
-		}
-	}
+    public App()
+    {
+        InitializeComponent();
+        ConfigureServices();
+    }
 
-	private void ConfigureServices()
-	{
-		try
-		{
-			var services = new ServiceCollection();
+    private void ConfigureServices()
+    {
+        var services = new ServiceCollection();
 
-			var config = new ConfigurationBuilder()
-				.SetBasePath(AppContext.BaseDirectory)
-				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-				.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
-				.AddEnvironmentVariables()
-				.Build();
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
 
-			services.AddDbContext<HydroponicDbContext>(options =>
-				options.UseSqlite(config.GetConnectionString("HydroponicDb")));
+        var connStr = config.GetConnectionString("HydroponicDb");
 
-			Services = services.BuildServiceProvider();
-			System.Diagnostics.Debug.WriteLine("ConfigureServices completed successfully");
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine($"ConfigureServices failed: {ex}");
-			throw;
-		}
-	}
+        services.AddDbContext<HydroponicDbContext>(options =>
+            options.UseSqlite(connStr));
 
-	protected override Window CreateWindow(IActivationState? activationState)
-	{
-		try
-		{
-			System.Diagnostics.Debug.WriteLine("CreateWindow called");
+        Services = services.BuildServiceProvider();
+    }
 
-			// Check if user is logged in
-			var isLoggedIn = Preferences.Get("IsLoggedIn", false);
-			System.Diagnostics.Debug.WriteLine($"IsLoggedIn: {isLoggedIn}");
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        // Check if user is logged in
+        var isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
-			Window window;
-			if (isLoggedIn)
-			{
-				System.Diagnostics.Debug.WriteLine("Creating AppShell");
-				window = new Window(new AppShell());
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine("Creating LoginPage");
-				window = new Window(new LoginPage());
-			}
+        Window window;
+        if (isLoggedIn)
+        {
+            window = new Window(new AppShell());
+        }
+        else
+        {
+            window = new Window(new LoginPage());
+        }
 
-			System.Diagnostics.Debug.WriteLine("Window created successfully");
-			return window;
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine($"CreateWindow failed: {ex}");
-			throw;
-		}
-	}
+        return window;
+    }
 
-	public static void Logout()
-	{
-		Preferences.Remove("IsLoggedIn");
-		Preferences.Remove("CurrentUserId");
-		Preferences.Remove("CurrentUserEmail");
-		Preferences.Remove("CurrentUserName");
-		Preferences.Remove("RememberMe");
-		Preferences.Remove("SavedEmail");
-		Preferences.Remove("SavedPassword");
+    public static void Logout()
+    {
+        Preferences.Remove("IsLoggedIn");
+        Preferences.Remove("CurrentUserId");
+        Preferences.Remove("CurrentUserEmail");
+        Preferences.Remove("CurrentUserName");
+        Preferences.Remove("RememberMe");
+        Preferences.Remove("SavedEmail");
+        Preferences.Remove("SavedPassword");
 
-		// Navigate to login page
-		if (Current?.Windows.Count > 0)
-		{
-			var window = Current.Windows[0];
-			window.Page = new LoginPage();
-		}
-	}
+        // Navigate to login page
+        if (Current?.Windows.Count > 0)
+        {
+            var window = Current.Windows[0];
+            window.Page = new LoginPage();
+        }
+    }
 }

@@ -9,10 +9,38 @@ namespace GLORIOUSSYSTEM.App;
 
 public partial class AppShell : Shell
 {
+    private static void LogToFile(string message)
+    {
+        try
+        {
+            var logPath = Path.Combine(AppContext.BaseDirectory, "startup_log.txt");
+            var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            File.AppendAllText(logPath, $"[{timestamp}] {message}\n");
+        }
+        catch { }
+    }
+
     public AppShell()
     {
-        InitializeComponent();
-        LoadFlyoutData();
+        LogToFile("=== AppShell constructor STARTED ===");
+        System.Diagnostics.Debug.WriteLine("=== AppShell constructor STARTED ===");
+        try
+        {
+            InitializeComponent();
+            LogToFile("=== AppShell InitializeComponent COMPLETED ===");
+            System.Diagnostics.Debug.WriteLine("=== AppShell InitializeComponent COMPLETED ===");
+            LoadFlyoutData();
+            LogToFile("=== AppShell LoadFlyoutData CALLED ===");
+            System.Diagnostics.Debug.WriteLine("=== AppShell LoadFlyoutData CALLED ===");
+        }
+        catch (Exception ex)
+        {
+            LogToFile($"!!! AppShell constructor FAILED: {ex}");
+            System.Diagnostics.Debug.WriteLine($"!!! AppShell constructor FAILED: {ex}");
+            throw;
+        }
+        LogToFile("=== AppShell constructor COMPLETED ===");
+        System.Diagnostics.Debug.WriteLine("=== AppShell constructor COMPLETED ===");
     }
 
     async void LoadFlyoutData()
@@ -60,9 +88,13 @@ public partial class AppShell : Shell
 
     protected override void OnNavigated(ShellNavigatedEventArgs args)
     {
+        LogToFile($"=== AppShell OnNavigated: {args.Current?.Location?.OriginalString ?? "null"} ===");
+        System.Diagnostics.Debug.WriteLine($"=== AppShell OnNavigated: {args.Current?.Location?.OriginalString ?? "null"} ===");
         base.OnNavigated(args);
 
         // Refresh flyout data on navigation
         LoadFlyoutData();
+        LogToFile("=== AppShell OnNavigated LoadFlyoutData CALLED ===");
+        System.Diagnostics.Debug.WriteLine("=== AppShell OnNavigated LoadFlyoutData CALLED ===");
     }
 }

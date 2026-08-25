@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using BCrypt.Net;
 using GLORIOUSSYSTEM.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +37,11 @@ public partial class LoginPage : ContentPage
         PasswordEntry.Focus();
     }
 
-    async void OnPasswordCompleted(object? sender, EventArgs e)
+    void OnPasswordCompleted(object? sender, EventArgs e)
     {
         if (LoginButton.IsEnabled)
         {
-            await OnLoginClicked(sender, e);
+            OnLoginClicked(sender, e);
         }
     }
 
@@ -54,7 +52,7 @@ public partial class LoginPage : ContentPage
         LoginButton.IsEnabled = hasEmail && hasPassword;
     }
 
-    async Task OnLoginClicked(object sender, EventArgs e)
+    async void OnLoginClicked(object sender, EventArgs e)
     {
         ErrorLabel.IsVisible = false;
         LoginButton.IsEnabled = false;
@@ -63,7 +61,7 @@ public partial class LoginPage : ContentPage
         try
         {
             var email = EmailEntry.Text?.Trim();
-            var password = PasswordEntry.Text;
+            var password = PasswordEntry.Text?.Trim();
 
             // Validate credentials against database
             var (success, user) = await ValidateCredentialsAsync(email, password);
@@ -90,8 +88,12 @@ public partial class LoginPage : ContentPage
                 Preferences.Set("CurrentUserName", user.Name);
                 Preferences.Set("IsLoggedIn", true);
 
-                // Navigate to main app
-                await Shell.Current.GoToAsync("//dashboard");
+                // Navigate to main app by replacing the window's page
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    var window = Application.Current.Windows[0];
+                    window.Page = new AppShell();
+                }
             }
             else
             {
@@ -121,14 +123,18 @@ public partial class LoginPage : ContentPage
             var user = await db.Users
                 .FirstOrDefaultAsync(u => u.Email == email && u.IsActive == 1);
 
-            if (user != null && VerifyPassword(password, user.PasswordHash))
+            if (user != null)
             {
-                return (true, user);
+                var verifyResult = VerifyPassword(password, user.PasswordHash);
+                if (verifyResult)
+                {
+                    return (true, user);
+                }
             }
 
             return (false, null);
         }
-        catch
+        catch (Exception)
         {
             return (false, null);
         }
@@ -136,9 +142,14 @@ public partial class LoginPage : ContentPage
 
     bool VerifyPassword(string password, string hash)
     {
-        // Simple verification - in production use BCrypt or similar
-        // For demo: password123 hashes to a known value
-        return BCrypt.Net.BCrypt.Verify(password, hash);
+        try
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hash);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     async void OnForgotPasswordClicked(object? sender, EventArgs e)

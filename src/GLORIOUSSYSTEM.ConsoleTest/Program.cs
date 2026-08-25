@@ -1,4 +1,5 @@
 ﻿using GLORIOUSSYSTEM.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 using var db = new HydroponicDbContext();
 
@@ -71,14 +72,24 @@ if (!db.Users.Any())
     {
         Name = "Admin",
         Email = "admin@glorious.com",
-        PasswordHash = "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/RK.PZvO.S", // BCrypt hash of 'password123' with cost 12
+        PasswordHash = "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa", // BCrypt hash of 'password123' with cost 12
         IsActive = 1,
         CreatedAt = DateTime.UtcNow,
         Role = "Admin"
     });
 }
+else
+{
+    // Update existing admin user with correct password hash
+    var admin = await db.Users.FirstOrDefaultAsync<User>(u => u.Email == "admin@glorious.com");
+    if (admin != null && admin.PasswordHash != "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa")
+    {
+        admin.PasswordHash = "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa";
+        Console.WriteLine("Updated admin user password hash");
+    }
+}
 
-db.SaveChanges();
+await db.SaveChangesAsync();
 
 // Add sample readings for all sensors that don't have any
 var sensors = db.Sensors.ToList();
@@ -146,5 +157,6 @@ Console.WriteLine("\nAll users in the database:");
 foreach (var u in db.Users.OrderBy(u => u.Id))
 {
     Console.WriteLine($"  {u.Id}: {u.Name} ({u.Email}) - Active: {u.IsActive}, Role: {u.Role}");
+    Console.WriteLine($"      PasswordHash: {u.PasswordHash}");
 }
 

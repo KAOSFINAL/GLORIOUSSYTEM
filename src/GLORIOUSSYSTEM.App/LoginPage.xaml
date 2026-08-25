@@ -45,13 +45,26 @@
                            Completed="OnEmailCompleted"/>
 
                     <!-- Password Field -->
-                    <Entry x:Name="PasswordEntry"
-                           Placeholder="Password"
-                           IsPassword="True"
-                           Style="{DynamicResource EntryStyle}"
-                           TextChanged="OnFieldChanged"
-                           ReturnType="Done"
-                           Completed="OnPasswordCompleted"/>
+                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                        <Entry x:Name="PasswordEntry"
+                               Placeholder="Password"
+                               IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}"
+                               Style="{DynamicResource EntryStyle}"
+                               TextChanged="OnFieldChanged"
+                               ReturnType="Done"
+                               Completed="OnPasswordCompleted"
+                               Grid.Row="0"/>
+                        <CheckBox x:Name="ShowPasswordCheckBox"
+                                  Grid.Row="1"
+                                  HorizontalOptions="Start"
+                                  Margin="0,0,0,0"/>
+                        <Label Grid.Row="1"
+                               Text="Show Password"
+                               Style="{DynamicResource BodySmall}"
+                               TextColor="{DynamicResource OnSurfaceVariant}"
+                               VerticalOptions="Center"
+                               Margin="32,0,0,0"/>
+                    </Grid>
 
                     <!-- Remember Me / Forgot Password -->
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">

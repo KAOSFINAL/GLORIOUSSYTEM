@@ -13,13 +13,28 @@ public partial class ReportsPage : ContentPage
 {
     bool _isRefreshing = false;
     bool _isFirstLoad = true;
+    bool _isLoading = false;
+
+    private static void LogToFile(string message)
+    {
+        try
+        {
+            var logPath = Path.Combine(AppContext.BaseDirectory, "startup_log.txt");
+            var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            File.AppendAllText(logPath, $"[{timestamp}] {message}\n");
+        }
+        catch { }
+    }
 
     public ReportsPage()
     {
+        LogToFile("=== ReportsPage constructor STARTED ===");
         InitializeComponent();
+        LogToFile("=== ReportsPage InitializeComponent COMPLETED ===");
         ChartTimeRangePicker.SelectedIndex = 2; // 24 Hours default
         ChartTimeRangePicker.SelectedIndexChanged += OnTimeRangeChanged;
         Load();
+        LogToFile("=== ReportsPage constructor COMPLETED ===");
     }
 
     public bool IsRefreshing
@@ -57,6 +72,10 @@ public partial class ReportsPage : ContentPage
 
     void Load()
     {
+        if (_isLoading) return;
+        _isLoading = true;
+        LogToFile("=== ReportsPage Load STARTED ===");
+
         try
         {
             using var scope = App.Services.CreateScope();
@@ -76,6 +95,8 @@ public partial class ReportsPage : ContentPage
                      (x.Sensor.MaxThreshold.HasValue && x.Latest.Value > x.Sensor.MaxThreshold.Value)))
                 .Count();
 
+            LogToFile($"=== ReportsPage Load: sensors={sensors.Count}, readingsWithData={readingsWithData}, alerts={alertCount} ===");
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 TotalSensorsLabel.Text = sensors.Count.ToString();
@@ -91,18 +112,25 @@ public partial class ReportsPage : ContentPage
             });
 
             LoadChart();
+            LogToFile("=== ReportsPage Load COMPLETED ===");
         }
         catch (Exception ex)
         {
+            LogToFile($"!!! ReportsPage Load FAILED: {ex}");
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await DisplayAlertAsync("Error", $"Failed to load reports: {ex.Message}", "OK");
             });
         }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     void LoadChart()
     {
+        LogToFile("=== ReportsPage LoadChart STARTED ===");
         try
         {
             using var scope = App.Services.CreateScope();
@@ -123,6 +151,8 @@ public partial class ReportsPage : ContentPage
                 .Where(r => r.Metric == "pH" && r.Timestamp >= cutoff)
                 .OrderBy(r => r.Timestamp)
                 .ToList();
+
+            LogToFile($"=== ReportsPage LoadChart: found {readings.Count} pH readings ===");
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -178,10 +208,12 @@ public partial class ReportsPage : ContentPage
 
                 // Update legend
                 UpdateLegend(readings);
+                LogToFile("=== ReportsPage LoadChart COMPLETED ===");
             });
         }
         catch (Exception ex)
         {
+            LogToFile($"!!! ReportsPage LoadChart FAILED: {ex}");
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await DisplayAlertAsync("Error", $"Failed to load chart: {ex.Message}", "OK");
@@ -207,7 +239,9 @@ public partial class ReportsPage : ContentPage
         var latest = readings.Last();
         var earliest = readings.First();
         var change = latest.Value - earliest.Value;
-        var changeColor = change >= 0 ? (Color)Resources["StatusOnline"] : (Color)Resources["StatusCritical"];
+        var changeColor = change >= 0
+    ? (Color)(Application.Current?.Resources.TryGetValue("StatusOnline", out var onlineColor) == true ? onlineColor : Colors.Green)
+    : (Color)(Application.Current?.Resources.TryGetValue("StatusCritical", out var criticalColor) == true ? criticalColor : Colors.Red);
         var changeIcon = change >= 0 ? "↗" : "↘";
 
         ChartLegend.Children.Add(new Label
