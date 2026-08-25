@@ -12,7 +12,7 @@ namespace GLORIOUSSYSTEM.App;
 public static class ThemeManager
 {
     private const string ThemeVersionKey = "Theme_Version";
-    private const int CurrentThemeVersion = 4;
+    private const int CurrentThemeVersion = 5;
 
     public static event EventHandler? ThemeChanged;
 
@@ -37,19 +37,26 @@ public static class ThemeManager
         var secondary = GetSecondary(dark);
         var surface = GetBackground(dark);
 
-        // Surface colors are always neutral. Primary/accent colors are used
-        // for controls and emphasis, never as the application background.
+        // Neutral surfaces are derived from the selected background.
         var surfaceContainer = dark
-            ? Color.FromArgb("#202124")
+            ? Blend(surface, Colors.White, 0.08f)
             : Blend(surface, Colors.White, 0.70f);
 
         var surfaceContainerHigh = dark
-            ? Color.FromArgb("#292A2D")
+            ? Blend(surface, Colors.White, 0.14f)
             : Blend(surface, Colors.White, 0.48f);
 
         var surfaceContainerHighest = dark
-            ? Color.FromArgb("#323338")
+            ? Blend(surface, Colors.White, 0.20f)
             : Blend(surface, Colors.White, 0.28f);
+
+        var surfaceBright = dark
+            ? Blend(surface, Colors.White, 0.12f)
+            : Colors.White;
+
+        var surfaceDim = dark
+            ? Blend(surface, Colors.Black, 0.12f)
+            : Blend(surface, Colors.Black, 0.04f);
 
         var onSurface = dark
             ? Color.FromArgb("#F5F5F5")
@@ -70,79 +77,110 @@ public static class ThemeManager
         var primaryContainer = WithAlpha(primary, dark ? 0.22f : 0.12f);
         var secondaryContainer = WithAlpha(secondary, dark ? 0.20f : 0.10f);
 
+        // Core semantic resources.
         Set(resources, "Primary", primary);
+        Set(resources, "PrimaryDark", primary);
         Set(resources, "PrimaryContainer", primaryContainer);
+        Set(resources, "PrimaryContainerDark", primaryContainer);
         Set(resources, "OnPrimary", Colors.White);
-        Set(resources, "OnPrimaryContainer", dark
-            ? Color.FromArgb("#F4F4F5")
-            : Darken(primary, 0.55f));
+        Set(resources, "OnPrimaryDark", Colors.White);
+        Set(resources, "OnPrimaryContainer", dark ? Color.FromArgb("#F4F4F5") : Darken(primary, 0.55f));
+        Set(resources, "OnPrimaryContainerDark", dark ? Color.FromArgb("#F4F4F5") : Darken(primary, 0.55f));
 
         Set(resources, "Secondary", secondary);
+        Set(resources, "SecondaryDark", secondary);
         Set(resources, "SecondaryContainer", secondaryContainer);
+        Set(resources, "SecondaryContainerDark", secondaryContainer);
         Set(resources, "OnSecondary", Colors.White);
-        Set(resources, "OnSecondaryContainer", dark
-            ? Color.FromArgb("#F4F4F5")
-            : Darken(secondary, 0.55f));
+        Set(resources, "OnSecondaryDark", Colors.White);
+        Set(resources, "OnSecondaryContainer", dark ? Color.FromArgb("#F4F4F5") : Darken(secondary, 0.55f));
+        Set(resources, "OnSecondaryContainerDark", dark ? Color.FromArgb("#F4F4F5") : Darken(secondary, 0.55f));
+
+        // Keep the warning/error palette semantic rather than tying it to the
+        // user's chosen accent.
+        Set(resources, "Tertiary", Color.FromArgb(dark ? "#FBBF24" : "#D97706"));
+        Set(resources, "TertiaryDark", Color.FromArgb("#FBBF24"));
+        Set(resources, "TertiaryContainer", Color.FromArgb(dark ? "#78350F" : "#FEF3C7"));
+        Set(resources, "TertiaryContainerDark", Color.FromArgb("#78350F"));
+        Set(resources, "OnTertiary", Colors.White);
+        Set(resources, "OnTertiaryDark", Colors.White);
+        Set(resources, "OnTertiaryContainer", Color.FromArgb(dark ? "#FEF3C7" : "#78350F"));
+        Set(resources, "OnTertiaryContainerDark", Color.FromArgb("#FEF3C7"));
 
         Set(resources, "Surface", surface);
-        Set(resources, "SurfaceDim", dark
-            ? Color.FromArgb("#141414")
-            : Blend(surface, Colors.Black, 0.04f));
-        Set(resources, "SurfaceBright", dark
-            ? Color.FromArgb("#2C2D30")
-            : Colors.White);
+        Set(resources, "SurfaceDark", surface);
+        Set(resources, "SurfaceDim", surfaceDim);
+        Set(resources, "SurfaceDimDark", dark ? surfaceDim : Color.FromArgb("#141414"));
+        Set(resources, "SurfaceBright", surfaceBright);
+        Set(resources, "SurfaceBrightDark", surfaceBright);
         Set(resources, "SurfaceContainer", surfaceContainer);
+        Set(resources, "SurfaceContainerDark", surfaceContainer);
         Set(resources, "SurfaceContainerHigh", surfaceContainerHigh);
+        Set(resources, "SurfaceContainerHighDark", surfaceContainerHigh);
         Set(resources, "SurfaceContainerHighest", surfaceContainerHighest);
+        Set(resources, "SurfaceContainerHighestDark", surfaceContainerHighest);
         Set(resources, "OnSurface", onSurface);
+        Set(resources, "OnSurfaceDark", onSurface);
         Set(resources, "OnSurfaceVariant", onSurfaceVariant);
+        Set(resources, "OnSurfaceVariantDark", onSurfaceVariant);
         Set(resources, "Outline", outline);
+        Set(resources, "OutlineDark", outline);
         Set(resources, "OutlineVariant", outlineVariant);
+        Set(resources, "OutlineVariantDark", outlineVariant);
 
-        Set(resources, "Error", dark
-            ? Color.FromArgb("#F87171")
-            : Color.FromArgb("#DC2626"));
-        Set(resources, "ErrorContainer", dark
-            ? Color.FromArgb("#7F1D1D")
-            : Color.FromArgb("#FEE2E2"));
+        var error = dark ? Color.FromArgb("#F87171") : Color.FromArgb("#DC2626");
+        var errorContainer = dark ? Color.FromArgb("#7F1D1D") : Color.FromArgb("#FEE2E2");
+        Set(resources, "Error", error);
+        Set(resources, "ErrorDark", error);
+        Set(resources, "ErrorContainer", errorContainer);
+        Set(resources, "ErrorContainerDark", errorContainer);
         Set(resources, "OnError", Colors.White);
-        Set(resources, "OnErrorContainer", dark
-            ? Colors.White
-            : Color.FromArgb("#7F1D1D"));
+        Set(resources, "OnErrorDark", Colors.White);
+        Set(resources, "OnErrorContainer", dark ? Colors.White : Color.FromArgb("#7F1D1D"));
+        Set(resources, "OnErrorContainerDark", Colors.White);
 
-        // Explicit semantic aliases. These are intentionally separate from
-        // status colors: a healthy/online sensor should remain green even when
-        // the user chooses Indigo as the application primary color.
+        // Explicit application resources. Every modern page should use these
+        // for accent/background/card styling.
         Set(resources, "AppPrimary", primary);
         Set(resources, "AppAccent", secondary);
         Set(resources, "AppBackground", surface);
         Set(resources, "AppCard", surfaceContainer);
-        Set(resources, "AppCardElevated", dark ? Color.FromArgb("#2C2D30") : Colors.White);
+        Set(resources, "AppCardElevated", surfaceBright);
         Set(resources, "AppPrimarySoft", primaryContainer);
         Set(resources, "AppAccentSoft", secondaryContainer);
 
-        // Legacy aliases are synchronized so older pages still participate in
-        // the same theme instead of creating a second green/rose visual system.
+        // Compatibility aliases. Older pages using these keys now follow the
+        // selected primary/accent instead of creating a second green theme.
         Set(resources, "AccentGreen", primary);
         Set(resources, "AccentBlue", secondary);
         Set(resources, "TextPrimary", onSurface);
         Set(resources, "TextSecondary", onSurfaceVariant);
-        Set(resources, "TextMuted", dark ? Color.FromArgb("#71717A") : Color.FromArgb("#71717A"));
+        Set(resources, "TextMuted", Color.FromArgb("#71717A"));
         Set(resources, "BgDark", surface);
         Set(resources, "CardDark", surfaceContainer);
         Set(resources, "BorderDark", outlineVariant);
 
         SetBrush(resources, "PrimaryBrush", primary);
         SetBrush(resources, "PrimaryContainerBrush", primaryContainer);
+        SetBrush(resources, "PrimaryDarkBrush", primary);
+        SetBrush(resources, "PrimaryContainerDarkBrush", primaryContainer);
         SetBrush(resources, "SecondaryBrush", secondary);
         SetBrush(resources, "SecondaryContainerBrush", secondaryContainer);
+        SetBrush(resources, "SecondaryDarkBrush", secondary);
         SetBrush(resources, "SurfaceBrush", surface);
+        SetBrush(resources, "SurfaceDarkBrush", surface);
         SetBrush(resources, "SurfaceContainerBrush", surfaceContainer);
+        SetBrush(resources, "SurfaceContainerDarkBrush", surfaceContainer);
         SetBrush(resources, "SurfaceContainerHighBrush", surfaceContainerHigh);
         SetBrush(resources, "OnSurfaceBrush", onSurface);
+        SetBrush(resources, "OnSurfaceDarkBrush", onSurface);
         SetBrush(resources, "OnSurfaceVariantBrush", onSurfaceVariant);
+        SetBrush(resources, "OnSurfaceVariantDarkBrush", onSurfaceVariant);
         SetBrush(resources, "OutlineBrush", outline);
+        SetBrush(resources, "OutlineDarkBrush", outline);
         SetBrush(resources, "OutlineVariantBrush", outlineVariant);
+        SetBrush(resources, "ErrorBrush", error);
+        SetBrush(resources, "ErrorDarkBrush", error);
         SetBrush(resources, "AccentGreenBrush", primary);
         SetBrush(resources, "AccentBlueBrush", secondary);
         SetBrush(resources, "TextPrimaryBrush", onSurface);
@@ -164,14 +202,14 @@ public static class ThemeManager
         var index = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, 7);
         var themes = new[]
         {
-            (Light: "#059669", Dark: "#34D399"), // Hydroponic Green
-            (Light: "#0284C7", Dark: "#38BDF8"), // Ocean Blue
-            (Light: "#EA580C", Dark: "#FB923C"), // Sunset Orange
-            (Light: "#7C3AED", Dark: "#A78BFA"), // Deep Purple
-            (Light: "#E11D48", Dark: "#FB7185"), // Rose Pink
-            (Light: "#0D9488", Dark: "#2DD4BF"), // Teal
-            (Light: "#4F46E5", Dark: "#818CF8"), // Indigo
-            (Light: "#10B981", Dark: "#34D399")  // Emerald
+            (Light: "#059669", Dark: "#34D399"),
+            (Light: "#0284C7", Dark: "#38BDF8"),
+            (Light: "#EA580C", Dark: "#FB923C"),
+            (Light: "#7C3AED", Dark: "#A78BFA"),
+            (Light: "#E11D48", Dark: "#FB7185"),
+            (Light: "#0D9488", Dark: "#2DD4BF"),
+            (Light: "#4F46E5", Dark: "#818CF8"),
+            (Light: "#10B981", Dark: "#34D399")
         };
 
         return Color.FromArgb(dark ? themes[index].Dark : themes[index].Light);
@@ -182,14 +220,14 @@ public static class ThemeManager
         var index = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, 7);
         var themes = new[]
         {
-            (Light: "#2563EB", Dark: "#60A5FA"), // Water Blue
-            (Light: "#059669", Dark: "#34D399"), // Growth Green
-            (Light: "#D97706", Dark: "#FBBF24"), // Sun Amber
-            (Light: "#DC2626", Dark: "#F87171"), // Alert Red
-            (Light: "#7C3AED", Dark: "#A78BFA"), // Purple
-            (Light: "#0891B2", Dark: "#67E8F9"), // Cyan
-            (Light: "#65A30D", Dark: "#A3E635"), // Lime
-            (Light: "#DB2777", Dark: "#F472B6")  // Pink
+            (Light: "#2563EB", Dark: "#60A5FA"),
+            (Light: "#059669", Dark: "#34D399"),
+            (Light: "#D97706", Dark: "#FBBF24"),
+            (Light: "#DC2626", Dark: "#F87171"),
+            (Light: "#7C3AED", Dark: "#A78BFA"),
+            (Light: "#0891B2", Dark: "#67E8F9"),
+            (Light: "#65A30D", Dark: "#A3E635"),
+            (Light: "#DB2777", Dark: "#F472B6")
         };
 
         return Color.FromArgb(dark ? themes[index].Dark : themes[index].Light);
@@ -229,18 +267,12 @@ public static class ThemeManager
 
     private static void InitializeMissingPreferences()
     {
-        // Never overwrite an existing user choice during a theme migration.
-        // Older versions reset these values, which caused the UI to jump back
-        // to green or another previously selected color after navigation.
         if (!Preferences.ContainsKey("Theme_PrimaryIndex"))
             Preferences.Set("Theme_PrimaryIndex", 0);
-
         if (!Preferences.ContainsKey("Theme_AccentIndex"))
             Preferences.Set("Theme_AccentIndex", 0);
-
         if (!Preferences.ContainsKey("Theme_BackgroundIndex"))
             Preferences.Set("Theme_BackgroundIndex", 0);
-
         if (!Preferences.ContainsKey("Theme_DarkMode"))
             Preferences.Set("Theme_DarkMode", false);
 
@@ -262,7 +294,6 @@ public static class ThemeManager
     private static Color Blend(Color baseColor, Color overlay, float amount)
     {
         amount = Math.Clamp(amount, 0f, 1f);
-
         return Color.FromRgba(
             baseColor.Red + (overlay.Red - baseColor.Red) * amount,
             baseColor.Green + (overlay.Green - baseColor.Green) * amount,
