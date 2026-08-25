@@ -2,213 +2,191 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.WebcamPage"
-             BackgroundColor="{AppThemeBinding Light={DynamicResource Surface}, Dark={DynamicResource SurfaceDark}}"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#0F1115}"
              Title="Leaf Classifier">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="24,22,24,34" Spacing="18">
 
-        <!-- Header -->
-        <VerticalStackLayout Spacing="8" Margin="0,0,0,8">
-            <Label Text="Leaf Classifier"
-                   Style="{StaticResource HeadlineMedium}"/>
-            <Label Text="Capture or select a photo to detect lettuce, health, and growth stage"
-                   Style="{StaticResource BodyMedium}"/>
-        </VerticalStackLayout>
-
-        <!-- Camera/Photo Selection Card -->
-        <Border Style="{DynamicResource ElevatedCard}" Padding="20">
-            <VerticalStackLayout Spacing="16">
-
-                <!-- Image Preview Area -->
-                <Grid x:Name="PreviewContainer" HeightRequest="280">
-                    <!-- Placeholder State -->
-                    <Border x:Name="PlaceholderBorder"
-                            BackgroundColor="{AppThemeBinding Light={DynamicResource SurfaceContainerHigh}, Dark={DynamicResource SurfaceContainerHighDark}}"
-                            StrokeShape="RoundRectangle 16"
-                            Stroke="{AppThemeBinding Light={DynamicResource OutlineVariant}, Dark={DynamicResource OutlineVariantDark}}"
-                            StrokeThickness="1"
-                            Padding="20"
-                            IsVisible="True">
-                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="🌿" FontSize="48"/>
-                            <Label Text="No image selected"
-                                   Style="{StaticResource TitleMedium}"
-                                   TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
-                            <Label Text="Tap to choose a photo"
-                                   Style="{StaticResource BodySmall}"
-                                   TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Image Preview State -->
-                    <Border x:Name="ImageBorder"
-                            BackgroundColor="{AppThemeBinding Light={DynamicResource SurfaceContainer}, Dark={DynamicResource SurfaceContainerDark}}"
-                            StrokeShape="RoundRectangle 16"
-                            Stroke="Transparent"
-                            Padding="0"
-                            IsVisible="False">
-                        <Image x:Name="PreviewImage"
-                               Aspect="AspectFit"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               MaximumWidthRequest="224"
-                               MaximumHeightRequest="224"/>
-                    </Border>
-
-                    <!-- Loading Overlay -->
-                    <Border x:Name="LoadingBorder"
-                            BackgroundColor="#80000000"
-                            StrokeShape="RoundRectangle 16"
-                            Padding="20"
-                            IsVisible="False">
-                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center" VerticalOptions="Center">
-                            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="{DynamicResource OnPrimary}" WidthRequest="40" HeightRequest="40"/>
-                            <Label x:Name="LoadingLabel" Text="Analyzing..." Style="{StaticResource TitleMedium}" TextColor="{DynamicResource OnPrimary}"/>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
-
-                <!-- Action Buttons -->
-                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Button x:Name="ChoosePhotoButton"
-                            Text="Choose Photo"
-                            Style="{DynamicResource PrimaryButton}"
-                            Clicked="OnChoosePhotoClicked"
-                            WidthRequest="160">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="📷" Size="20"/>
-                        </Button.ImageSource>
-                    </Button>
-                    <Button x:Name="TakePhotoButton"
-                            Text="Take Photo"
-                            Style="{DynamicResource SecondaryButton}"
-                            Clicked="OnTakePhotoClicked"
-                            WidthRequest="160">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="📸" Size="20"/>
-                        </Button.ImageSource>
-                    </Button>
-                    <Button x:Name="ClearButton"
-                            Text="Clear"
-                            Style="{DynamicResource TertiaryButton}"
-                            Clicked="OnClearClicked"
-                            WidthRequest="100"
-                            IsVisible="False"/>
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </Border>
-
-        <!-- Results Card -->
-        <Border x:Name="ResultsCard"
-                Style="{DynamicResource ElevatedCard}"
-                Padding="20"
-                IsVisible="False">
-            <VerticalStackLayout Spacing="16">
-
-                <!-- Lettuce Detection Result -->
-                <Border x:Name="LettuceDetectionCard"
-                        Style="{DynamicResource FilledCard}"
-                        Padding="16"
-                        IsVisible="False">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="LettuceStatusBorder"
-                                WidthRequest="48" HeightRequest="48"
-                                StrokeShape="RoundRectangle 12"
-                                Padding="8">
-                            <Label x:Name="LettuceStatusIcon"
-                                   FontSize="20"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
-                        <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                            <Label x:Name="LettuceStatusLabel" Style="{StaticResource HeadlineSmall}" FontAttributes="Bold"/>
-                            <Label x:Name="LettuceConfidenceLabel" Style="{StaticResource BodyMedium}"/>
-                        </VerticalStackLayout>
-                        <Label x:Name="LettuceDetailLabel" Style="{StaticResource BodySmall}" VerticalOptions="Center" TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
-                    </Grid>
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Leaf Classifier" FontSize="30" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#151A21, Dark=#F5F7FA}" />
+                    <Label Text="AI-powered lettuce health and growth analysis" FontSize="14"
+                           TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                </VerticalStackLayout>
+                <Border Grid.Column="1" WidthRequest="44" HeightRequest="44"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
+                        Stroke="{AppThemeBinding Light=#E3E7ED, Dark=#2A3039}" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 13" VerticalOptions="Start">
+                    <Label Text="AI" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{DynamicResource Primary}" />
                 </Border>
+            </Grid>
 
-                <!-- Health Classification Result (only shown if lettuce) -->
-                <Border x:Name="HealthCard"
-                        Style="{DynamicResource FilledCard}"
-                        Padding="16"
-                        IsVisible="False">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="HealthStatusBorder"
-                                WidthRequest="48" HeightRequest="48"
-                                StrokeShape="RoundRectangle 12"
-                                Padding="8">
-                            <Label x:Name="HealthStatusIcon"
-                                   FontSize="20"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
-                        <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                            <Label x:Name="HealthStatusLabel" Style="{StaticResource HeadlineSmall}" FontAttributes="Bold"/>
-                            <Label x:Name="HealthConfidenceLabel" Style="{StaticResource BodyMedium}"/>
+            <!-- Capture Card -->
+            <Border Padding="16" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
+                    Stroke="{AppThemeBinding Light=#E1E5EB, Dark=#292F38}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Analyze a leaf" FontSize="19" FontAttributes="Bold" />
+                            <Label Text="Use an existing image or capture a new one" FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
                         </VerticalStackLayout>
-                        <Label x:Name="HealthDetailLabel" Style="{StaticResource BodySmall}" VerticalOptions="Center" TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
-                    </Grid>
-                </Border>
-
-                <!-- Age Classification Result (only shown if lettuce) -->
-                <Border x:Name="AgeCard"
-                        Style="{DynamicResource FilledCard}"
-                        Padding="16"
-                        IsVisible="False">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border x:Name="AgeStatusBorder"
-                                WidthRequest="48" HeightRequest="48"
-                                StrokeShape="RoundRectangle 12"
-                                Padding="8">
-                            <Label x:Name="AgeStatusIcon"
-                                   FontSize="20"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
+                        <Border Grid.Column="1" Padding="8,5" BackgroundColor="{AppThemeBinding Light=#EEF8F4, Dark=#173229}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 9">
+                            <Label Text="ON-DEVICE AI" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
                         </Border>
-                        <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                            <Label x:Name="AgeStatusLabel" Style="{StaticResource HeadlineSmall}" FontAttributes="Bold"/>
-                            <Label x:Name="AgeConfidenceLabel" Style="{StaticResource BodyMedium}"/>
-                        </VerticalStackLayout>
-                        <Label x:Name="AgeDetailLabel" Style="{StaticResource BodySmall}" VerticalOptions="Center" TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
                     </Grid>
-                </Border>
 
-                <!-- All Predictions (for detailed view) -->
-                <Label x:Name="DetailedPredictionsLabel" Text="Detailed Predictions" Style="{StaticResource SectionHeaderLabel}" IsVisible="False"/>
-                <CollectionView x:Name="PredictionsList" ItemsLayout="VerticalList" HeightRequest="200" IsVisible="False">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border Style="{DynamicResource FilledCard}" Padding="12" Margin="0,0,0,8">
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <BoxView Grid.Column="0" Color="{Binding Color}" WidthRequest="12" HeightRequest="12" CornerRadius="6" VerticalOptions="Center"/>
-                                    <Label Grid.Column="1" Text="{Binding Label}" Style="{StaticResource BodyMedium}" VerticalOptions="Center"/>
-                                    <Label Grid.Column="2" Text="{Binding Confidence, StringFormat='{0:P0}'}" Style="{StaticResource LabelMedium}" FontAttributes="Bold" TextColor="{Binding Color}" VerticalOptions="Center"/>
-                                </Grid>
+                    <!-- Preview -->
+                    <Grid x:Name="PreviewContainer" HeightRequest="300">
+                        <Border x:Name="PlaceholderBorder"
+                                BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#14171C}"
+                                Stroke="{AppThemeBinding Light=#E2E6EB, Dark=#2A3039}" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16" Padding="20" IsVisible="True">
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Border WidthRequest="64" HeightRequest="64" BackgroundColor="{AppThemeBinding Light=#EEF8F4, Dark=#173229}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 18" HorizontalOptions="Center">
+                                    <Label Text="＋" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center"
+                                           TextColor="{DynamicResource Primary}" />
+                                </Border>
+                                <Label Text="No image selected" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Choose a photo to begin analysis" FontSize="12" HorizontalOptions="Center"
+                                       TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border x:Name="ImageBorder"
+                                BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#14171C}"
+                                StrokeThickness="1" Stroke="{AppThemeBinding Light=#E2E6EB, Dark=#2A3039}"
+                                StrokeShape="RoundRectangle 16" Padding="8" IsVisible="False">
+                            <Image x:Name="PreviewImage" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+
+                        <Border x:Name="LoadingBorder" BackgroundColor="#99000000"
+                                StrokeShape="RoundRectangle 16" Padding="20" IsVisible="False">
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="White" WidthRequest="40" HeightRequest="40" />
+                                <Label x:Name="LoadingLabel" Text="Analyzing..." FontSize="15" FontAttributes="Bold"
+                                       TextColor="White" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Actions -->
+                    <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="9">
+                        <Button x:Name="ChoosePhotoButton" Grid.Column="0" Text="Choose Photo"
+                                Style="{DynamicResource PrimaryButton}" Clicked="OnChoosePhotoClicked" HeightRequest="46" />
+                        <Button x:Name="TakePhotoButton" Grid.Column="1" Text="Take Photo"
+                                Style="{DynamicResource SecondaryButton}" Clicked="OnTakePhotoClicked" HeightRequest="46" />
+                        <Button x:Name="ClearButton" Grid.Column="2" Text="Clear"
+                                Style="{DynamicResource TertiaryButton}" Clicked="OnClearClicked"
+                                WidthRequest="70" HeightRequest="46" IsVisible="False" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Results -->
+            <Border x:Name="ResultsCard" Padding="16" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
+                    Stroke="{AppThemeBinding Light=#E1E5EB, Dark=#292F38}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20" IsVisible="False">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Analysis results" FontSize="19" FontAttributes="Bold" />
+                            <Label Text="Model confidence and classification details" FontSize="12"
+                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1" Padding="8,5" BackgroundColor="{AppThemeBinding Light=#F3F5F8, Dark=#232831}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 9">
+                            <Label Text="CNN" FontSize="9" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                        </Border>
+                    </Grid>
+
+                    <Border x:Name="LettuceDetectionCard" Padding="13" BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#15191E}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 14" IsVisible="False">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11">
+                            <Border x:Name="LettuceStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 11">
+                                <Label x:Name="LettuceStatusIcon" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label x:Name="LettuceStatusLabel" FontSize="15" FontAttributes="Bold" />
+                                <Label x:Name="LettuceConfidenceLabel" FontSize="11" TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" x:Name="LettuceDetailLabel" FontSize="10" HorizontalTextAlignment="End" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                        </Grid>
+                    </Border>
 
-                <!-- Action Buttons -->
-                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Button Text="Save Result" Style="{DynamicResource SecondaryButton}" Clicked="OnSaveResultClicked"/>
-                    <Button Text="Classify Another" Style="{DynamicResource TertiaryButton}" Clicked="OnClassifyAnotherClicked"/>
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </Border>
+                    <Border x:Name="HealthCard" Padding="13" BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#15191E}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 14" IsVisible="False">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11">
+                            <Border x:Name="HealthStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 11">
+                                <Label x:Name="HealthStatusIcon" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label x:Name="HealthStatusLabel" FontSize="15" FontAttributes="Bold" />
+                                <Label x:Name="HealthConfidenceLabel" FontSize="11" TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" x:Name="HealthDetailLabel" FontSize="10" HorizontalTextAlignment="End" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                        </Grid>
+                    </Border>
 
-        <!-- Info Card -->
-        <Border Style="{DynamicResource FilledCard}" Padding="16">
-            <VerticalStackLayout Spacing="8">
-                <Label Text="About the Model" Style="{StaticResource TitleSmall}" TextTransform="Uppercase" CharacterSpacing="0.5"/>
-                <Label Text="Multi-task MobileNetV2: Lettuce detection (binary), Health classification (3 classes), Age estimation (4 stages). Input: 224×224 RGB, ImageNet normalization. Runs locally via ONNX Runtime."
-                       Style="{StaticResource BodySmall}"
-                       TextColor="{AppThemeBinding Light={DynamicResource OnSurfaceVariant}, Dark={DynamicResource OnSurfaceVariantDark}}"/>
-            </VerticalStackLayout>
-        </Border>
+                    <Border x:Name="AgeCard" Padding="13" BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#15191E}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 14" IsVisible="False">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11">
+                            <Border x:Name="AgeStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 11">
+                                <Label x:Name="AgeStatusIcon" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label x:Name="AgeStatusLabel" FontSize="15" FontAttributes="Bold" />
+                                <Label x:Name="AgeConfidenceLabel" FontSize="11" TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" x:Name="AgeDetailLabel" FontSize="10" HorizontalTextAlignment="End" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#7A8494, Dark=#929BA8}" />
+                        </Grid>
+                    </Border>
 
-    </VerticalStackLayout>
+                    <Label x:Name="DetailedPredictionsLabel" Text="Detailed predictions" FontSize="14" FontAttributes="Bold" Margin="0,6,0,0" IsVisible="False" />
+                    <CollectionView x:Name="PredictionsList" ItemsLayout="VerticalList" HeightRequest="200" IsVisible="False">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10" Margin="0,0,0,7" BackgroundColor="{AppThemeBinding Light=#F7F9FA, Dark=#15191E}" StrokeThickness="0" StrokeShape="RoundRectangle 11">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <BoxView Grid.Column="0" Color="{Binding Color}" WidthRequest="9" HeightRequest="9" CornerRadius="5" VerticalOptions="Center" />
+                                        <Label Grid.Column="1" Text="{Binding Label}" FontSize="12" VerticalOptions="Center" />
+                                        <Label Grid.Column="2" Text="{Binding Confidence, StringFormat='{0:P0}'}" FontSize="12" FontAttributes="Bold" TextColor="{Binding Color}" VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="9" Margin="0,4,0,0">
+                        <Button Grid.Column="0" Text="Save Result" Style="{DynamicResource SecondaryButton}" Clicked="OnSaveResultClicked" HeightRequest="44" />
+                        <Button Grid.Column="1" Text="Classify Another" Style="{DynamicResource TertiaryButton}" Clicked="OnClassifyAnotherClicked" HeightRequest="44" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Model Info -->
+            <Border Padding="16" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191D24}"
+                    Stroke="{AppThemeBinding Light=#E1E5EB, Dark=#292F38}" StrokeThickness="1" StrokeShape="RoundRectangle 18">
+                <VerticalStackLayout Spacing="7">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="About the model" FontSize="15" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="ONNX" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
+                    </Grid>
+                    <Label Text="Multi-task MobileNetV2 for lettuce detection, health classification, and growth-stage estimation. Input: 224×224 RGB. Runs locally via ONNX Runtime."
+                           FontSize="11" LineHeight="1.3" TextColor="{AppThemeBinding Light=#697386, Dark=#A8AFBA}" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
