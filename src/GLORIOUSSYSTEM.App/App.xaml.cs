@@ -15,6 +15,7 @@ public partial class App : Application
     {
         InitializeComponent();
         ConfigureServices();
+        ThemeManager.Initialize();
     }
 
     private void ConfigureServices()
@@ -38,7 +39,6 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        // Check if user is logged in
         var isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
         Window window;
@@ -62,9 +62,7 @@ public partial class App : Application
         Preferences.Remove("CurrentUserName");
         Preferences.Remove("RememberMe");
         Preferences.Remove("SavedEmail");
-        Preferences.Remove("SavedPassword");
 
-        // Navigate to login page
         if (Current?.Windows.Count > 0)
         {
             var window = Current.Windows[0];
