@@ -3,8 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- GLORIOUS SYSTEM - shared visual language -->
-    <!-- Use these resources on every page so the UI stays visually consistent. -->
+    <!-- ================================================================
+         GLORIOUS SYSTEM — Shared Design System
+         One visual language for Dashboard, Reports, Settings, Webcam,
+         Login, and future pages.
+         ================================================================ -->
 
     <!-- Layout -->
     <x:Double x:Key="PageHorizontalPadding">24</x:Double>
@@ -18,7 +21,7 @@
     <x:Int32 x:Key="SmallCornerRadius">12</x:Int32>
     <x:Int32 x:Key="PillCornerRadius">24</x:Int32>
 
-    <!-- Standard component styles -->
+    <!-- Typography -->
     <Style x:Key="GSPageTitle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="FontFamily" Value="OpenSansSemiBold" />
@@ -63,6 +66,7 @@
         <Setter Property="FontSize" Value="30" />
     </Style>
 
+    <!-- Cards -->
     <Style x:Key="GSCard" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
         <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
@@ -81,7 +85,13 @@
         <Setter Property="Margin" Value="0,0,0,16" />
     </Style>
 
-    <Style x:Key="GSPrimaryButton" TargetType="Button">
+    <!-- ================================================================
+         Compatibility aliases
+         Existing pages use these names. Keeping them here means every
+         page automatically gets the same component language.
+         ================================================================ -->
+
+    <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
         <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
         <Setter Property="FontFamily" Value="OpenSansSemiBold" />
@@ -92,7 +102,7 @@
         <Setter Property="MinimumHeightRequest" Value="44" />
     </Style>
 
-    <Style x:Key="GSSecondaryButton" TargetType="Button">
+    <Style x:Key="SecondaryButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="FontFamily" Value="OpenSansSemiBold" />
@@ -104,13 +114,74 @@
         <Setter Property="MinimumHeightRequest" Value="44" />
     </Style>
 
-    <Style x:Key="GSInput" TargetType="Entry">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
+    <Style x:Key="TertiaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+    </Style>
+
+    <Style x:Key="DangerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Error}" />
+        <Setter Property="TextColor" Value="{DynamicResource OnError}" />
+        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+    </Style>
+
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="MinimumHeightRequest" Value="48" />
+        <Setter Property="MinimumWidthRequest" Value="48" />
+    </Style>
+
+    <Style x:Key="EntryStyle" TargetType="Entry">
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerHigh}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="MinimumHeightRequest" Value="48" />
+        <Setter Property="MinimumHeightRequest" Value="40" />
+    </Style>
+
+    <Style x:Key="ElevatedCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
+        <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+    </Style>
+
+    <Style x:Key="FilledCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainer}" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+    </Style>
+
+    <Style x:Key="OutlinedCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceBright}" />
+        <Setter Property="Stroke" Value="{DynamicResource OutlineVariant}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="0,0,0,16" />
     </Style>
 
     <Style x:Key="GSStatusPill" TargetType="Border">
