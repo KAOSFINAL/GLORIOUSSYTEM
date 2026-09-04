@@ -42,17 +42,16 @@ public partial class AppSidebar : ContentView
         var primary = Application.Current?.Resources["Primary"] as Color;
         var muted = Application.Current?.Resources["OnSurfaceVariant"] as Color;
 
-        SetItem(OverviewItem, OverviewIcon, route == "dashboard", active, inactive, primary, muted);
-        SetItem(ScannerItem, ScannerIcon, route == "webcam", active, inactive, primary, muted);
-        SetItem(AnalyticsItem, AnalyticsIcon, route == "reports", active, inactive, primary, muted);
-        SetItem(SettingsItem, SettingsIcon, route == "settings", active, inactive, primary, muted);
+        SetItem(OverviewItem, OverviewIcon, route == "dashboard", active, inactive);
+        SetItem(ScannerItem, ScannerIcon, route == "webcam", active, inactive);
+        SetItem(AnalyticsItem, AnalyticsIcon, route == "reports", active, inactive);
+        SetItem(SettingsItem, SettingsIcon, route == "settings", active, inactive);
     }
 
-    static void SetItem(Border item, Label icon, bool selected, Color? active, Color? inactive, Color? primary, Color? muted)
+    static void SetItem(Border item, Image icon, bool selected, Color? active, Color? inactive)
     {
         item.BackgroundColor = selected ? active : inactive;
-        icon.BackgroundColor = selected ? primary : (Application.Current?.Resources["SurfaceContainer"] as Color);
-        icon.TextColor = selected ? Colors.White : muted;
+        icon.Opacity = selected ? 1.0 : 0.62;
     }
 
     async Task Navigate(string route, Border item)
