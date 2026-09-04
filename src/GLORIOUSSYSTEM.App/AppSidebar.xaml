@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GLORIOUSSYSTEM.App.AppSidebar"
+             BackgroundColor="{DynamicResource SurfaceBright}">
+    <Border Margin="14" Padding="16,18,14,14" BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 28">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="18">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="11">
+                <Border WidthRequest="44" HeightRequest="44" BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                    <Label Text="G" FontSize="23" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                    <Label Text="GLORIOUSSYTEM" FontSize="14" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                    <Label Text="Living Farm" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Border Grid.Row="1" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" StrokeShape="RoundRectangle 17" Padding="11">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="9">
+                    <Border WidthRequest="8" HeightRequest="8" BackgroundColor="{DynamicResource StatusOnline}" StrokeThickness="0" StrokeShape="RoundRectangle 4" VerticalOptions="Center" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="0">
+                        <Label Text="System online" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource OnPrimaryContainer}" />
+                        <Label Text="Live monitoring active" FontSize="9" TextColor="{DynamicResource OnPrimaryContainer}" Opacity="0.72" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="LIVE" FontSize="8" FontAttributes="Bold" TextColor="{DynamicResource Primary}" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="WORKSPACE" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" Margin="7,4,0,5" />
+                    <Border x:Name="OverviewItem" Padding="10,9" StrokeThickness="0" StrokeShape="RoundRectangle 14">
+                        <Grid ColumnDefinitions="38,*" ColumnSpacing="10">
+                            <Border x:Name="OverviewIcon" WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="RoundRectangle 11"><Label Text="⌂" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0"><Label Text="Overview" FontSize="12" FontAttributes="Bold"/><Label Text="Farm health &amp; sensors" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="ScannerItem" Padding="10,9" StrokeThickness="0" StrokeShape="RoundRectangle 14">
+                        <Grid ColumnDefinitions="38,*" ColumnSpacing="10">
+                            <Border x:Name="ScannerIcon" WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="RoundRectangle 11"><Label Text="✦" FontSize="17" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0"><Label Text="AI Crop Scanner" FontSize="12" FontAttributes="Bold"/><Label Text="Inspect lettuce" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="AnalyticsItem" Padding="10,9" StrokeThickness="0" StrokeShape="RoundRectangle 14">
+                        <Grid ColumnDefinitions="38,*" ColumnSpacing="10">
+                            <Border x:Name="AnalyticsIcon" WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="RoundRectangle 11"><Label Text="⌁" FontSize="19" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0"><Label Text="Analytics" FontSize="12" FontAttributes="Bold"/><Label Text="Trends &amp; history" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
+                    </Border>
+
+                    <Label Text="SYSTEM" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" Margin="7,17,0,5" />
+                    <Border x:Name="SettingsItem" Padding="10,9" StrokeThickness="0" StrokeShape="RoundRectangle 14">
+                        <Grid ColumnDefinitions="38,*" ColumnSpacing="10">
+                            <Border x:Name="SettingsIcon" WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="RoundRectangle 11"><Label Text="⚙" FontSize="17" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0"><Label Text="Settings" FontSize="12" FontAttributes="Bold"/><Label Text="Sensors &amp; appearance" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <VerticalStackLayout Grid.Row="3" Spacing="9">
+                <Border BackgroundColor="{DynamicResource SurfaceContainer}" StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="11">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="9">
+                        <Label Text="☀" FontSize="18" TextColor="{DynamicResource Tertiary}" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="0"><Label Text="Solar powered" FontSize="10" FontAttributes="Bold"/><Label Text="Energy-aware monitoring" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                    </Grid>
+                </Border>
+                <Button Text="Sign out" Style="{DynamicResource TertiaryButton}" Clicked="OnLogoutClicked" HeightRequest="40" CornerRadius="13" FontSize="11" TextColor="{DynamicResource Error}" BorderColor="{DynamicResource Error}" BorderWidth="1" />
+                <Label Text="GLORIOUSSYTEM • v1.0.0" FontSize="8" HorizontalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" />
+            </VerticalStackLayout>
+        </Grid>
+    </Border>
+</ContentView>
