@@ -20,7 +20,9 @@
         <HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
             <Border x:Name="OverviewItem" Padding="14,9" StrokeThickness="0" StrokeShape="RoundRectangle 10">
                 <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7">
-                    <Label x:Name="OverviewIcon" Text="⌂" FontSize="17" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Border x:Name="OverviewIcon" WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 8" VerticalOptions="Center">
+                        <Label Text="⌂" FontSize="17" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    </Border>
                     <Label Grid.Column="1" Text="OVERVIEW" FontSize="10" FontAttributes="Bold" VerticalTextAlignment="Center" />
                 </Grid>
                 <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
@@ -28,7 +30,9 @@
 
             <Border x:Name="ScannerItem" Padding="14,9" StrokeThickness="0" StrokeShape="RoundRectangle 10">
                 <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7">
-                    <Label x:Name="ScannerIcon" Text="✦" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Border x:Name="ScannerIcon" WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 8" VerticalOptions="Center">
+                        <Label Text="✦" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    </Border>
                     <Label Grid.Column="1" Text="WEBCAM" FontSize="10" FontAttributes="Bold" VerticalTextAlignment="Center" />
                 </Grid>
                 <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
@@ -36,7 +40,9 @@
 
             <Border x:Name="AnalyticsItem" Padding="14,9" StrokeThickness="0" StrokeShape="RoundRectangle 10">
                 <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7">
-                    <Label x:Name="AnalyticsIcon" Text="⌁" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Border x:Name="AnalyticsIcon" WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 8" VerticalOptions="Center">
+                        <Label Text="⌁" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    </Border>
                     <Label Grid.Column="1" Text="REPORTS" FontSize="10" FontAttributes="Bold" VerticalTextAlignment="Center" />
                 </Grid>
                 <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
@@ -44,7 +50,9 @@
 
             <Border x:Name="SettingsItem" Padding="14,9" StrokeThickness="0" StrokeShape="RoundRectangle 10">
                 <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7">
-                    <Label x:Name="SettingsIcon" Text="⚙" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Border x:Name="SettingsIcon" WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 8" VerticalOptions="Center">
+                        <Label Text="⚙" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    </Border>
                     <Label Grid.Column="1" Text="SETTINGS" FontSize="10" FontAttributes="Bold" VerticalTextAlignment="Center" />
                 </Grid>
                 <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
