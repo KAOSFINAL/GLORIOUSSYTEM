@@ -8,9 +8,7 @@
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
 
-    <!-- Windows 8 / Metro-inspired login: flat color, typography, open space. -->
     <Grid ColumnDefinitions="1.05*,1.35*" RowDefinitions="*">
-
         <Grid Grid.Column="0" BackgroundColor="#176B4D" Padding="56,48,48,44">
             <Grid RowDefinitions="Auto,*,Auto">
                 <VerticalStackLayout Spacing="4">
@@ -22,13 +20,10 @@
                     <Label Text="SMART FARMING.&#10;MADE VISIBLE." FontSize="38" FontAttributes="Bold" LineHeight="0.95" TextColor="White" />
                     <BoxView HeightRequest="4" WidthRequest="72" HorizontalOptions="Start" Color="#8BE0B4" />
                     <Label Text="Monitor your hydroponic lettuce system,&#10;environment and water conditions&#10;from one place." FontSize="15" LineHeight="1.25" TextColor="#E2F5EA" />
-                    <Grid HeightRequest="120" WidthRequest="230" HorizontalOptions="Start" Margin="0,10,0,0">
-                        <BoxView VerticalOptions="End" HeightRequest="6" Color="#8BE0B4" />
-                        <BoxView WidthRequest="6" HeightRequest="82" VerticalOptions="End" HorizontalOptions="Center" Color="#8BE0B4" />
-                        <BoxView WidthRequest="125" HeightRequest="6" VerticalOptions="Center" HorizontalOptions="Center" Color="#8BE0B4" />
-                        <Label Text="LETTUCE" FontSize="12" FontAttributes="Bold" CharacterSpacing="2" TextColor="#8BE0B4" HorizontalOptions="Center" VerticalOptions="Start" />
-                        <Label Text="WATER  •  LIGHT  •  AIR" FontSize="9" CharacterSpacing="1" TextColor="#D5F1E3" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,12" />
-                    </Grid>
+                    <VerticalStackLayout Spacing="3" Margin="0,10,0,0">
+                        <Label Text="LETTUCE" FontSize="30" FontAttributes="Bold" CharacterSpacing="3" TextColor="#8BE0B4" />
+                        <Label Text="WATER  •  LIGHT  •  AIR" FontSize="9" CharacterSpacing="1" TextColor="#D5F1E3" />
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout Grid.Row="2" Spacing="8">
@@ -51,14 +46,14 @@
                     <VerticalStackLayout Spacing="6" Margin="0,8,0,0">
                         <Label Text="EMAIL" FontSize="11" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="#34423C" />
                         <Border BackgroundColor="Transparent" Stroke="#AAB8B1" StrokeThickness="1" StrokeShape="Rectangle" HeightRequest="54" Padding="0">
-                            <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" BackgroundColor="Transparent" TextColor="#17211D" PlaceholderColor="#899790" FontSize="15" TextChanged="OnFieldChanged" ReturnType="Next" Completed="OnEmailCompleted" Margin="14,0" />
+                            <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" HeightRequest="52" VerticalOptions="Center" VerticalTextAlignment="Center" BackgroundColor="Transparent" TextColor="#17211D" PlaceholderColor="#899790" FontSize="15" TextChanged="OnFieldChanged" ReturnType="Next" Completed="OnEmailCompleted" Margin="14,0" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
                         <Label Text="PASSWORD" FontSize="11" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="#34423C" />
                         <Border BackgroundColor="Transparent" Stroke="#AAB8B1" StrokeThickness="1" StrokeShape="Rectangle" HeightRequest="54" Padding="0">
-                            <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}" BackgroundColor="Transparent" TextColor="#17211D" PlaceholderColor="#899790" FontSize="15" TextChanged="OnFieldChanged" ReturnType="Done" Completed="OnPasswordCompleted" Margin="14,0" />
+                            <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}" HeightRequest="52" VerticalOptions="Center" VerticalTextAlignment="Center" BackgroundColor="Transparent" TextColor="#17211D" PlaceholderColor="#899790" FontSize="15" TextChanged="OnFieldChanged" ReturnType="Done" Completed="OnPasswordCompleted" Margin="14,0" />
                         </Border>
                         <HorizontalStackLayout Spacing="5" HeightRequest="30">
                             <CheckBox x:Name="ShowPasswordCheckBox" Color="#176B4D" VerticalOptions="Center" />
