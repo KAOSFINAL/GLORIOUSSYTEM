@@ -99,68 +99,57 @@ public class LeafClassifierService
         {
             IsLettuce = isLettuce,
             LettuceConfidence = lettuceProbs[lettuceMaxIndex],
-            LettuceScores = LettuceClasses.Zip(lettuceProbs, (c, p) => (c, p)).ToDictionary(x => x.c, x => x.p)
+            LettuceScores = LettuceClasses
+                .Select((label, i) => new { label, value = lettuceProbs[i] })
+                .ToDictionary(x => x.label, x => x.value)
         };
 
-        if (isLettuce)
-        {
-            // Health classification
-            var healthExp = healthLogits.Select(MathF.Exp).ToArray();
-            var healthSumExp = healthExp.Sum();
-            var healthProbs = healthExp.Select(e => e / healthSumExp).ToArray();
+        if (!isLettuce)
+            return prediction;
 
-            var healthMaxIndex = Array.IndexOf(healthProbs, healthProbs.Max());
-            prediction.HealthLabel = HealthClasses[healthMaxIndex];
-            prediction.HealthConfidence = healthProbs[healthMaxIndex];
-            prediction.HealthScores = HealthClasses.Zip(healthProbs, (c, p) => (c, p)).ToDictionary(x => x.c, x => x.p);
+        // Softmax for health classification
+        var healthExp = healthLogits.Select(MathF.Exp).ToArray();
+        var healthSumExp = healthExp.Sum();
+        var healthProbs = healthExp.Select(e => e / healthSumExp).ToArray();
+        var healthMaxIndex = Array.IndexOf(healthProbs, healthProbs.Max());
 
-            // Age classification
-            var ageExp = ageLogits.Select(MathF.Exp).ToArray();
-            var ageSumExp = ageExp.Sum();
-            var ageProbs = ageExp.Select(e => e / ageSumExp).ToArray();
+        prediction.HealthLabel = HealthClasses[healthMaxIndex];
+        prediction.HealthConfidence = healthProbs[healthMaxIndex];
+        prediction.HealthScores = HealthClasses
+            .Select((label, i) => new { label, value = healthProbs[i] })
+            .ToDictionary(x => x.label, x => x.value);
 
-            var ageMaxIndex = Array.IndexOf(ageProbs, ageProbs.Max());
-            prediction.AgeLabel = AgeClasses[ageMaxIndex];
-            prediction.AgeConfidence = ageProbs[ageMaxIndex];
-            prediction.AgeScores = AgeClasses.Zip(ageProbs, (c, p) => (c, p)).ToDictionary(x => x.c, x => x.p);
-        }
-        else
-        {
-            // Not lettuce - set defaults for health/age
-            prediction.HealthLabel = "N/A";
-            prediction.HealthConfidence = 0;
-            prediction.HealthScores = HealthClasses.ToDictionary(c => c, c => 0f);
-            prediction.AgeLabel = "N/A";
-            prediction.AgeConfidence = 0;
-            prediction.AgeScores = AgeClasses.ToDictionary(c => c, c => 0f);
-        }
+        // Softmax for age classification
+        var ageExp = ageLogits.Select(MathF.Exp).ToArray();
+        var ageSumExp = ageExp.Sum();
+        var ageProbs = ageExp.Select(e => e / ageSumExp).ToArray();
+        var ageMaxIndex = Array.IndexOf(ageProbs, ageProbs.Max());
+
+        prediction.AgeLabel = AgeClasses[ageMaxIndex];
+        prediction.AgeConfidence = ageProbs[ageMaxIndex];
+        prediction.AgeScores = AgeClasses
+            .Select((label, i) => new { label, value = ageProbs[i] })
+            .ToDictionary(x => x.label, x => x.value);
 
         return prediction;
     }
 
     LeafPrediction ProcessLegacyOutput(IReadOnlyList<DisposableNamedOnnxValue> results)
     {
-        var scores = results.First().AsEnumerable<float>().ToArray();
+        var scores = results[0].AsEnumerable<float>().ToArray();
+        var exp = scores.Select(MathF.Exp).ToArray();
+        var sumExp = exp.Sum();
+        var probs = exp.Select(e => e / sumExp).ToArray();
+        var maxIndex = Array.IndexOf(probs, probs.Max());
 
-        var expScores = scores.Select(MathF.Exp).ToArray();
-        var sumExp = expScores.Sum();
-        var probabilities = expScores.Select(e => e / sumExp).ToArray();
-
-        var maxIndex = Array.IndexOf(probabilities, probabilities.Max());
-
-        // Legacy model only does health classification
-        // Treat as lettuce with unknown age
+        var isLettuce = maxIndex == 1;
         return new LeafPrediction
         {
-            IsLettuce = true,
-            LettuceConfidence = 1.0f,
-            LettuceScores = LettuceClasses.ToDictionary(c => c, c => c == "lettuce" ? 1.0f : 0f),
-            HealthLabel = HealthClasses[maxIndex],
-            HealthConfidence = probabilities[maxIndex],
-            HealthScores = HealthClasses.Zip(probabilities, (c, p) => (c, p)).ToDictionary(x => x.c, x => x.p),
-            AgeLabel = "unknown",
-            AgeConfidence = 0,
-            AgeScores = AgeClasses.ToDictionary(c => c, c => 0f)
+            IsLettuce = isLettuce,
+            LettuceConfidence = probs[maxIndex],
+            LettuceScores = LettuceClasses
+                .Select((label, i) => new { label, value = probs[i] })
+                .ToDictionary(x => x.label, x => x.value)
         };
     }
 }
