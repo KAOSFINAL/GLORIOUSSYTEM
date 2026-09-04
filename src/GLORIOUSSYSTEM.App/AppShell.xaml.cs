@@ -29,8 +29,8 @@ public partial class AppShell : Shell
             page.Opacity = 0;
             page.TranslationY = 14;
             await Task.WhenAll(
-                page.FadeToAsync(1, 240, Easing.CubicOut),
-                page.TranslateToAsync(0, 300, Easing.CubicOut));
+                ViewExtensions.FadeToAsync(page, 1, 240, Easing.CubicOut),
+                ViewExtensions.TranslateToAsync(page, 0, 0, 300, Easing.CubicOut));
         }
         catch
         {
