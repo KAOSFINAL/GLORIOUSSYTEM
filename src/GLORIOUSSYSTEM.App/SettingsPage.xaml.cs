@@ -32,7 +32,7 @@ public sealed class SensorSetting : INotifyPropertyChanged
     public int Id { get => _id; set { _id = value; OnPropertyChanged(); } }
     public string Name { get => _name; set { _name = value; MarkChanged(); OnPropertyChanged(); } }
     public string Model { get => _model; set { _model = value; OnPropertyChanged(); } }
-    public string Type { get => _type; set { _type = value; OnPropertyChanged(); } }
+    public string Type { get => _type; set { _type = value; OnPropertyChanged(); OnPropertyChanged(nameof(Category)); OnPropertyChanged(nameof(CategoryIcon)); OnPropertyChanged(nameof(CategoryColor)); OnPropertyChanged(nameof(CategoryContainerColor)); } }
 
     public bool Enabled
     {
@@ -75,9 +75,24 @@ public sealed class SensorSetting : INotifyPropertyChanged
     public bool HasThresholds => MinThreshold.HasValue || MaxThreshold.HasValue;
     public bool HasChanges { get => _hasChanges; private set { _hasChanges = value; OnPropertyChanged(); } }
 
-    public string ThresholdStatusText => !Enabled ? "Disabled" : !HasThresholds ? "No thresholds set" : "Thresholds active";
-    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#64748B") : !HasThresholds ? Color.FromArgb("#F59E0B") : Color.FromArgb("#10B981");
-    public Color ThresholdStatusTextColor => !Enabled || HasThresholds ? Colors.White : Color.FromArgb("#78350F");
+    public string Category
+    {
+        get
+        {
+            var value = $"{Type} {Name}".ToLowerInvariant();
+            if (value.Contains("ph") || value.Contains("ec") || value.Contains("water") || value.Contains("flow") || value.Contains("tds") || value.Contains("level"))
+                return "WATER";
+            return "ENVIRONMENT";
+        }
+    }
+
+    public string CategoryIcon => Category == "WATER" ? "≈" : "☼";
+    public Color CategoryColor => Category == "WATER" ? Color.FromArgb("#1686A3") : Color.FromArgb("#247F48");
+    public Color CategoryContainerColor => Category == "WATER" ? Color.FromArgb("#D8F0F6") : Color.FromArgb("#DDF4E5");
+
+    public string ThresholdStatusText => !Enabled ? "DISABLED" : !HasThresholds ? "SET LIMITS" : "ACTIVE";
+    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#647067") : !HasThresholds ? Color.FromArgb("#C99527") : Color.FromArgb("#247F48");
+    public Color ThresholdStatusTextColor => Colors.White;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -169,7 +184,7 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
     {
         _hasUnsavedChanges = _settings.Any(s => s.HasChanges);
         SaveButton.IsEnabled = _hasUnsavedChanges;
-        SaveButton.Text = _hasUnsavedChanges ? "Save Changes ●" : "Save Changes";
+        SaveButton.Text = _hasUnsavedChanges ? "Save changes  •  UNSAVED" : "Save changes";
     }
 
     private void OnSettingPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -205,14 +220,14 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
             await db.SaveChangesAsync();
             UpdateSaveButtonState();
-            SaveButton.Text = "Saved ✓";
+            SaveButton.Text = "Changes saved  ✓";
             await Task.Delay(800);
-            SaveButton.Text = "Save Changes";
+            SaveButton.Text = "Save changes";
         }
         catch (Exception ex)
         {
             SaveButton.IsEnabled = true;
-            SaveButton.Text = "Save Changes";
+            SaveButton.Text = "Save changes";
             await DisplayAlertAsync("Error", $"Failed to save settings:\n\n{ex.Message}", "OK");
         }
     }
@@ -241,15 +256,8 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         UpdateColorPreviews();
     }
 
-    private void OnResetPrimaryColor(object? sender, EventArgs e)
-    {
-        PrimaryColorPicker.SelectedIndex = 0;
-    }
-
-    private void OnResetAccentColor(object? sender, EventArgs e)
-    {
-        AccentColorPicker.SelectedIndex = 0;
-    }
+    private void OnResetPrimaryColor(object? sender, EventArgs e) => PrimaryColorPicker.SelectedIndex = 0;
+    private void OnResetAccentColor(object? sender, EventArgs e) => AccentColorPicker.SelectedIndex = 0;
 
     private void UpdateColorPreviews()
     {
