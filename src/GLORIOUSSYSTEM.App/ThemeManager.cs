@@ -5,20 +5,30 @@ using Microsoft.Maui.Storage;
 namespace GLORIOUSSYSTEM.App;
 
 /// <summary>
-/// Single source of truth for the application's visual theme.
-/// Pages should consume DynamicResource semantic keys instead of hard-coded
-/// colors or AppThemeBinding color literals.
+/// Single source of truth for the GLORIOUSSYSTEM visual theme.
+/// The runtime palette intentionally matches the GLORIOUSSYSTEMATIC/Figma design.
 /// </summary>
 public static class ThemeManager
 {
     private const string ThemeVersionKey = "Theme_Version";
-    private const int CurrentThemeVersion = 6;
+    private const int CurrentThemeVersion = 7;
 
     public static event EventHandler? ThemeChanged;
 
     public static void Initialize()
     {
-        InitializeMissingPreferences();
+        // Reset older theme preferences so an old green/light theme cannot
+        // override the reference palette on an existing installation.
+        var version = Preferences.Get(ThemeVersionKey, 0);
+        if (version < CurrentThemeVersion)
+        {
+            Preferences.Set("Theme_DarkMode", true);
+            Preferences.Set("Theme_PrimaryIndex", 0);
+            Preferences.Set("Theme_AccentIndex", 0);
+            Preferences.Set("Theme_BackgroundIndex", 0);
+            Preferences.Set(ThemeVersionKey, CurrentThemeVersion);
+        }
+
         Apply();
     }
 
@@ -29,102 +39,68 @@ public static class ThemeManager
             return;
 
         var resources = app.Resources;
-        var dark = Preferences.Get("Theme_DarkMode", false);
+        const string primary = "#F59E0B";
+        const string primaryContainer = "#3A2410";
+        const string secondary = "#F97316";
+        const string secondaryContainer = "#35170F";
+        const string tertiary = "#FCD34D";
+        const string tertiaryContainer = "#3B2A0A";
+        const string error = "#F97316";
+        const string errorContainer = "#3A1710";
+        const string surface = "#160A0C";
+        const string surfaceDim = "#100607";
+        const string surfaceBright = "#2A1318";
+        const string surfaceContainer = "#1F0E12";
+        const string surfaceContainerHigh = "#211014";
+        const string surfaceContainerHighest = "#2A1318";
+        const string onSurface = "#FDF0E8";
+        const string onSurfaceVariant = "#7A4A55";
+        const string outline = "#6B3742";
+        const string outlineVariant = "#3A1B22";
+        const string shadow = "#080304";
 
-        app.UserAppTheme = dark ? AppTheme.Dark : AppTheme.Light;
+        app.UserAppTheme = AppTheme.Dark;
 
-        var primary = GetPrimary(dark);
-        var secondary = GetSecondary(dark);
-        var surface = GetBackground(dark);
-
-        var surfaceContainer = dark
-            ? Blend(surface, Colors.White, 0.08f)
-            : Blend(surface, Colors.White, 0.70f);
-
-        var surfaceContainerHigh = dark
-            ? Blend(surface, Colors.White, 0.14f)
-            : Blend(surface, Colors.White, 0.48f);
-
-        var surfaceContainerHighest = dark
-            ? Blend(surface, Colors.White, 0.20f)
-            : Blend(surface, Colors.White, 0.28f);
-
-        var surfaceBright = dark
-            ? Blend(surface, Colors.White, 0.12f)
-            : Colors.White;
-
-        var surfaceDim = dark
-            ? Blend(surface, Colors.Black, 0.12f)
-            : Blend(surface, Colors.Black, 0.04f);
-
-        var onSurface = dark
-            ? Color.FromArgb("#F5F5F5")
-            : Color.FromArgb("#18181B");
-
-        var onSurfaceVariant = dark
-            ? Color.FromArgb("#A1A1AA")
-            : Color.FromArgb("#52525B");
-
-        var outline = dark
-            ? Color.FromArgb("#52525B")
-            : Color.FromArgb("#D4D4D8");
-
-        var outlineVariant = dark
-            ? Color.FromArgb("#3F3F46")
-            : Color.FromArgb("#E4E4E7");
-
-        var primaryContainer = WithAlpha(primary, dark ? 0.22f : 0.12f);
-        var secondaryContainer = WithAlpha(secondary, dark ? 0.20f : 0.10f);
-
-        // Core semantic resources.
         Set(resources, "Primary", primary);
         Set(resources, "PrimaryDark", primary);
         Set(resources, "PrimaryContainer", primaryContainer);
         Set(resources, "PrimaryContainerDark", primaryContainer);
-        Set(resources, "OnPrimary", Colors.White);
-        Set(resources, "OnPrimaryDark", Colors.White);
-        Set(resources, "OnPrimaryContainer", dark ? Color.FromArgb("#F4F4F5") : Darken(primary, 0.55f));
-        Set(resources, "OnPrimaryContainerDark", dark ? Color.FromArgb("#F4F4F5") : Darken(primary, 0.55f));
+        Set(resources, "OnPrimary", "#1A0A00");
+        Set(resources, "OnPrimaryDark", "#1A0A00");
+        Set(resources, "OnPrimaryContainer", "#FDE68A");
+        Set(resources, "OnPrimaryContainerDark", "#FDE68A");
 
         Set(resources, "Secondary", secondary);
         Set(resources, "SecondaryDark", secondary);
         Set(resources, "SecondaryContainer", secondaryContainer);
         Set(resources, "SecondaryContainerDark", secondaryContainer);
-        Set(resources, "OnSecondary", Colors.White);
-        Set(resources, "OnSecondaryDark", Colors.White);
-        Set(resources, "OnSecondaryContainer", dark ? Color.FromArgb("#F4F4F5") : Darken(secondary, 0.55f));
-        Set(resources, "OnSecondaryContainerDark", dark ? Color.FromArgb("#F4F4F5") : Darken(secondary, 0.55f));
+        Set(resources, "OnSecondary", "#1A0A00");
+        Set(resources, "OnSecondaryDark", "#1A0A00");
+        Set(resources, "OnSecondaryContainer", "#FED7AA");
+        Set(resources, "OnSecondaryContainerDark", "#FED7AA");
 
-        // Semantic status colors intentionally stay independent of the user's accent.
-        var success = dark ? Color.FromArgb("#34D399") : Color.FromArgb("#059669");
-        var warning = dark ? Color.FromArgb("#FBBF24") : Color.FromArgb("#D97706");
-        var error = dark ? Color.FromArgb("#F87171") : Color.FromArgb("#DC2626");
-        var info = dark ? Color.FromArgb("#60A5FA") : Color.FromArgb("#2563EB");
-
-        Set(resources, "Tertiary", warning);
-        Set(resources, "TertiaryDark", warning);
-        Set(resources, "TertiaryContainer", dark ? Color.FromArgb("#78350F") : Color.FromArgb("#FEF3C7"));
-        Set(resources, "TertiaryContainerDark", Color.FromArgb("#78350F"));
-        Set(resources, "OnTertiary", Colors.White);
-        Set(resources, "OnTertiaryDark", Colors.White);
-        Set(resources, "OnTertiaryContainer", dark ? Color.FromArgb("#FEF3C7") : Color.FromArgb("#78350F"));
-        Set(resources, "OnTertiaryContainerDark", Color.FromArgb("#FEF3C7"));
+        Set(resources, "Tertiary", tertiary);
+        Set(resources, "TertiaryDark", tertiary);
+        Set(resources, "TertiaryContainer", tertiaryContainer);
+        Set(resources, "TertiaryContainerDark", tertiaryContainer);
+        Set(resources, "OnTertiary", "#1A0A00");
+        Set(resources, "OnTertiaryDark", "#1A0A00");
+        Set(resources, "OnTertiaryContainer", "#FEF3C7");
+        Set(resources, "OnTertiaryContainerDark", "#FEF3C7");
 
         Set(resources, "Error", error);
         Set(resources, "ErrorDark", error);
-        Set(resources, "ErrorContainer", dark ? Color.FromArgb("#7F1D1D") : Color.FromArgb("#FEE2E2"));
-        Set(resources, "ErrorContainerDark", Color.FromArgb("#7F1D1D"));
-        Set(resources, "OnError", Colors.White);
-        Set(resources, "OnErrorDark", Colors.White);
-        Set(resources, "OnErrorContainer", dark ? Colors.White : Color.FromArgb("#7F1D1D"));
-        Set(resources, "OnErrorContainerDark", Colors.White);
+        Set(resources, "ErrorContainer", errorContainer);
+        Set(resources, "ErrorContainerDark", errorContainer);
+        Set(resources, "OnError", "#1A0500");
+        Set(resources, "OnErrorDark", "#1A0500");
+        Set(resources, "OnErrorContainer", "#FED7AA");
+        Set(resources, "OnErrorContainerDark", "#FED7AA");
 
-        // Surfaces are derived from the selected background so the Background
-        // setting actually affects cards and page surfaces too.
         Set(resources, "Surface", surface);
         Set(resources, "SurfaceDark", surface);
         Set(resources, "SurfaceDim", surfaceDim);
-        Set(resources, "SurfaceDimDark", dark ? surfaceDim : Color.FromArgb("#141414"));
+        Set(resources, "SurfaceDimDark", surfaceDim);
         Set(resources, "SurfaceBright", surfaceBright);
         Set(resources, "SurfaceBrightDark", surfaceBright);
         Set(resources, "SurfaceContainer", surfaceContainer);
@@ -141,59 +117,35 @@ public static class ThemeManager
         Set(resources, "OutlineDark", outline);
         Set(resources, "OutlineVariant", outlineVariant);
         Set(resources, "OutlineVariantDark", outlineVariant);
+        Set(resources, "Shadow", shadow);
+        Set(resources, "Scrim", shadow);
+        Set(resources, "InverseSurface", onSurface);
+        Set(resources, "InverseOnSurface", surface);
+        Set(resources, "InversePrimary", "#B45309");
 
-        // Application-level semantic aliases. These are the preferred keys for
-        // pages going forward and make the design system independent of color names.
-        Set(resources, "AppPrimary", primary);
-        Set(resources, "AppAccent", secondary);
-        Set(resources, "AppBackground", surface);
-        Set(resources, "AppCard", surfaceContainer);
-        Set(resources, "AppCardElevated", surfaceBright);
-        Set(resources, "AppBorder", outlineVariant);
-        Set(resources, "AppText", onSurface);
-        Set(resources, "AppTextSecondary", onSurfaceVariant);
-        Set(resources, "AppPrimarySoft", primaryContainer);
-        Set(resources, "AppAccentSoft", secondaryContainer);
-        Set(resources, "AppSuccess", success);
-        Set(resources, "AppWarning", warning);
-        Set(resources, "AppError", error);
-        Set(resources, "AppInfo", info);
+        // Semantic statuses use the same gold/orange language as the reference
+        // instead of reintroducing the old green/blue status palette.
+        Set(resources, "StatusOnline", primary);
+        Set(resources, "StatusOffline", onSurfaceVariant);
+        Set(resources, "StatusWarning", tertiary);
+        Set(resources, "StatusCritical", secondary);
+        Set(resources, "StatusUnknown", outline);
+        Set(resources, "Success", primary);
+        Set(resources, "Warning", tertiary);
+        Set(resources, "Info", secondary);
 
-        // Short semantic aliases for XAML. Do not use color names such as
-        // AccentGreen/AccentBlue for new UI because those cannot express a
-        // user-selected theme correctly.
-        Set(resources, "Background", surface);
-        Set(resources, "CardBackground", surfaceContainer);
-        Set(resources, "CardBackgroundElevated", surfaceBright);
-        Set(resources, "Text", onSurface);
-        Set(resources, "TextSecondarySemantic", onSurfaceVariant);
-        Set(resources, "Border", outlineVariant);
-        Set(resources, "Accent", secondary);
-        Set(resources, "Success", success);
-        Set(resources, "Warning", warning);
-        Set(resources, "Info", info);
-
-        // Compatibility aliases. Older pages now follow the selected theme
-        // instead of introducing another fixed green/blue palette.
+        // Compatibility aliases used by older pages.
         Set(resources, "AccentGreen", primary);
         Set(resources, "AccentBlue", secondary);
+        Set(resources, "AccentAmber", primary);
+        Set(resources, "AccentRed", secondary);
         Set(resources, "TextPrimary", onSurface);
-        Set(resources, "TextSecondary", onSurfaceVariant);
-        Set(resources, "TextMuted", dark ? Color.FromArgb("#71717A") : Color.FromArgb("#71717A"));
+        Set(resources, "TextSecondary", "#B98A94");
+        Set(resources, "TextMuted", onSurfaceVariant);
         Set(resources, "BgDark", surface);
         Set(resources, "CardDark", surfaceContainer);
         Set(resources, "BorderDark", outlineVariant);
 
-        // Status aliases remain semantic; an online sensor is still green even
-        // when the application's branding is indigo or blue.
-        Set(resources, "StatusOnline", success);
-        Set(resources, "StatusOffline", Color.FromArgb(dark ? "#A1A1AA" : "#64748B"));
-        Set(resources, "StatusWarning", warning);
-        Set(resources, "StatusCritical", error);
-        Set(resources, "StatusUnknown", Color.FromArgb(dark ? "#A1A1AA" : "#94A3B8"));
-
-        // Brushes mirror the color resources and are recreated on every Apply
-        // so code that consumes a SolidColorBrush never retains the old theme.
         SetBrush(resources, "PrimaryBrush", primary);
         SetBrush(resources, "PrimaryContainerBrush", primaryContainer);
         SetBrush(resources, "PrimaryDarkBrush", primary);
@@ -218,131 +170,42 @@ public static class ThemeManager
         SetBrush(resources, "AccentGreenBrush", primary);
         SetBrush(resources, "AccentBlueBrush", secondary);
         SetBrush(resources, "TextPrimaryBrush", onSurface);
-        SetBrush(resources, "TextSecondaryBrush", onSurfaceVariant);
-        SetBrush(resources, "TextMutedBrush", Color.FromArgb("#71717A"));
-        SetBrush(resources, "StatusOnlineBrush", success);
-        SetBrush(resources, "StatusOfflineBrush", Color.FromArgb(dark ? "#A1A1AA" : "#64748B"));
-        SetBrush(resources, "StatusWarningBrush", warning);
-        SetBrush(resources, "StatusCriticalBrush", error);
-        SetBrush(resources, "AppPrimaryBrush", primary);
-        SetBrush(resources, "AppAccentBrush", secondary);
-        SetBrush(resources, "AppBackgroundBrush", surface);
-        SetBrush(resources, "AppCardBrush", surfaceContainer);
-        SetBrush(resources, "AppPrimarySoftBrush", primaryContainer);
-        SetBrush(resources, "AppAccentSoftBrush", secondaryContainer);
-        SetBrush(resources, "AppBorderBrush", outlineVariant);
-        SetBrush(resources, "AppTextBrush", onSurface);
-        SetBrush(resources, "AppTextSecondaryBrush", onSurfaceVariant);
-        SetBrush(resources, "AppSuccessBrush", success);
-        SetBrush(resources, "AppWarningBrush", warning);
-        SetBrush(resources, "AppErrorBrush", error);
-        SetBrush(resources, "AppInfoBrush", info);
+        SetBrush(resources, "TextSecondaryBrush", "#B98A94");
+        SetBrush(resources, "TextMutedBrush", onSurfaceVariant);
+        SetBrush(resources, "StatusOnlineBrush", primary);
+        SetBrush(resources, "StatusOfflineBrush", onSurfaceVariant);
+        SetBrush(resources, "StatusWarningBrush", tertiary);
+        SetBrush(resources, "StatusCriticalBrush", secondary);
+
+        Set(resources, "Background", surface);
+        Set(resources, "CardBackground", surfaceContainer);
+        Set(resources, "CardBackgroundElevated", surfaceBright);
+        Set(resources, "Text", onSurface);
+        Set(resources, "TextSecondarySemantic", onSurfaceVariant);
+        Set(resources, "Border", outlineVariant);
+        Set(resources, "Accent", secondary);
+        Set(resources, "AppPrimary", primary);
+        Set(resources, "AppAccent", secondary);
+        Set(resources, "AppBackground", surface);
+        Set(resources, "AppCard", surfaceContainer);
+        Set(resources, "AppCardElevated", surfaceBright);
+        Set(resources, "AppBorder", outlineVariant);
+        Set(resources, "AppText", onSurface);
+        Set(resources, "AppTextSecondary", onSurfaceVariant);
+        Set(resources, "AppPrimarySoft", primaryContainer);
+        Set(resources, "AppAccentSoft", secondaryContainer);
+        Set(resources, "AppSuccess", primary);
+        Set(resources, "AppWarning", tertiary);
+        Set(resources, "AppError", secondary);
+        Set(resources, "AppInfo", secondary);
 
         Preferences.Set(ThemeVersionKey, CurrentThemeVersion);
         ThemeChanged?.Invoke(null, EventArgs.Empty);
     }
 
-    private static Color GetPrimary(bool dark)
-    {
-        var index = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, 7);
-        var themes = new[]
-        {
-            (Light: "#059669", Dark: "#34D399"),
-            (Light: "#0284C7", Dark: "#38BDF8"),
-            (Light: "#EA580C", Dark: "#FB923C"),
-            (Light: "#7C3AED", Dark: "#A78BFA"),
-            (Light: "#E11D48", Dark: "#FB7185"),
-            (Light: "#0D9488", Dark: "#2DD4BF"),
-            (Light: "#4F46E5", Dark: "#818CF8"),
-            (Light: "#10B981", Dark: "#34D399")
-        };
+    private static void Set(ResourceDictionary resources, string key, string value)
+        => resources[key] = Color.FromArgb(value);
 
-        return Color.FromArgb(dark ? themes[index].Dark : themes[index].Light);
-    }
-
-    private static Color GetSecondary(bool dark)
-    {
-        var index = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, 7);
-        var themes = new[]
-        {
-            (Light: "#2563EB", Dark: "#60A5FA"),
-            (Light: "#059669", Dark: "#34D399"),
-            (Light: "#D97706", Dark: "#FBBF24"),
-            (Light: "#DC2626", Dark: "#F87171"),
-            (Light: "#7C3AED", Dark: "#A78BFA"),
-            (Light: "#0891B2", Dark: "#67E8F9"),
-            (Light: "#65A30D", Dark: "#A3E635"),
-            (Light: "#DB2777", Dark: "#F472B6")
-        };
-
-        return Color.FromArgb(dark ? themes[index].Dark : themes[index].Light);
-    }
-
-    private static Color GetBackground(bool dark)
-    {
-        var index = Math.Clamp(Preferences.Get("Theme_BackgroundIndex", 0), 0, 7);
-
-        if (dark)
-        {
-            return index switch
-            {
-                1 => Color.FromArgb("#151618"),
-                2 => Color.FromArgb("#171719"),
-                3 => Color.FromArgb("#15201B"),
-                4 => Color.FromArgb("#151B22"),
-                5 => Color.FromArgb("#18191B"),
-                6 => Color.FromArgb("#171A20"),
-                7 => Color.FromArgb("#16181C"),
-                _ => Color.FromArgb("#18181B")
-            };
-        }
-
-        return index switch
-        {
-            1 => Color.FromArgb("#FFFFFF"),
-            2 => Color.FromArgb("#FCFAF7"),
-            3 => Color.FromArgb("#F5FAF7"),
-            4 => Color.FromArgb("#F6F9FD"),
-            5 => Color.FromArgb("#F4F5F6"),
-            6 => Color.FromArgb("#F3F6FA"),
-            7 => Color.FromArgb("#F7F8FB"),
-            _ => Color.FromArgb("#F6F7F8")
-        };
-    }
-
-    private static void InitializeMissingPreferences()
-    {
-        if (!Preferences.ContainsKey("Theme_PrimaryIndex"))
-            Preferences.Set("Theme_PrimaryIndex", 0);
-        if (!Preferences.ContainsKey("Theme_AccentIndex"))
-            Preferences.Set("Theme_AccentIndex", 0);
-        if (!Preferences.ContainsKey("Theme_BackgroundIndex"))
-            Preferences.Set("Theme_BackgroundIndex", 0);
-        if (!Preferences.ContainsKey("Theme_DarkMode"))
-            Preferences.Set("Theme_DarkMode", false);
-
-        Preferences.Set(ThemeVersionKey, CurrentThemeVersion);
-    }
-
-    private static void Set(ResourceDictionary resources, string key, object value)
-        => resources[key] = value;
-
-    private static void SetBrush(ResourceDictionary resources, string key, Color color)
-        => resources[key] = new SolidColorBrush(color);
-
-    private static Color WithAlpha(Color color, float alpha)
-        => color.WithAlpha(alpha);
-
-    private static Color Darken(Color color, float amount)
-        => Blend(color, Colors.Black, Math.Clamp(amount, 0f, 1f));
-
-    private static Color Blend(Color baseColor, Color overlay, float amount)
-    {
-        amount = Math.Clamp(amount, 0f, 1f);
-        return Color.FromRgba(
-            baseColor.Red + (overlay.Red - baseColor.Red) * amount,
-            baseColor.Green + (overlay.Green - baseColor.Green) * amount,
-            baseColor.Blue + (overlay.Blue - baseColor.Blue) * amount,
-            1f);
-    }
+    private static void SetBrush(ResourceDictionary resources, string key, string value)
+        => resources[key] = new SolidColorBrush(Color.FromArgb(value));
 }
