@@ -8,13 +8,11 @@
                 <VerticalStackLayout Spacing="2"><Label Text="SETTINGS" FontSize="10" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="System configuration" FontSize="34" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="Tune sensors and personalize the workspace." FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
                 <Border Grid.Column="1" WidthRequest="42" HeightRequest="42" BackgroundColor="{DynamicResource SurfaceContainerHigh}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 21" VerticalOptions="Center"><Label Text="⚙" FontSize="20" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border>
             </Grid>
-
             <Label Text="SENSOR CONFIGURATION" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,8"/>
             <Grid ColumnDefinitions="*,*" ColumnSpacing="1" BackgroundColor="{DynamicResource OutlineVariant}" Margin="0,0,0,14">
                 <Border BackgroundColor="{DynamicResource SurfaceContainer}" Padding="15" StrokeThickness="0"><VerticalStackLayout Spacing="2"><Label Text="WATER" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource Secondary}"/><Label Text="pH • EC • Level • Flow" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></Border>
                 <Border Grid.Column="1" BackgroundColor="{DynamicResource SurfaceContainer}" Padding="15" StrokeThickness="0"><VerticalStackLayout Spacing="2"><Label Text="ENVIRONMENT" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/><Label Text="Temperature • Humidity" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></Border>
             </Grid>
-
             <CollectionView x:Name="SettingsList" ItemsLayout="VerticalList" EmptyView="No sensors configured" SelectionMode="None" Margin="0,0,0,12">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -26,14 +24,13 @@
                                 <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
                                     <VerticalStackLayout Spacing="2"><Label Text="MINIMUM" FontSize="7" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}"/><Border BackgroundColor="{DynamicResource SurfaceContainerHigh}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="7,0" HeightRequest="38"><Entry Text="{Binding MinThreshold, Mode=TwoWay, StringFormat='{0:F1}'}" Keyboard="Numeric" FontSize="12" FontAttributes="Bold" BackgroundColor="Transparent"/></Border></VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="1" Spacing="2"><Label Text="MAXIMUM" FontSize="7" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}"/><Border BackgroundColor="{DynamicResource SurfaceContainerHigh}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="7,0" HeightRequest="38"><Entry Text="{Binding MaxThreshold, Mode=TwoWay, StringFormat='{0:F1}'}" Keyboard="Numeric" FontSize="12" FontAttributes="Bold" BackgroundColor="Transparent"/></Border></VerticalStackLayout>
-                                    <VerticalStackLayout Grid.Column="2" Spacing="2"><Label Text="STATUS" FontSize="7" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}"/><Border BackgroundColor="{Binding ThresholdStatusColor}" StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="10,10" HeightRequest="38" MinimumWidthRequest="92"><Label Text="{Binding ThresholdStatusText}" FontSize="8" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border></VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="2"><Label Text="STATUS" FontSize="7" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}"/><Border BackgroundColor="{Binding ThresholdStatusColor}" StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="10,10" HeightRequest="38" MinimumWidthRequest="92"><Label Text="{Binding ThresholdStatusText}" FontSize="8" FontAttributes="Bold" TextColor="{DynamicResource OnPrimary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border></VerticalStackLayout>
                                 </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
             <Label Text="APPEARANCE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,6,0,8"/>
             <Border BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="16" Margin="0,0,0,14">
                 <VerticalStackLayout Spacing="13">
@@ -44,7 +41,6 @@
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11"><Border WidthRequest="40" HeightRequest="40" BackgroundColor="{DynamicResource SurfaceContainerHigh}" StrokeThickness="0" StrokeShape="RoundRectangle 12"><Label Text="◐" FontSize="19" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center"><Label Text="Dark mode" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="Use a darker workspace" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout><Switch x:Name="DarkModeSwitch" Grid.Column="2" IsToggled="{Binding DarkModeEnabled, Mode=TwoWay}" Toggled="OnDarkModeToggled" OnColor="{DynamicResource Primary}" ThumbColor="{DynamicResource OnSurface}"/></Grid>
                 </VerticalStackLayout>
             </Border>
-
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"><Button x:Name="SaveButton" Text="SAVE CHANGES" Style="{DynamicResource PrimaryButton}" Clicked="OnSaveClicked" HeightRequest="46"/><Button x:Name="ResetButton" Grid.Column="1" Text="RESET ALL" Style="{DynamicResource TertiaryButton}" Clicked="OnResetAllClicked" HeightRequest="46" WidthRequest="100"/></Grid>
         </VerticalStackLayout>
     </ScrollView>
