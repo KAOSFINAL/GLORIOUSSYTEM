@@ -5,85 +5,61 @@
        x:Class="GLORIOUSSYSTEM.App.AppShell"
        FlyoutBehavior="Flyout"
        FlyoutBackgroundColor="{DynamicResource Surface}"
-       FlyoutWidth="292"
+       FlyoutWidth="300"
        Title="GLORIOUS SYSTEM">
 
     <Shell.FlyoutHeader>
-        <Grid Padding="22,28,22,20" RowDefinitions="Auto,Auto" RowSpacing="22">
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                <Border WidthRequest="44" HeightRequest="44"
-                        BackgroundColor="{DynamicResource Primary}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
-                        VerticalOptions="Center">
-                    <Label Text="G" FontSize="24" FontAttributes="Bold"
-                           TextColor="{DynamicResource OnPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+        <VerticalStackLayout Padding="22,26,22,18" Spacing="18">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="13">
+                <Border WidthRequest="48" HeightRequest="48" BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                    <Label Text="G" FontSize="25" FontAttributes="Bold" TextColor="{DynamicResource OnPrimary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                 </Border>
                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                    <Label Text="GLORIOUS SYSTEM" FontSize="15" FontAttributes="Bold"
-                           CharacterSpacing="1.2" TextColor="{DynamicResource OnSurface}"/>
-                    <Label Text="Lettuce Monitoring" FontSize="12"
-                           TextColor="{DynamicResource OnSurfaceVariant}"/>
+                    <Label Text="GLORIOUS SYSTEM" FontSize="15" FontAttributes="Bold" CharacterSpacing="1.1" TextColor="{DynamicResource OnSurface}" />
+                    <Label Text="Smart hydroponic monitoring" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
                 </VerticalStackLayout>
             </Grid>
 
-            <Border Grid.Row="1" BackgroundColor="{DynamicResource SurfaceBright}"
-                    Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
-                    StrokeShape="RoundRectangle 14" Padding="14,12">
-                <Grid ColumnDefinitions="*,1,*,1,*" ColumnSpacing="10">
-                    <VerticalStackLayout Grid.Column="0" Spacing="1" HorizontalOptions="Center">
-                        <Label x:Name="FlyoutTotalSensors" Text="--" FontSize="18" FontAttributes="Bold"
-                               TextColor="{DynamicResource Primary}" HorizontalOptions="Center"/>
-                        <Label Text="SENSORS" FontSize="9" CharacterSpacing="0.8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center"/>
+            <Border BackgroundColor="{DynamicResource SurfaceContainer}" StrokeThickness="0" StrokeShape="RoundRectangle 18" Padding="14">
+                <Grid ColumnDefinitions="*,Auto,*,Auto,*" ColumnSpacing="10">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="1">
+                        <Label x:Name="FlyoutTotalSensors" Text="--" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource Primary}" HorizontalOptions="Center" />
+                        <Label Text="SENSORS" FontSize="8" CharacterSpacing="0.7" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <BoxView Grid.Column="1" WidthRequest="1" Color="{DynamicResource OutlineVariant}"/>
-                    <VerticalStackLayout Grid.Column="2" Spacing="1" HorizontalOptions="Center">
-                        <Label x:Name="FlyoutOnlineSensors" Text="--" FontSize="18" FontAttributes="Bold"
-                               TextColor="{DynamicResource StatusOnline}" HorizontalOptions="Center"/>
-                        <Label Text="ONLINE" FontSize="9" CharacterSpacing="0.8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center"/>
+                    <BoxView Grid.Column="1" WidthRequest="1" Color="{DynamicResource OutlineVariant}" />
+                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="1">
+                        <Label x:Name="FlyoutOnlineSensors" Text="--" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource StatusOnline}" HorizontalOptions="Center" />
+                        <Label Text="ONLINE" FontSize="8" CharacterSpacing="0.7" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <BoxView Grid.Column="3" WidthRequest="1" Color="{DynamicResource OutlineVariant}"/>
-                    <VerticalStackLayout Grid.Column="4" Spacing="1" HorizontalOptions="Center">
-                        <Label x:Name="FlyoutAlerts" Text="--" FontSize="18" FontAttributes="Bold"
-                               TextColor="{DynamicResource StatusCritical}" HorizontalOptions="Center"/>
-                        <Label Text="ALERTS" FontSize="9" CharacterSpacing="0.8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center"/>
+                    <BoxView Grid.Column="3" WidthRequest="1" Color="{DynamicResource OutlineVariant}" />
+                    <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="1">
+                        <Label x:Name="FlyoutAlerts" Text="--" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource StatusCritical}" HorizontalOptions="Center" />
+                        <Label Text="ALERTS" FontSize="8" CharacterSpacing="0.7" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>
-        </Grid>
+        </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
     <FlyoutItem Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Title="Dashboard"/>
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Title="Dashboard" />
     </FlyoutItem>
     <FlyoutItem Title="Leaf Classifier" Route="webcam" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:WebcamPage}" Title="Leaf Classifier"/>
+        <ShellContent ContentTemplate="{DataTemplate local:WebcamPage}" Title="Leaf Classifier" />
     </FlyoutItem>
     <FlyoutItem Title="Reports" Route="reports" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:ReportsPage}" Title="Reports"/>
+        <ShellContent ContentTemplate="{DataTemplate local:ReportsPage}" Title="Reports" />
     </FlyoutItem>
     <FlyoutItem Title="Settings" Route="settings" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" Title="Settings"/>
+        <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" Title="Settings" />
     </FlyoutItem>
 
     <Shell.FlyoutFooter>
-        <VerticalStackLayout Padding="22,12,22,22" Spacing="12">
-            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}"/>
-            <Button Text="Sign Out" Style="{DynamicResource TertiaryButton}"
-                    Clicked="OnLogoutClicked" HorizontalOptions="Fill"
-                    TextColor="{DynamicResource Error}"
-                    BorderColor="{DynamicResource Error}" BorderWidth="1"
-                    CornerRadius="10" HeightRequest="44"/>
-            <Label x:Name="FlyoutVersion" Text="GLORIOUS SYSTEM  •  v1.0.0"
-                   FontSize="10" HorizontalOptions="Center"
-                   TextColor="{DynamicResource OnSurfaceVariant}"/>
-            <Label x:Name="FlyoutLastSync" Text="Last sync: --"
-                   FontSize="10" HorizontalOptions="Center"
-                   TextColor="{DynamicResource OnSurfaceVariant}"/>
+        <VerticalStackLayout Padding="22,12,22,22" Spacing="11">
+            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+            <Button Text="Sign Out" Style="{DynamicResource TertiaryButton}" Clicked="OnLogoutClicked" TextColor="{DynamicResource Error}" BorderColor="{DynamicResource Error}" BorderWidth="1" CornerRadius="14" HeightRequest="44" />
+            <Label x:Name="FlyoutVersion" Text="GLORIOUS SYSTEM  •  v1.0.0" FontSize="9" HorizontalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" />
+            <Label x:Name="FlyoutLastSync" Text="Last sync: --" FontSize="9" HorizontalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" />
         </VerticalStackLayout>
     </Shell.FlyoutFooter>
 </Shell>
