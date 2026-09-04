@@ -7,164 +7,77 @@
              Title="Overview"
              Shell.NavBarIsVisible="False">
 
-    <Grid ColumnDefinitions="260,*" BackgroundColor="{DynamicResource Surface}">
-        <local:AppSidebar Grid.Column="0" CurrentRoute="dashboard" />
-
-        <ScrollView Grid.Column="1">
+    <Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
+        <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="42,34,48,42" Spacing="0">
 
                 <!-- HEADER -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,22">
                     <VerticalStackLayout Spacing="3">
-                        <Label Text="Smart Hydroponics System"
-                               FontSize="11"
-                               CharacterSpacing="1.5"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Label Text="Dashboard"
-                               FontSize="34"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="Smart Hydroponics System" FontSize="11" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="Dashboard" FontSize="34" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                     <Grid Grid.Column="1" WidthRequest="34" HeightRequest="34" Margin="0,5,0,0">
-                        <Label Text="♧"
-                               FontSize="24"
-                               TextColor="{DynamicResource OnSurface}"
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center" />
-                        <Border WidthRequest="15" HeightRequest="15"
-                                BackgroundColor="{DynamicResource Secondary}"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8"
-                                HorizontalOptions="End"
-                                VerticalOptions="Start">
-                            <Label Text="3" FontSize="8" FontAttributes="Bold"
-                                   TextColor="{DynamicResource OnPrimary}"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                        <Label Text="♧" FontSize="24" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                        <Border WidthRequest="15" HeightRequest="15" BackgroundColor="{DynamicResource Secondary}" StrokeThickness="0" StrokeShape="RoundRectangle 8" HorizontalOptions="End" VerticalOptions="Start">
+                            <Label Text="3" FontSize="8" FontAttributes="Bold" TextColor="{DynamicResource OnPrimary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                         </Border>
                     </Grid>
                 </Grid>
 
                 <!-- WEATHER STRIP -->
-                <Border Margin="0,0,0,25"
-                        Padding="17,15,17,13"
-                        BackgroundColor="{DynamicResource SurfaceContainer}"
-                        Stroke="{DynamicResource Primary}"
-                        StrokeThickness="2"
-                        StrokeShape="RoundRectangle 0,4,4,0">
+                <Border Margin="0,0,0,25" Padding="17,15,17,13" BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource Primary}" StrokeThickness="2" StrokeShape="RoundRectangle 0,4,4,0">
                     <VerticalStackLayout Spacing="11">
                         <Grid ColumnDefinitions="*,Auto">
                             <HorizontalStackLayout Spacing="13" VerticalOptions="Center">
-                                <Label Text="28°C" FontSize="30" FontAttributes="Bold"
-                                       TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="28°C" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                                 <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                                    <Label Text="Partly Cloudy" FontSize="11"
-                                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    <Label Text="Partly Cloudy" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
                                     <HorizontalStackLayout Spacing="4">
                                         <Label Text="⌖" FontSize="10" TextColor="{DynamicResource Primary}" />
-                                        <Label Text="Green Farm, Nueva Ecija" FontSize="9"
-                                               CharacterSpacing="0.4"
-                                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        <Label Text="Green Farm, Nueva Ecija" FontSize="9" CharacterSpacing="0.4" TextColor="{DynamicResource OnSurfaceVariant}" />
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
                             <VerticalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="End">
-                                <Label Text="💧  Humidity 65%" FontSize="9" HorizontalTextAlignment="End"
-                                       TextColor="{DynamicResource OnSurfaceVariant}" />
-                                <Label Text="〰  Wind 12 km/h" FontSize="9" HorizontalTextAlignment="End"
-                                       TextColor="{DynamicResource OnSurfaceVariant}" />
-                                <Label Text="☁  Rain 20%" FontSize="9" HorizontalTextAlignment="End"
-                                       TextColor="{DynamicResource OnSurfaceVariant}" />
+                                <Label Text="💧  Humidity 65%" FontSize="9" HorizontalTextAlignment="End" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                <Label Text="〰  Wind 12 km/h" FontSize="9" HorizontalTextAlignment="End" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                <Label Text="☁  Rain 20%" FontSize="9" HorizontalTextAlignment="End" TextColor="{DynamicResource OnSurfaceVariant}" />
                             </VerticalStackLayout>
                         </Grid>
-                        <Label Text="Today, 9:41 AM" FontSize="9"
-                               CharacterSpacing="0.5"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="Today, 9:41 AM" FontSize="9" CharacterSpacing="0.5" TextColor="{DynamicResource OnSurfaceVariant}" />
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- SYSTEM OVERVIEW -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-                    <Label Text="System Overview"
-                           FontSize="10"
-                           CharacterSpacing="1.8"
-                           TextTransform="Uppercase"
-                           TextColor="{DynamicResource OnSurfaceVariant}" />
-                    <Label Grid.Column="1" Text="Live ●"
-                           FontSize="9"
-                           CharacterSpacing="0.5"
-                           TextColor="{DynamicResource Primary}" />
+                    <Label Text="System Overview" FontSize="10" CharacterSpacing="1.8" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
+                    <Label Grid.Column="1" Text="Live ●" FontSize="9" CharacterSpacing="0.5" TextColor="{DynamicResource Primary}" />
                 </Grid>
 
-                <!-- SENSOR GRID. The existing C# SensorList binding is preserved. -->
-                <Border Padding="0"
-                        Margin="0,0,0,25"
-                        BackgroundColor="Transparent"
-                        Stroke="{DynamicResource OutlineVariant}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 4">
-                    <CollectionView x:Name="SensorList"
-                                    SelectionMode="None"
-                                    BackgroundColor="Transparent">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
-                        </CollectionView.ItemsLayout>
+                <!-- SENSOR GRID -->
+                <Border Padding="0" Margin="0,0,0,25" BackgroundColor="Transparent" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 4">
+                    <CollectionView x:Name="SensorList" SelectionMode="None" BackgroundColor="Transparent">
+                        <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Vertical" ItemSpacing="0" /></CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <VerticalStackLayout Padding="0" Spacing="0">
                                     <Grid Padding="14,10,14,7" ColumnDefinitions="*,Auto">
-                                        <Label Text="{Binding CategoryName}"
-                                               FontSize="9"
-                                               CharacterSpacing="1.5"
-                                               TextColor="{DynamicResource OnSurfaceVariant}" />
-                                        <Label Grid.Column="1"
-                                               Text="{Binding SensorCount, StringFormat='{}{0} sensors'}"
-                                               FontSize="8"
-                                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        <Label Text="{Binding CategoryName}" FontSize="9" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        <Label Grid.Column="1" Text="{Binding SensorCount, StringFormat='{}{0} sensors'}" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
                                     </Grid>
-
-                                    <FlexLayout Direction="Row"
-                                                Wrap="Wrap"
-                                                BindableLayout.ItemsSource="{Binding .}"
-                                                AlignItems="Stretch"
-                                                JustifyContent="Start">
+                                    <FlexLayout Direction="Row" Wrap="Wrap" BindableLayout.ItemsSource="{Binding .}" AlignItems="Stretch" JustifyContent="Start">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid WidthRequest="190"
-                                                      MinimumHeightRequest="82"
-                                                      Padding="13,11"
-                                                      ColumnDefinitions="*,Auto"
-                                                      RowDefinitions="Auto,Auto,Auto">
-                                                    <Label Text="{Binding Name}"
-                                                           FontSize="9"
-                                                           LineBreakMode="TailTruncation"
-                                                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                <Grid WidthRequest="190" MinimumHeightRequest="82" Padding="13,11" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                                    <Label Text="{Binding Name}" FontSize="9" LineBreakMode="TailTruncation" TextColor="{DynamicResource OnSurfaceVariant}" />
                                                     <HorizontalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                                        <Label Text="{Binding ValueText}"
-                                                               FontSize="18"
-                                                               FontAttributes="Bold"
-                                                               TextColor="{Binding ValueColor}" />
-                                                        <Label Text="{Binding UnitText}"
-                                                               FontSize="8"
-                                                               VerticalOptions="End"
-                                                               Margin="0,0,0,2"
-                                                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                        <Label Text="{Binding ValueText}" FontSize="18" FontAttributes="Bold" TextColor="{Binding ValueColor}" />
+                                                        <Label Text="{Binding UnitText}" FontSize="8" VerticalOptions="End" Margin="0,0,0,2" TextColor="{DynamicResource OnSurfaceVariant}" />
                                                     </HorizontalStackLayout>
-                                                    <Label Grid.Row="1"
-                                                           Text="{Binding SubText}"
-                                                           FontSize="8"
-                                                           TextColor="{DynamicResource OnSurfaceVariant}" />
-                                                    <Label Grid.Row="2"
-                                                           Text="●  Normal"
-                                                           FontSize="8"
-                                                           TextColor="{Binding StatusColor}"
-                                                           Margin="0,5,0,0" />
-                                                    <BoxView Grid.Row="2"
-                                                             Grid.ColumnSpan="2"
-                                                             HeightRequest="1"
-                                                             BackgroundColor="{DynamicResource OutlineVariant}"
-                                                             VerticalOptions="End"
-                                                             Margin="0,17,0,0" />
+                                                    <Label Grid.Row="1" Text="{Binding SubText}" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    <Label Grid.Row="2" Text="●  Normal" FontSize="8" TextColor="{Binding StatusColor}" Margin="0,5,0,0" />
+                                                    <BoxView Grid.Row="2" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" VerticalOptions="End" Margin="0,17,0,0" />
                                                 </Grid>
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
@@ -175,11 +88,10 @@
                     </CollectionView>
                 </Border>
 
-                <!-- KEEP PROJECT-SPECIFIC INFORMATION -->
+                <!-- PROJECT-SPECIFIC INFORMATION -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="18" Margin="0,0,0,24">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="Environment" FontSize="9" CharacterSpacing="1.6"
-                               TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="Environment" FontSize="9" CharacterSpacing="1.6" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
                         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,1,Auto" RowSpacing="8">
                             <Label Text="Temperature" FontSize="10" TextColor="{DynamicResource OnSurface}" />
                             <Label Grid.Column="1" Text="26.5 °C" FontSize="16" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
@@ -189,8 +101,7 @@
                         </Grid>
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" Spacing="8">
-                        <Label Text="Power" FontSize="9" CharacterSpacing="1.6"
-                               TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="Power" FontSize="9" CharacterSpacing="1.6" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
                         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,1,Auto" RowSpacing="8">
                             <Label Text="Solar Battery" FontSize="10" TextColor="{DynamicResource OnSurface}" />
                             <Label Grid.Column="1" Text="85%" FontSize="16" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
@@ -203,36 +114,27 @@
 
                 <!-- CNN STATUS -->
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Margin="0,0,0,22">
-                    <Border WidthRequest="34" HeightRequest="34"
-                            BackgroundColor="{DynamicResource PrimaryContainer}"
-                            StrokeThickness="0" StrokeShape="RoundRectangle 17">
-                        <Label Text="✦" FontSize="16" TextColor="{DynamicResource Primary}"
-                               HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Border WidthRequest="34" HeightRequest="34" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" StrokeShape="RoundRectangle 17">
+                        <Label Text="✦" FontSize="16" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                     </Border>
                     <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                        <Label Text="CNN Predict — Healthy" FontSize="10" FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="CNN Confidence: 92%" FontSize="8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="CNN Predict — Healthy" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="CNN Confidence: 92%" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
                     </VerticalStackLayout>
-                    <Label Grid.Column="2" Text="92%" FontSize="18" FontAttributes="Bold"
-                           TextColor="{DynamicResource Primary}" VerticalOptions="Center" />
+                    <Label Grid.Column="2" Text="92%" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Primary}" VerticalOptions="Center" />
                 </Grid>
 
                 <!-- LATEST CAPTURE -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,9">
-                    <Label Text="Latest Capture" FontSize="9" CharacterSpacing="1.7"
-                           TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
+                    <Label Text="Latest Capture" FontSize="9" CharacterSpacing="1.7" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
                     <HorizontalStackLayout Grid.Column="1" Spacing="5">
                         <Label Text="▣" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
                         <Label Text="Today, 9:30 AM" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
                     </HorizontalStackLayout>
                 </Grid>
-                <Border HeightRequest="180" Margin="0,0,0,18"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 4">
+                <Border HeightRequest="180" Margin="0,0,0,18" StrokeThickness="0" StrokeShape="RoundRectangle 4">
                     <Grid>
-                        <Image Source="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1000&amp;h=500&amp;fit=crop&amp;auto=format"
-                               Aspect="AspectFill" />
+                        <Image Source="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1000&amp;h=500&amp;fit=crop&amp;auto=format" Aspect="AspectFill" />
                         <Grid VerticalOptions="End" Padding="13,28,13,11">
                             <HorizontalStackLayout Spacing="6">
                                 <Label Text="●" FontSize="10" TextColor="{DynamicResource Primary}" />
@@ -246,17 +148,15 @@
                 <!-- EXISTING REFRESH / SYNC LOGIC -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,5">
                     <VerticalStackLayout Spacing="1">
-                        <Label Text="Last Sensor Sync" FontSize="8" CharacterSpacing="1.1"
-                               TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Label x:Name="LastUpdatedLabel" Text="--" FontSize="9" FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="Last Sensor Sync" FontSize="8" CharacterSpacing="1.1" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label x:Name="LastUpdatedLabel" Text="--" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
-                    <Button Grid.Column="1" Text="REFRESH" WidthRequest="96" HeightRequest="36"
-                            CornerRadius="18" BackgroundColor="{DynamicResource Primary}"
-                            TextColor="{DynamicResource OnPrimary}" FontSize="8" FontAttributes="Bold"
-                            Clicked="OnRefreshClicked" />
+                    <Button Grid.Column="1" Text="REFRESH" WidthRequest="96" HeightRequest="36" CornerRadius="18" BackgroundColor="{DynamicResource Primary}" TextColor="{DynamicResource OnPrimary}" FontSize="8" FontAttributes="Bold" Clicked="OnRefreshClicked" />
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- BOTTOM NAVIGATION -->
+        <local:AppSidebar Grid.Row="1" CurrentRoute="dashboard" />
     </Grid>
 </ContentPage>
