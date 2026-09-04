@@ -44,16 +44,30 @@ public partial class App : Application
         var connStr = config.GetConnectionString("HydroponicDb");
 
         // The desktop configuration points to the development database on the
-        // Windows machine. Android must use its own private app data folder.
+        // Windows machine. Android uses a private writable copy of that database.
         if (OperatingSystem.IsAndroid())
         {
-            connStr = $"Data Source={Path.Combine(FileSystem.AppDataDirectory, "hydroponic.db")}";
+            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "hydroponic.db");
+            InitializeAndroidDatabase(databasePath);
+            connStr = $"Data Source={databasePath}";
         }
 
         services.AddDbContext<HydroponicDbContext>(options =>
             options.UseSqlite(connStr));
 
         Services = services.BuildServiceProvider();
+    }
+
+    private static void InitializeAndroidDatabase(string databasePath)
+    {
+        if (File.Exists(databasePath))
+            return;
+
+        using var source = FileSystem.OpenAppPackageFileAsync("database/hydroponic.db")
+            .GetAwaiter()
+            .GetResult();
+        using var destination = File.Create(databasePath);
+        source.CopyTo(destination);
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -81,6 +95,7 @@ public partial class App : Application
         Preferences.Remove("CurrentUserName");
         Preferences.Remove("RememberMe");
         Preferences.Remove("SavedEmail");
+        Preferences.Remove("SavedPassword");
 
         if (Current?.Windows.Count > 0)
         {
