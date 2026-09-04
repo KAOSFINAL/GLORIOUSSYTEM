@@ -1,194 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
-             x:Class="GLORIOUSSYSTEM.App.WebcamPage"
-             BackgroundColor="{DynamicResource Surface}"
-             Title="GLORIOUSSYSTEM"
-             Shell.NavBarIsVisible="False">
-
-    <Grid ColumnDefinitions="260,*">
-        <!-- KEEP SIDEBAR FIXED AND ALWAYS VISIBLE -->
-        <local:AppSidebar Grid.Column="0" />
-
-        <!-- WEBCAM WORKSPACE -->
-        <Grid Grid.Column="1" RowDefinitions="Auto,*" Padding="42,30,42,34">
-            <!-- PAGE HEADER -->
-            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,26">
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="WEBCAM" FontSize="11" FontAttributes="Bold" CharacterSpacing="2.4"
-                           TextColor="{DynamicResource Primary}" />
-                    <Label Text="AI crop scanner" FontSize="38" FontAttributes="Bold"
-                           TextColor="{DynamicResource OnSurface}" />
-                    <Label Text="See the crop. Let the model read it."
-                           FontSize="14" TextColor="{DynamicResource OnSurfaceVariant}" />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
-                    <Label Text="CNN" FontSize="26" FontAttributes="Bold"
-                           HorizontalTextAlignment="End" TextColor="{DynamicResource Primary}" />
-                    <Label Text="● ONLINE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5"
-                           HorizontalTextAlignment="End" TextColor="{DynamicResource StatusOnline}" />
-                </VerticalStackLayout>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:GLORIOUSSYSTEM.App" x:Class="GLORIOUSSYSTEM.App.WebcamPage" BackgroundColor="{DynamicResource Surface}" Title="GLORIOUSSYSTEM" Shell.NavBarIsVisible="False">
+<Grid ColumnDefinitions="260,*" BackgroundColor="{DynamicResource Surface}">
+    <local:AppSidebar Grid.Column="0" CurrentRoute="webcam" />
+    <ScrollView Grid.Column="1">
+        <VerticalStackLayout Padding="42,34,48,40" Spacing="0">
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,22">
+                <VerticalStackLayout Spacing="2"><Label Text="WEBCAM" FontSize="10" FontAttributes="Bold" CharacterSpacing="2.2" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="AI crop scanner" FontSize="34" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="See the crop. Let the model read it." FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1"><Label Text="CNN" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="End" TextColor="{DynamicResource Primary}"/><Label Text="● ONLINE" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.5" HorizontalTextAlignment="End" TextColor="{DynamicResource Primary}"/></VerticalStackLayout>
             </Grid>
 
-            <Grid Grid.Row="1" ColumnDefinitions="2.3*,1*" ColumnSpacing="34">
-                <!-- CAMERA WORKSPACE -->
-                <VerticalStackLayout Spacing="14">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="LIVE VIEW" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Label Text="READY TO SCAN" FontSize="10" FontAttributes="Bold"
-                               CharacterSpacing="1" TextColor="{DynamicResource StatusOnline}" />
-                    </Grid>
-
-                    <Border BackgroundColor="#18201B" StrokeThickness="0" Padding="0">
+            <Grid ColumnDefinitions="2.2*,1*" ColumnSpacing="24">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="LIVE VIEW" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="READY TO SCAN" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource Primary}"/></Grid>
+                    <Border BackgroundColor="#0A0405" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="0">
                         <Grid x:Name="PreviewContainer" HeightRequest="500">
-                            <Border x:Name="PlaceholderBorder" BackgroundColor="#18201B" StrokeThickness="0">
-                                <Grid>
-                                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="7">
-                                        <Label Text="CAMERA" FontSize="12" FontAttributes="Bold" CharacterSpacing="2"
-                                               TextColor="#91A59A" HorizontalTextAlignment="Center" />
-                                        <Label Text="READY" FontSize="46" FontAttributes="Bold"
-                                               TextColor="White" HorizontalTextAlignment="Center" />
-                                        <Label Text="Choose an image or capture a photo to begin"
-                                               FontSize="12" TextColor="#AEB9B1" HorizontalTextAlignment="Center" />
-                                    </VerticalStackLayout>
-                                    <BoxView HeightRequest="2" WidthRequest="90" Color="{DynamicResource Primary}"
-                                             HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,42" />
-                                </Grid>
-                            </Border>
-
-                            <Border x:Name="ImageBorder" BackgroundColor="#0C100D" StrokeThickness="0"
-                                    Padding="0" IsVisible="False">
-                                <Image x:Name="PreviewImage" Aspect="AspectFit" />
-                            </Border>
-
-                            <Border x:Name="LoadingBorder" BackgroundColor="#D9101511" StrokeThickness="0" IsVisible="False">
-                                <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
-                                    <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="White"
-                                                       WidthRequest="40" HeightRequest="40" />
-                                    <Label x:Name="LoadingLabel" Text="Analyzing crop…" FontSize="15"
-                                           FontAttributes="Bold" TextColor="White" />
-                                </VerticalStackLayout>
-                            </Border>
+                            <Border x:Name="PlaceholderBorder" BackgroundColor="#0A0405" StrokeThickness="0" StrokeShape="RoundRectangle 16"><Grid><VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="7"><Label Text="CAMERA" FontSize="10" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalTextAlignment="Center"/><Label Text="READY" FontSize="44" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center"/><Label Text="Choose an image or capture a photo to begin" FontSize="11" TextColor="#B98A94" HorizontalTextAlignment="Center"/><BoxView HeightRequest="2" WidthRequest="64" Color="{DynamicResource Primary}" HorizontalOptions="Center" Margin="0,16,0,0"/></VerticalStackLayout></Grid></Border>
+                            <Border x:Name="ImageBorder" BackgroundColor="#080304" StrokeThickness="0" Padding="0" IsVisible="False"><Image x:Name="PreviewImage" Aspect="AspectFit" /></Border>
+                            <Border x:Name="LoadingBorder" BackgroundColor="#D9160A0C" StrokeThickness="0" IsVisible="False"><VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center"><ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="{DynamicResource Primary}" WidthRequest="40" HeightRequest="40"/><Label x:Name="LoadingLabel" Text="Analyzing crop…" FontSize="14" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/></VerticalStackLayout></Border>
                         </Grid>
                     </Border>
-
-                    <!-- FLAT METRO COMMAND BAR -->
-                    <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="10">
-                        <Button x:Name="ChoosePhotoButton" Text="CHOOSE PHOTO"
-                                Style="{DynamicResource PrimaryButton}" Clicked="OnChoosePhotoClicked"
-                                HeightRequest="46" CornerRadius="0" Padding="22,0" />
-                        <Button x:Name="TakePhotoButton" Grid.Column="1" Text="CAMERA"
-                                Style="{DynamicResource SecondaryButton}" Clicked="OnTakePhotoClicked"
-                                HeightRequest="46" CornerRadius="0" Padding="22,0" />
-                        <Button x:Name="ClearButton" Grid.Column="2" Text="CLEAR"
-                                Style="{DynamicResource TertiaryButton}" Clicked="OnClearClicked"
-                                HeightRequest="46" CornerRadius="0" Padding="22,0"
-                                HorizontalOptions="End" IsVisible="False" />
+                    <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="9">
+                        <Button x:Name="ChoosePhotoButton" Text="CHOOSE PHOTO" Style="{DynamicResource PrimaryButton}" Clicked="OnChoosePhotoClicked" HeightRequest="44" />
+                        <Button x:Name="TakePhotoButton" Grid.Column="1" Text="CAMERA" Style="{DynamicResource SecondaryButton}" Clicked="OnTakePhotoClicked" HeightRequest="44" />
+                        <Button x:Name="ClearButton" Grid.Column="2" Text="CLEAR" Style="{DynamicResource TertiaryButton}" Clicked="OnClearClicked" HeightRequest="44" HorizontalOptions="End" IsVisible="False" />
                     </Grid>
                 </VerticalStackLayout>
 
-                <!-- ASSESSMENT -->
                 <ScrollView Grid.Column="1">
                     <VerticalStackLayout Spacing="0">
-                        <Label Text="ASSESSMENT" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8"
-                               TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,16" />
-
+                        <Label Text="ASSESSMENT" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,14" />
                         <VerticalStackLayout x:Name="ResultsCard" IsVisible="False" Spacing="0">
-                            <Label Text="CROP RESULT" FontSize="11" FontAttributes="Bold" CharacterSpacing="1.4"
-                                   TextColor="{DynamicResource Primary}" />
-                            <Label Text="Multi-task CNN" FontSize="13" TextColor="{DynamicResource OnSurfaceVariant}"
-                                   Margin="0,2,0,20" />
-
-                            <Grid x:Name="LettuceDetectionCard" ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="12" Padding="0,14" IsVisible="False">
-                                <Border x:Name="LettuceStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0">
-                                    <Label x:Name="LettuceStatusIcon" FontSize="17" HorizontalTextAlignment="Center"
-                                           VerticalTextAlignment="Center" />
-                                </Border>
-                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label x:Name="LettuceStatusLabel" FontSize="16" FontAttributes="Bold" />
-                                    <Label x:Name="LettuceConfidenceLabel" FontSize="10"
-                                           TextColor="{DynamicResource OnSurfaceVariant}" />
-                                </VerticalStackLayout>
-                                <Label Grid.Column="2" x:Name="LettuceDetailLabel" FontSize="9"
-                                       HorizontalTextAlignment="End" VerticalOptions="Center" />
-                            </Grid>
-
+                            <Label Text="CROP RESULT" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.4" TextColor="{DynamicResource Primary}" />
+                            <Label Text="Multi-task CNN" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,2,0,16" />
+                            <Grid x:Name="LettuceDetectionCard" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,12" IsVisible="False"><Border x:Name="LettuceStatusBorder" WidthRequest="40" HeightRequest="40" StrokeThickness="0" StrokeShape="RoundRectangle 20"><Label x:Name="LettuceStatusIcon" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border><VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center"><Label x:Name="LettuceStatusLabel" FontSize="15" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label x:Name="LettuceConfidenceLabel" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout><Label Grid.Column="2" x:Name="LettuceDetailLabel" FontSize="9" HorizontalTextAlignment="End" VerticalOptions="Center" TextColor="{DynamicResource Primary}"/></Grid>
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-
-                            <Grid x:Name="HealthCard" ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="12" Padding="0,14" IsVisible="False">
-                                <Border x:Name="HealthStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0">
-                                    <Label x:Name="HealthStatusIcon" FontSize="17" HorizontalTextAlignment="Center"
-                                           VerticalTextAlignment="Center" />
-                                </Border>
-                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label x:Name="HealthStatusLabel" FontSize="16" FontAttributes="Bold" />
-                                    <Label x:Name="HealthConfidenceLabel" FontSize="10"
-                                           TextColor="{DynamicResource OnSurfaceVariant}" />
-                                </VerticalStackLayout>
-                                <Label Grid.Column="2" x:Name="HealthDetailLabel" FontSize="9"
-                                       HorizontalTextAlignment="End" VerticalOptions="Center" />
-                            </Grid>
-
+                            <Grid x:Name="HealthCard" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,12" IsVisible="False"><Border x:Name="HealthStatusBorder" WidthRequest="40" HeightRequest="40" StrokeThickness="0" StrokeShape="RoundRectangle 20"><Label x:Name="HealthStatusIcon" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border><VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center"><Label x:Name="HealthStatusLabel" FontSize="15" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label x:Name="HealthConfidenceLabel" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout><Label Grid.Column="2" x:Name="HealthDetailLabel" FontSize="9" HorizontalTextAlignment="End" VerticalOptions="Center" TextColor="{DynamicResource Primary}"/></Grid>
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-
-                            <Grid x:Name="AgeCard" ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="12" Padding="0,14" IsVisible="False">
-                                <Border x:Name="AgeStatusBorder" WidthRequest="42" HeightRequest="42" StrokeThickness="0">
-                                    <Label x:Name="AgeStatusIcon" FontSize="17" HorizontalTextAlignment="Center"
-                                           VerticalTextAlignment="Center" />
-                                </Border>
-                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label x:Name="AgeStatusLabel" FontSize="16" FontAttributes="Bold" />
-                                    <Label x:Name="AgeConfidenceLabel" FontSize="10"
-                                           TextColor="{DynamicResource OnSurfaceVariant}" />
-                                </VerticalStackLayout>
-                                <Label Grid.Column="2" x:Name="AgeDetailLabel" FontSize="9"
-                                       HorizontalTextAlignment="End" VerticalOptions="Center" />
-                            </Grid>
-
+                            <Grid x:Name="AgeCard" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,12" IsVisible="False"><Border x:Name="AgeStatusBorder" WidthRequest="40" HeightRequest="40" StrokeThickness="0" StrokeShape="RoundRectangle 20"><Label x:Name="AgeStatusIcon" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border><VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center"><Label x:Name="AgeStatusLabel" FontSize="15" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label x:Name="AgeConfidenceLabel" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout><Label Grid.Column="2" x:Name="AgeDetailLabel" FontSize="9" HorizontalTextAlignment="End" VerticalOptions="Center" TextColor="{DynamicResource Primary}"/></Grid>
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-
-                            <Label x:Name="DetailedPredictionsLabel" Text="PREDICTION CONFIDENCE"
-                                   FontSize="10" FontAttributes="Bold" CharacterSpacing="1.4"
-                                   TextColor="{DynamicResource Primary}" Margin="0,22,0,8" IsVisible="False" />
-                            <CollectionView x:Name="PredictionsList" HeightRequest="180" IsVisible="False">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid ColumnDefinitions="*,Auto" Padding="0,5">
-                                            <Label Text="{Binding Label}" FontSize="11" />
-                                            <Label Grid.Column="1" Text="{Binding Confidence, StringFormat='{0:P0}'}"
-                                                   FontSize="11" FontAttributes="Bold" TextColor="{Binding Color}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
-                                <Button Text="SAVE RESULT" Style="{DynamicResource SecondaryButton}"
-                                        Clicked="OnSaveResultClicked" HeightRequest="44" CornerRadius="0" />
-                                <Button Text="NEW SCAN" Grid.Column="1" Style="{DynamicResource TertiaryButton}"
-                                        Clicked="OnClassifyAnotherClicked" HeightRequest="44" CornerRadius="0" />
-                            </Grid>
+                            <Label x:Name="DetailedPredictionsLabel" Text="PREDICTION CONFIDENCE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.4" TextColor="{DynamicResource Primary}" Margin="0,18,0,7" IsVisible="False" />
+                            <CollectionView x:Name="PredictionsList" HeightRequest="180" IsVisible="False"><CollectionView.ItemTemplate><DataTemplate><Grid ColumnDefinitions="*,Auto" Padding="0,5"><Label Text="{Binding Label}" FontSize="10" TextColor="{DynamicResource OnSurface}"/><Label Grid.Column="1" Text="{Binding Confidence, StringFormat='{0:P0}'}" FontSize="10" FontAttributes="Bold" TextColor="{Binding Color}"/></Grid></DataTemplate></CollectionView.ItemTemplate></CollectionView>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,18,0,0"><Button Text="SAVE RESULT" Style="{DynamicResource SecondaryButton}" Clicked="OnSaveResultClicked" HeightRequest="42"/><Button Text="NEW SCAN" Grid.Column="1" Style="{DynamicResource TertiaryButton}" Clicked="OnClassifyAnotherClicked" HeightRequest="42"/></Grid>
                         </VerticalStackLayout>
 
-                        <VerticalStackLayout Spacing="8" Margin="0,10,0,0">
-                            <BoxView HeightRequest="3" WidthRequest="48" Color="{DynamicResource Primary}"
-                                     HorizontalOptions="Start" />
-                            <Label Text="THE AI" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.5"
-                                   TextColor="{DynamicResource Primary}" Margin="0,8,0,0" />
-                            <Label Text="MobileNetV2" FontSize="24" FontAttributes="Bold" />
-                            <Label Text="224×224 RGB  •  multi-task CNN" FontSize="11"
-                                   TextColor="{DynamicResource OnSurfaceVariant}" />
-                            <Label Text="Lettuce detection, health classification, and growth-stage estimation run locally with ONNX Runtime."
-                                   FontSize="10" LineHeight="1.35" TextColor="{DynamicResource OnSurfaceVariant}" />
-                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="7" Margin="0,12,0,0"><BoxView HeightRequest="2" WidthRequest="46" Color="{DynamicResource Primary}" HorizontalOptions="Start"/><Label Text="THE AI" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource Primary}" Margin="0,5,0,0"/><Label Text="MobileNetV2" FontSize="23" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="224×224 RGB  •  multi-task CNN" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="Lettuce detection, health classification, and growth-stage estimation run locally with ONNX Runtime." FontSize="9" LineHeight="1.35" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout>
                     </VerticalStackLayout>
                 </ScrollView>
             </Grid>
-        </Grid>
-    </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</Grid>
 </ContentPage>
