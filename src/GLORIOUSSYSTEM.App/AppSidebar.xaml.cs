@@ -31,8 +31,8 @@ public partial class AppSidebar : ContentView
         Opacity = 0;
         TranslationX = -18;
         await Task.WhenAll(
-            ViewExtensions.FadeToAsync(this, 1, 260, Easing.CubicOut),
-            ViewExtensions.TranslateToAsync(this, 0, 0, 320, Easing.CubicOut));
+            Microsoft.Maui.Controls.ViewExtensions.FadeToAsync(this, 1, 260, Easing.CubicOut),
+            Microsoft.Maui.Controls.ViewExtensions.TranslateToAsync(this, 0, 0, 320, Easing.CubicOut));
     }
 
     void UpdateSelection(string route)
@@ -58,8 +58,8 @@ public partial class AppSidebar : ContentView
 
     async Task Navigate(string route, Border item)
     {
-        await item.ScaleToAsync(0.97, 70, Easing.CubicOut);
-        await item.ScaleToAsync(1, 120, Easing.CubicOut);
+        await Microsoft.Maui.Controls.ViewExtensions.ScaleToAsync(item, 0.97, 70, Easing.CubicOut);
+        await Microsoft.Maui.Controls.ViewExtensions.ScaleToAsync(item, 1, 120, Easing.CubicOut);
         if (CurrentRoute == route)
             return;
         CurrentRoute = route;
