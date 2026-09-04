@@ -8,30 +8,29 @@
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
 
-    <Grid ColumnDefinitions="1.1*,1.25*" BackgroundColor="{DynamicResource Surface}">
-        <!-- Figma-inspired visual hero -->
-        <Grid Grid.Column="0" BackgroundColor="{DynamicResource SurfaceContainer}" Padding="46,42,42,38">
+    <Grid BackgroundColor="{DynamicResource Surface}" ColumnDefinitions="1.05*,1.15*">
+        <Grid Grid.Column="0" BackgroundColor="{DynamicResource SurfaceContainer}" Padding="56,48,48,44">
             <Grid RowDefinitions="Auto,*,Auto">
-                <VerticalStackLayout Spacing="3">
-                    <Label Text="GLORIOUSSYSTEM" FontSize="24" FontAttributes="Bold" CharacterSpacing="1.2" TextColor="{DynamicResource OnSurface}" />
-                    <Label Text="HYDROPONIC MONITORING SYSTEM" FontSize="9" CharacterSpacing="1.6" TextColor="{DynamicResource OnSurfaceVariant}" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="GLORIOUSSYSTEM" FontSize="25" FontAttributes="Bold" CharacterSpacing="1.4" TextColor="{DynamicResource OnSurface}" />
+                    <Label Text="HYDROPONIC MONITORING SYSTEM" FontSize="9" CharacterSpacing="1.8" TextColor="{DynamicResource OnSurfaceVariant}" />
                 </VerticalStackLayout>
 
-                <Grid Grid.Row="1" VerticalOptions="Center" Margin="0,26,0,26">
-                    <Border HeightRequest="360" BackgroundColor="#0A0405" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 22">
-                        <Grid>
-                            <Image Source="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1000&amp;h=700&amp;fit=crop&amp;auto=format" Aspect="AspectFill" Opacity="0.62" />
-                            <BoxView BackgroundColor="#160A0C" Opacity="0.48" />
-                            <VerticalStackLayout VerticalOptions="End" Padding="26,26" Spacing="7">
-                                <Label Text="SMART FARMING.&#10;MADE VISIBLE." FontSize="34" FontAttributes="Bold" LineHeight="0.95" TextColor="{DynamicResource OnSurface}" />
-                                <BoxView HeightRequest="3" WidthRequest="64" HorizontalOptions="Start" Color="{DynamicResource Primary}" />
+                <Border Grid.Row="1" VerticalOptions="Center" HeightRequest="390" BackgroundColor="#0A0405" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 24" Margin="0,24,0,24">
+                    <Grid>
+                        <Image Source="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1000&amp;h=700&amp;fit=crop&amp;auto=format" Aspect="AspectFill" Opacity="0.62" />
+                        <BoxView BackgroundColor="#160A0C" Opacity="0.5" />
+                        <Grid RowDefinitions="*,Auto" Padding="28,28">
+                            <VerticalStackLayout Grid.Row="1" Spacing="8">
+                                <Label Text="SMART FARMING.&#10;MADE VISIBLE." FontSize="35" FontAttributes="Bold" LineHeight="0.95" TextColor="{DynamicResource OnSurface}" />
+                                <BoxView HeightRequest="3" WidthRequest="66" HorizontalOptions="Start" Color="{DynamicResource Primary}" />
                                 <Label Text="Monitor your hydroponic lettuce system,&#10;environment and water conditions&#10;from one place." FontSize="12" LineHeight="1.25" TextColor="#E8D8D0" />
-                                <Label Text="LETTUCE" FontSize="25" FontAttributes="Bold" CharacterSpacing="3" TextColor="{DynamicResource Primary}" Margin="0,8,0,0" />
+                                <Label Text="LETTUCE" FontSize="25" FontAttributes="Bold" CharacterSpacing="3" TextColor="{DynamicResource Primary}" Margin="0,7,0,0" />
                                 <Label Text="WATER  •  LIGHT  •  AIR" FontSize="8" CharacterSpacing="1.2" TextColor="#C9AEB5" />
                             </VerticalStackLayout>
                         </Grid>
-                    </Border>
-                </Grid>
+                    </Grid>
+                </Border>
 
                 <HorizontalStackLayout Grid.Row="2" Spacing="8">
                     <Ellipse WidthRequest="7" HeightRequest="7" Fill="{DynamicResource Primary}" VerticalOptions="Center" />
@@ -40,26 +39,24 @@
             </Grid>
         </Grid>
 
-        <!-- Sign-in form: same project words, Figma styling -->
         <ScrollView Grid.Column="1">
-            <VerticalStackLayout Padding="64,46,74,42" Spacing="0" VerticalOptions="Center">
-                <Label Text="SECURE ACCESS" FontSize="10" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,20" />
-
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="SIGN IN" FontSize="44" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+            <VerticalStackLayout Padding="70,54,78,48" Spacing="0" VerticalOptions="Center">
+                <Label Text="SECURE ACCESS" FontSize="10" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,21" />
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="SIGN IN" FontSize="46" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                     <Label Text="Enter your account details to continue." FontSize="13" TextColor="{DynamicResource OnSurfaceVariant}" />
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="7" Margin="0,28,0,0">
+                <VerticalStackLayout Spacing="7" Margin="0,30,0,0">
                     <Label Text="EMAIL" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" />
-                    <Border BackgroundColor="Transparent" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 0" HeightRequest="50" Padding="12,0">
+                    <Border BackgroundColor="Transparent" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 0" HeightRequest="52" Padding="13,0">
                         <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" VerticalTextAlignment="Center" BackgroundColor="Transparent" TextColor="{DynamicResource OnSurface}" PlaceholderColor="{DynamicResource OnSurfaceVariant}" FontSize="14" TextChanged="OnFieldChanged" ReturnType="Next" Completed="OnEmailCompleted" />
                     </Border>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="7" Margin="0,17,0,0">
+                <VerticalStackLayout Spacing="7" Margin="0,18,0,0">
                     <Label Text="PASSWORD" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}" />
-                    <Border BackgroundColor="Transparent" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 0" HeightRequest="50" Padding="12,0">
+                    <Border BackgroundColor="Transparent" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 0" HeightRequest="52" Padding="13,0">
                         <Grid ColumnDefinitions="*,Auto">
                             <Entry x:Name="PasswordEntry" Grid.Column="0" Placeholder="Enter your password" IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}" VerticalTextAlignment="Center" BackgroundColor="Transparent" TextColor="{DynamicResource OnSurface}" PlaceholderColor="{DynamicResource OnSurfaceVariant}" FontSize="14" TextChanged="OnFieldChanged" ReturnType="Done" Completed="OnPasswordCompleted" />
                             <CheckBox x:Name="ShowPasswordCheckBox" Grid.Column="1" Color="{DynamicResource Primary}" VerticalOptions="Center" />
@@ -76,9 +73,9 @@
 
                 <Label x:Name="ErrorLabel" Text="" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource Secondary}" IsVisible="False" Margin="0,8,0,0" />
 
-                <Button x:Name="LoginButton" Text="SIGN IN   →" BackgroundColor="{DynamicResource Primary}" TextColor="{DynamicResource OnPrimary}" FontSize="12" FontAttributes="Bold" CharacterSpacing="1" CornerRadius="12" HeightRequest="52" HorizontalOptions="Fill" Margin="0,17,0,0" Clicked="OnLoginClicked" IsEnabled="False" />
+                <Button x:Name="LoginButton" Text="SIGN IN   →" BackgroundColor="{DynamicResource Primary}" TextColor="{DynamicResource OnPrimary}" FontSize="12" FontAttributes="Bold" CharacterSpacing="1" CornerRadius="12" HeightRequest="52" HorizontalOptions="Fill" Margin="0,18,0,0" Clicked="OnLoginClicked" IsEnabled="False" />
 
-                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10" Margin="0,20,0,12">
+                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10" Margin="0,21,0,13">
                     <BoxView HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="or" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
                     <BoxView Grid.Column="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" VerticalOptions="Center" />
@@ -86,7 +83,7 @@
 
                 <Button Text="Continue with Google" BackgroundColor="{DynamicResource SurfaceContainerHigh}" TextColor="{DynamicResource OnSurface}" FontSize="12" FontAttributes="Bold" BorderWidth="1" BorderColor="{DynamicResource OutlineVariant}" CornerRadius="12" HeightRequest="48" />
 
-                <VerticalStackLayout Spacing="3" Margin="0,28,0,0">
+                <VerticalStackLayout Spacing="3" Margin="0,29,0,0">
                     <Label Text="HYDROPONIC LETTUCE MONITORING" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.4" TextColor="{DynamicResource Primary}" />
                     <Label Text="Secure access to your sensor system" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
                     <Label Text="Demo: admin@glorious.com / password123" FontSize="8" FontAttributes="Italic" TextColor="{DynamicResource OnSurfaceVariant}" />
