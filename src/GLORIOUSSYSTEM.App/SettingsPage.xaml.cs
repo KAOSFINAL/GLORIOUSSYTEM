@@ -123,7 +123,6 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
     {
         PrimaryColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, 7);
         AccentColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, 7);
-        BackgroundColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_BackgroundIndex", 0), 0, 7);
         DarkModeEnabled = Preferences.Get("Theme_DarkMode", false);
         DarkModeSwitch.IsToggled = DarkModeEnabled;
         ThemeManager.Apply();
@@ -234,14 +233,6 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         UpdateColorPreviews();
     }
 
-    private void OnBackgroundColorChanged(object? sender, EventArgs e)
-    {
-        if (BackgroundColorPicker.SelectedIndex < 0) return;
-        Preferences.Set("Theme_BackgroundIndex", BackgroundColorPicker.SelectedIndex);
-        ThemeManager.Apply();
-        UpdateColorPreviews();
-    }
-
     private void OnDarkModeToggled(object? sender, ToggledEventArgs e)
     {
         DarkModeEnabled = e.Value;
@@ -260,16 +251,10 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         AccentColorPicker.SelectedIndex = 0;
     }
 
-    private void OnResetBackgroundColor(object? sender, EventArgs e)
-    {
-        BackgroundColorPicker.SelectedIndex = 0;
-    }
-
     private void UpdateColorPreviews()
     {
         PrimaryColorPreview.BackgroundColor = GetResourceColor("Primary", Colors.Green);
         AccentColorPreview.BackgroundColor = GetResourceColor("Secondary", Colors.Blue);
-        BackgroundColorPreview.BackgroundColor = GetResourceColor("Surface", Colors.White);
     }
 
     private static Color GetResourceColor(string key, Color fallback)
@@ -289,12 +274,10 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
         PrimaryColorPicker.SelectedIndex = 0;
         AccentColorPicker.SelectedIndex = 0;
-        BackgroundColorPicker.SelectedIndex = 0;
         DarkModeSwitch.IsToggled = false;
 
         Preferences.Set("Theme_PrimaryIndex", 0);
         Preferences.Set("Theme_AccentIndex", 0);
-        Preferences.Set("Theme_BackgroundIndex", 0);
         Preferences.Set("Theme_DarkMode", false);
 
         ThemeManager.Apply();
