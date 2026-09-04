@@ -5,7 +5,7 @@
        x:Class="GLORIOUSSYSTEM.App.AppShell"
        FlyoutBehavior="Disabled"
        Shell.NavBarIsVisible="False"
-       Title="GLORIOUSSYTEM">
+       Title="GLORIOUSSYSTEM">
 
     <FlyoutItem Title="Overview" Route="dashboard" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Title="Overview" />
