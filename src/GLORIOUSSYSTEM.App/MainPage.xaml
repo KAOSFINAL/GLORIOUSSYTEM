@@ -1,13 +1,271 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:GLORIOUSSYSTEM.App" x:Class="GLORIOUSSYSTEM.App.MainPage" BackgroundColor="{DynamicResource Surface}" Title="Overview" Shell.NavBarIsVisible="False">
-<Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
-<RefreshView x:Name="RefreshView" Grid.Row="0" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" Command="{Binding RefreshCommand}"><ScrollView><VerticalStackLayout Padding="42,34,48,42" Spacing="0">
-<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,22"><VerticalStackLayout Spacing="3"><Label Text="Smart Hydroponics System" FontSize="11" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="Dashboard" FontSize="34" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/></VerticalStackLayout><Border Grid.Column="1" WidthRequest="42" HeightRequest="42" BackgroundColor="#331F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 14"><Label Text="♧" FontSize="24" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border></Grid>
-<Border Margin="0,0,0,25" Padding="18,16" BackgroundColor="#B31F0E12" Stroke="#665A303A" StrokeThickness="1" StrokeShape="RoundRectangle 18"><VerticalStackLayout Spacing="11"><Grid ColumnDefinitions="*,Auto"><HorizontalStackLayout Spacing="13"><Label Text="28°C" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><VerticalStackLayout Spacing="2"><Label Text="Partly Cloudy" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="⌖  Green Farm, Nueva Ecija" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></HorizontalStackLayout><VerticalStackLayout Grid.Column="1" Spacing="4"><Label Text="💧  Humidity 65%" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="〰  Wind 12 km/h" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Text="☁  Rain 20%" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></Grid><Label Text="Today, 9:41 AM" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></Border>
-<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10"><Label Text="System Overview" FontSize="10" CharacterSpacing="1.8" TextTransform="Uppercase" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Grid.Column="1" Text="Live ●" FontSize="9" TextColor="{DynamicResource Primary}"/></Grid>
-<Border Padding="10" Margin="0,0,0,25" BackgroundColor="#8F1F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 18"><CollectionView x:Name="SensorList" SelectionMode="None" BackgroundColor="Transparent"><CollectionView.ItemsLayout><LinearItemsLayout Orientation="Vertical" ItemSpacing="8"/></CollectionView.ItemsLayout><CollectionView.ItemTemplate><DataTemplate><VerticalStackLayout Spacing="7"><Label Text="{Binding CategoryName}" FontSize="9" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurfaceVariant}"/><FlexLayout Direction="Row" Wrap="Wrap" BindableLayout.ItemsSource="{Binding .}" AlignItems="Stretch" JustifyContent="Start"><BindableLayout.ItemTemplate><DataTemplate><Border WidthRequest="190" MinimumHeightRequest="82" Margin="4" Padding="13,11" BackgroundColor="#B32A1318" Stroke="#453A2630" StrokeThickness="1" StrokeShape="RoundRectangle 14"><Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto"><Label Text="{Binding Name}" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}"/><HorizontalStackLayout Grid.Column="1"><Label Text="{Binding ValueText}" FontSize="18" FontAttributes="Bold" TextColor="{Binding ValueColor}"/><Label Text="{Binding UnitText}" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" Margin="3,8,0,0"/></HorizontalStackLayout><Label Grid.Row="1" Text="{Binding SubText}" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Grid.Row="2" Text="●  Normal" FontSize="8" TextColor="{Binding StatusColor}" Margin="0,5,0,0"/></Grid></Border></DataTemplate></BindableLayout.ItemTemplate></FlexLayout></VerticalStackLayout></DataTemplate></CollectionView.ItemTemplate></CollectionView></Border>
-<Grid ColumnDefinitions="*,*" ColumnSpacing="18" Margin="0,0,0,24"><Border BackgroundColor="#A61F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="15"><VerticalStackLayout Spacing="8"><Label Text="ENVIRONMENT" FontSize="9" CharacterSpacing="1.6" TextColor="{DynamicResource OnSurfaceVariant}"/><Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,1,Auto" RowSpacing="8"><Label Text="Temperature" FontSize="10" TextColor="{DynamicResource OnSurface}"/><Label Grid.Column="1" Text="26.5 °C" FontSize="16" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/><BoxView Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="{DynamicResource OutlineVariant}"/><Label Grid.Row="2" Text="Humidity" FontSize="10" TextColor="{DynamicResource OnSurface}"/><Label Grid.Row="2" Grid.Column="1" Text="68%" FontSize="16" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/></Grid></VerticalStackLayout></Border><Border Grid.Column="1" BackgroundColor="#A61F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="15"><VerticalStackLayout Spacing="8"><Label Text="POWER" FontSize="9" CharacterSpacing="1.6" TextColor="{DynamicResource OnSurfaceVariant}"/><Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,1,Auto" RowSpacing="8"><Label Text="Solar Battery" FontSize="10" TextColor="{DynamicResource OnSurface}"/><Label Grid.Column="1" Text="85%" FontSize="16" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/><BoxView Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="{DynamicResource OutlineVariant}"/><Label Grid.Row="2" Text="Status" FontSize="10" TextColor="{DynamicResource OnSurface}"/><Label Grid.Row="2" Grid.Column="1" Text="Charging" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource Primary}"/></Grid></VerticalStackLayout></Border></Grid>
-<Border BackgroundColor="#A61F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="14" Margin="0,0,0,22"><Grid ColumnDefinitions="Auto,*,Auto"><Border WidthRequest="34" HeightRequest="34" BackgroundColor="{DynamicResource PrimaryContainer}" Stroke="#55F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 12"><Label Text="✦" FontSize="16" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><VerticalStackLayout Grid.Column="1" Margin="10,0"><Label Text="CNN Predict — Healthy" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="CNN Confidence: 92%" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout><Label Grid.Column="2" Text="92%" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Primary}" VerticalOptions="Center"/></Grid></Border>
-<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,9"><Label Text="Latest Capture" FontSize="9" CharacterSpacing="1.7" TextColor="{DynamicResource OnSurfaceVariant}"/><Label Grid.Column="1" Text="Today, 9:30 AM" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}"/></Grid><Border HeightRequest="180" Margin="0,0,0,18" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 18"><Grid><Image Source="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1000&amp;h=500&amp;fit=crop&amp;auto=format" Aspect="AspectFill"/><Border BackgroundColor="#80100607" StrokeThickness="0" VerticalOptions="End" Padding="13,11"><HorizontalStackLayout><Label Text="● Healthy  · CNN Confidence 92%" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/></HorizontalStackLayout></Border></Grid></Border>
-<Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Last Sensor Sync" FontSize="8" CharacterSpacing="1.1" TextColor="{DynamicResource OnSurfaceVariant}"/><Label x:Name="LastUpdatedLabel" Text="--" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/></VerticalStackLayout><Button Grid.Column="1" Text="REFRESH" WidthRequest="96" HeightRequest="36" CornerRadius="18" BackgroundColor="{DynamicResource Primary}" TextColor="{DynamicResource OnPrimary}" FontSize="8" FontAttributes="Bold" Clicked="OnRefreshClicked"/></Grid>
-</VerticalStackLayout></ScrollView></RefreshView><local:AppSidebar Grid.Row="1" CurrentRoute="dashboard"/></Grid></ContentPage>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
+             x:Class="GLORIOUSSYSTEM.App.MainPage"
+             BackgroundColor="{DynamicResource Surface}"
+             Title="Overview"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
+        <RefreshView x:Name="RefreshView"
+                     Grid.Row="0"
+                     IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                     Command="{Binding RefreshCommand}">
+            <ScrollView>
+                <VerticalStackLayout Padding="20,48,20,24" Spacing="0">
+
+                    <!-- Reference mobile header -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Smart Hydroponics System"
+                                   FontSize="11"
+                                   CharacterSpacing="1.5"
+                                   TextColor="{DynamicResource OnSurface}" />
+                            <Label Text="Dashboard"
+                                   FontSize="32"
+                                   LineHeight="0.95"
+                                   TextColor="{DynamicResource OnSurface}"
+                                   FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                        <Grid Grid.Column="1" WidthRequest="34" HeightRequest="34" Margin="0,1,0,0">
+                            <Label Text="🔔"
+                                   FontSize="20"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   TextColor="{DynamicResource OnSurface}" />
+                            <Border WidthRequest="15"
+                                    HeightRequest="15"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    BackgroundColor="{DynamicResource Primary}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 8">
+                                <Label Text="3"
+                                       FontSize="8"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnPrimary}"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center" />
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Weather strip -->
+                    <Border Margin="0,0,0,22"
+                            Padding="14,13"
+                            BackgroundColor="#0A4ADE80"
+                            Stroke="{DynamicResource Primary}"
+                            StrokeThickness="2"
+                            StrokeShape="RoundRectangle 0,4,4,0">
+                        <VerticalStackLayout Spacing="9">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                    <Label Text="28°C"
+                                           FontSize="29"
+                                           FontAttributes="Bold"
+                                           TextColor="{DynamicResource OnSurface}" />
+                                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                                        <Label Text="Partly Cloudy"
+                                               FontSize="11"
+                                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        <HorizontalStackLayout Spacing="3">
+                                            <Label Text="⌖"
+                                                   FontSize="10"
+                                                   TextColor="{DynamicResource Primary}" />
+                                            <Label Text="Green Farm, Nueva Ecija"
+                                                   FontSize="8"
+                                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="End">
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="💧" FontSize="9" />
+                                        <Label Text="Humidity 65%" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="〰" FontSize="9" TextColor="{DynamicResource Primary}" />
+                                        <Label Text="Wind 12 km/h" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="☁" FontSize="9" />
+                                        <Label Text="Rain 20%" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Label Text="Today, 9:41 AM"
+                                   FontSize="8"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- System Overview -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                        <Label Text="System Overview"
+                               FontSize="10"
+                               CharacterSpacing="1.8"
+                               TextTransform="Uppercase"
+                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Grid.Column="1"
+                               Text="Live ●"
+                               FontSize="9"
+                               TextColor="{DynamicResource Primary}" />
+                    </Grid>
+
+                    <!-- Sensor grid: data and grouping remain driven by the existing C# code -->
+                    <Border Padding="0"
+                            Margin="0,0,0,22"
+                            BackgroundColor="Transparent"
+                            StrokeThickness="0">
+                        <CollectionView x:Name="SensorList"
+                                        SelectionMode="None"
+                                        BackgroundColor="Transparent">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="7" Padding="0,10,0,5">
+                                            <Label Text="{Binding CategoryIcon}"
+                                                   FontSize="11"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding CategoryName}"
+                                                   FontSize="9"
+                                                   CharacterSpacing="1.5"
+                                                   TextColor="{DynamicResource OnSurfaceVariant}"
+                                                   VerticalTextAlignment="Center" />
+                                        </Grid>
+                                        <FlexLayout Direction="Row"
+                                                    Wrap="Wrap"
+                                                    BindableLayout.ItemsSource="{Binding .}"
+                                                    AlignItems="Stretch"
+                                                    JustifyContent="Start">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border FlexLayout.Basis="33.3333%"
+                                                            Margin="0"
+                                                            Padding="8,11"
+                                                            BackgroundColor="Transparent"
+                                                            Stroke="{DynamicResource OutlineVariant}"
+                                                            StrokeThickness="0.6"
+                                                            StrokeShape="RoundRectangle 0">
+                                                        <VerticalStackLayout Spacing="4">
+                                                            <HorizontalStackLayout Spacing="4">
+                                                                <Label Text="●"
+                                                                       FontSize="7"
+                                                                       TextColor="{Binding StatusColor}"
+                                                                       VerticalTextAlignment="Center" />
+                                                                <Label Text="{Binding Name}"
+                                                                       FontSize="9"
+                                                                       LineBreakMode="TailTruncation"
+                                                                       TextColor="{DynamicResource OnSurfaceVariant}"
+                                                                       VerticalTextAlignment="Center" />
+                                                            </HorizontalStackLayout>
+                                                            <HorizontalStackLayout Spacing="2" VerticalOptions="End">
+                                                                <Label Text="{Binding ValueText}"
+                                                                       FontSize="17"
+                                                                       FontAttributes="Bold"
+                                                                       TextColor="{DynamicResource OnSurface}"
+                                                                       VerticalTextAlignment="End" />
+                                                                <Label Text="{Binding UnitText}"
+                                                                       FontSize="8"
+                                                                       TextColor="{DynamicResource OnSurfaceVariant}"
+                                                                       VerticalTextAlignment="End"
+                                                                       Margin="0,0,0,2" />
+                                                            </HorizontalStackLayout>
+                                                            <Label Text="Normal"
+                                                                   FontSize="8"
+                                                                   TextColor="{Binding StatusColor}" />
+                                                        </VerticalStackLayout>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </FlexLayout>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Border>
+
+                    <!-- Latest Capture -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                        <Label Text="Latest Capture"
+                               FontSize="9"
+                               CharacterSpacing="1.7"
+                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="▣"
+                                   FontSize="9"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Text="Today, 9:30 AM"
+                                   FontSize="8"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Border HeightRequest="180"
+                            Margin="0,0,0,20"
+                            Stroke="{DynamicResource OutlineVariant}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 4">
+                        <Grid>
+                            <Image Source="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800&amp;h=400&amp;fit=crop&amp;auto=format"
+                                   Aspect="AspectFill" />
+                            <Border VerticalOptions="End"
+                                    Padding="12,10"
+                                    BackgroundColor="#D9050A05"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 0">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="●"
+                                           FontSize="10"
+                                           TextColor="{DynamicResource Primary}"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Text="Healthy"
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="{DynamicResource Primary}" />
+                                    <Label Text="· CNN Confidence 92%"
+                                           FontSize="10"
+                                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Last sync / refresh -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,2">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Last Sensor Sync"
+                                   FontSize="8"
+                                   CharacterSpacing="1.1"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label x:Name="LastUpdatedLabel"
+                                   Text="--"
+                                   FontSize="9"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="REFRESH"
+                                WidthRequest="92"
+                                HeightRequest="34"
+                                CornerRadius="17"
+                                BackgroundColor="{DynamicResource Primary}"
+                                TextColor="{DynamicResource OnPrimary}"
+                                FontSize="8"
+                                FontAttributes="Bold"
+                                Clicked="OnRefreshClicked" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- Existing mobile bottom navigation remains unchanged -->
+        <local:AppSidebar Grid.Row="1" CurrentRoute="dashboard" />
+    </Grid>
+</ContentPage>
