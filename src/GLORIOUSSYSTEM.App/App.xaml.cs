@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using GLORIOUSSYSTEM.Data.Models;
 using Microsoft.Maui.Storage;
 
@@ -60,14 +61,37 @@ public partial class App : Application
 
     private static void InitializeAndroidDatabase(string databasePath)
     {
-        if (File.Exists(databasePath))
+        // An earlier build could have created an empty SQLite file on the phone.
+        // Do not trust the file's existence alone; verify that it contains the
+        // application schema before deciding to keep it.
+        if (File.Exists(databasePath) && HasUsersTable(databasePath))
             return;
+
+        if (File.Exists(databasePath))
+            File.Delete(databasePath);
 
         using var source = FileSystem.OpenAppPackageFileAsync("database/hydroponic.db")
             .GetAwaiter()
             .GetResult();
         using var destination = File.Create(databasePath);
         source.CopyTo(destination);
+    }
+
+    private static bool HasUsersTable(string databasePath)
+    {
+        try
+        {
+            using var connection = new SqliteConnection($"Data Source={databasePath}");
+            connection.Open();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT 1 FROM sqlite_master WHERE type='table' AND name='Users' LIMIT 1";
+            return command.ExecuteScalar() != null;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
