@@ -1,2 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="GLORIOUSSYSTEM.App.AppSidebar" BackgroundColor="#CC160A0C"><Grid Padding="18,8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="20"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center"><Border WidthRequest="42" HeightRequest="42" BackgroundColor="#403A2410" Stroke="#66F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 13"><Label Text="G" FontSize="22" FontAttributes="Bold" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><VerticalStackLayout Grid.Column="1" VerticalOptions="Center"><Label Text="GLORIOUSSYTEM" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"/><Label Text="LIVING FARM" FontSize="7" CharacterSpacing="1.2" TextColor="{DynamicResource OnSurfaceVariant}"/></VerticalStackLayout></Grid><HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6"><Border x:Name="OverviewItem" Padding="14,9" BackgroundColor="#331F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 12"><Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7"><Border x:Name="OverviewIcon" WidthRequest="28" HeightRequest="28" BackgroundColor="#403A2410" Stroke="#55F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 8"><Label Text="⌂" FontSize="17" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><Label Grid.Column="1" Text="OVERVIEW" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center"/></Grid><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped"/></Border.GestureRecognizers></Border><Border x:Name="ScannerItem" Padding="14,9" BackgroundColor="#331F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 12"><Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7"><Border x:Name="ScannerIcon" WidthRequest="28" HeightRequest="28" BackgroundColor="#403A2410" Stroke="#55F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 8"><Label Text="✦" FontSize="16" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><Label Grid.Column="1" Text="WEBCAM" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center"/></Grid><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped"/></Border.GestureRecognizers></Border><Border x:Name="AnalyticsItem" Padding="14,9" BackgroundColor="#331F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 12"><Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7"><Border x:Name="AnalyticsIcon" WidthRequest="28" HeightRequest="28" BackgroundColor="#403A2410" Stroke="#55F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 8"><Label Text="⌁" FontSize="18" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><Label Grid.Column="1" Text="REPORTS" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center"/></Grid><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped"/></Border.GestureRecognizers></Border><Border x:Name="SettingsItem" Padding="14,9" BackgroundColor="#331F0E12" Stroke="#554A2630" StrokeThickness="1" StrokeShape="RoundRectangle 12"><Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="7"><Border x:Name="SettingsIcon" WidthRequest="28" HeightRequest="28" BackgroundColor="#403A2410" Stroke="#55F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 8"><Label Text="⚙" FontSize="16" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/></Border><Label Grid.Column="1" Text="SETTINGS" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center"/></Grid><Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped"/></Border.GestureRecognizers></Border></HorizontalStackLayout><HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center"><Border Padding="9,6" BackgroundColor="#332A1318" Stroke="#453A2630" StrokeThickness="1" StrokeShape="RoundRectangle 16"><HorizontalStackLayout Spacing="6"><BoxView WidthRequest="7" HeightRequest="7" BackgroundColor="{DynamicResource Primary}"/><Label Text="ONLINE" FontSize="8" FontAttributes="Bold" CharacterSpacing=".8" TextColor="{DynamicResource Primary}"/></HorizontalStackLayout></Border><Button Text="SIGN OUT" Style="{DynamicResource TertiaryButton}" Clicked="OnLogoutClicked" HeightRequest="32" Padding="12,0" CornerRadius="8" FontSize="8" TextColor="{DynamicResource Error}" BorderColor="{DynamicResource Error}" BorderWidth="1"/></HorizontalStackLayout></Grid></ContentView>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GLORIOUSSYSTEM.App.AppSidebar"
+             BackgroundColor="#CC160A0C">
+    <Border Margin="6,4,6,6"
+            Padding="8,7"
+            BackgroundColor="#CC160A0C"
+            Stroke="#453A2630"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 16">
+        <Grid ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="8"
+              VerticalOptions="Center">
+
+            <!-- Brand: compact on narrow screens -->
+            <Grid ColumnDefinitions="Auto,Auto"
+                  ColumnSpacing="7"
+                  VerticalOptions="Center">
+                <Border WidthRequest="34"
+                        HeightRequest="34"
+                        BackgroundColor="#403A2410"
+                        Stroke="#66F59E0B"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10">
+                    <Label Text="G"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{DynamicResource Primary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="0"
+                                     VerticalOptions="Center">
+                    <Label Text="GLORIOUSSYTEM"
+                           FontSize="10"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{DynamicResource OnSurface}" />
+                    <Label Text="LIVING FARM"
+                           FontSize="6"
+                           CharacterSpacing="1"
+                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Navigation: proportional and compact -->
+            <Grid Grid.Column="1"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="4"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Center">
+
+                <Border x:Name="OverviewItem"
+                        Grid.Column="0"
+                        Padding="5,5"
+                        HorizontalOptions="Fill"
+                        BackgroundColor="#331F0E12"
+                        Stroke="#554A2630"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10">
+                    <Grid ColumnDefinitions="Auto,*"
+                          ColumnSpacing="4"
+                          HorizontalOptions="Center">
+                        <Border x:Name="OverviewIcon"
+                                WidthRequest="24"
+                                HeightRequest="24"
+                                BackgroundColor="#403A2410"
+                                Stroke="#55F59E0B"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 7">
+                            <Label Text="⌂"
+                                   FontSize="14"
+                                   TextColor="{DynamicResource Primary}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Text="OVERVIEW"
+                               FontSize="8"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation"
+                               TextColor="{DynamicResource OnSurface}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnOverviewTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="ScannerItem"
+                        Grid.Column="1"
+                        Padding="5,5"
+                        HorizontalOptions="Fill"
+                        BackgroundColor="#331F0E12"
+                        Stroke="#554A2630"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10">
+                    <Grid ColumnDefinitions="Auto,*"
+                          ColumnSpacing="4"
+                          HorizontalOptions="Center">
+                        <Border x:Name="ScannerIcon"
+                                WidthRequest="24"
+                                HeightRequest="24"
+                                BackgroundColor="#403A2410"
+                                Stroke="#55F59E0B"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 7">
+                            <Label Text="✦"
+                                   FontSize="13"
+                                   TextColor="{DynamicResource Primary}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Text="WEBCAM"
+                               FontSize="8"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation"
+                               TextColor="{DynamicResource OnSurface}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnScannerTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="AnalyticsItem"
+                        Grid.Column="2"
+                        Padding="5,5"
+                        HorizontalOptions="Fill"
+                        BackgroundColor="#331F0E12"
+                        Stroke="#554A2630"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10">
+                    <Grid ColumnDefinitions="Auto,*"
+                          ColumnSpacing="4"
+                          HorizontalOptions="Center">
+                        <Border x:Name="AnalyticsIcon"
+                                WidthRequest="24"
+                                HeightRequest="24"
+                                BackgroundColor="#403A2410"
+                                Stroke="#55F59E0B"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 7">
+                            <Label Text="⌁"
+                                   FontSize="15"
+                                   TextColor="{DynamicResource Primary}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Text="REPORTS"
+                               FontSize="8"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation"
+                               TextColor="{DynamicResource OnSurface}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAnalyticsTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="SettingsItem"
+                        Grid.Column="3"
+                        Padding="5,5"
+                        HorizontalOptions="Fill"
+                        BackgroundColor="#331F0E12"
+                        Stroke="#554A2630"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10">
+                    <Grid ColumnDefinitions="Auto,*"
+                          ColumnSpacing="4"
+                          HorizontalOptions="Center">
+                        <Border x:Name="SettingsIcon"
+                                WidthRequest="24"
+                                HeightRequest="24"
+                                BackgroundColor="#403A2410"
+                                Stroke="#55F59E0B"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 7">
+                            <Label Text="⚙"
+                                   FontSize="13"
+                                   TextColor="{DynamicResource Primary}"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Text="SETTINGS"
+                               FontSize="8"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation"
+                               TextColor="{DynamicResource OnSurface}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSettingsTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+
+            <!-- Status/actions stay in their own column -->
+            <HorizontalStackLayout Grid.Column="2"
+                                   Spacing="6"
+                                   VerticalOptions="Center">
+                <Border Padding="7,5"
+                        BackgroundColor="#332A1318"
+                        Stroke="#453A2630"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14">
+                    <HorizontalStackLayout Spacing="4">
+                        <BoxView WidthRequest="6"
+                                 HeightRequest="6"
+                                 BackgroundColor="{DynamicResource Primary}"
+                                 VerticalOptions="Center" />
+                        <Label Text="ONLINE"
+                               FontSize="7"
+                               FontAttributes="Bold"
+                               CharacterSpacing=".5"
+                               TextColor="{DynamicResource Primary}"
+                               VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+                <Button Text="SIGN OUT"
+                        Style="{DynamicResource TertiaryButton}"
+                        Clicked="OnLogoutClicked"
+                        HeightRequest="30"
+                        Padding="8,0"
+                        CornerRadius="8"
+                        FontSize="7"
+                        TextColor="{DynamicResource Error}"
+                        BorderColor="{DynamicResource Error}"
+                        BorderWidth="1" />
+            </HorizontalStackLayout>
+        </Grid>
+    </Border>
+</ContentView>
