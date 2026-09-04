@@ -338,7 +338,7 @@
                                             <x:String>Indigo</x:String>
                                             <x:String>Emerald</x:String>
                                         </x:Array>
-                                    </x:Array>
+                                    </Picker.ItemsSource>
                                 </Picker>
                             </VerticalStackLayout>
                             <Button Grid.Column="2"
@@ -382,7 +382,7 @@
                                             <x:String>Lime</x:String>
                                             <x:String>Pink</x:String>
                                         </x:Array>
-                                    </x:Array>
+                                    </Picker.ItemsSource>
                                 </Picker>
                             </VerticalStackLayout>
                             <Button Grid.Column="2"
