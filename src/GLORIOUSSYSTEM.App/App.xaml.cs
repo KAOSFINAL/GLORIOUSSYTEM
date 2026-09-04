@@ -32,14 +32,23 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
+        using var configStream = FileSystem.OpenAppPackageFileAsync("appsettings.json")
+            .GetAwaiter()
+            .GetResult();
+
         var config = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+            .AddJsonStream(configStream)
             .AddEnvironmentVariables()
             .Build();
 
         var connStr = config.GetConnectionString("HydroponicDb");
+
+        // The desktop configuration points to the development database on the
+        // Windows machine. Android must use its own private app data folder.
+        if (OperatingSystem.IsAndroid())
+        {
+            connStr = $"Data Source={Path.Combine(FileSystem.AppDataDirectory, "hydroponic.db")}";
+        }
 
         services.AddDbContext<HydroponicDbContext>(options =>
             options.UseSqlite(connStr));
