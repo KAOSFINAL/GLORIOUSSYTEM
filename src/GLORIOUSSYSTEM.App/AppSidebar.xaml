@@ -12,137 +12,51 @@
         <Grid ColumnDefinitions="Auto,*,Auto"
               ColumnSpacing="7"
               VerticalOptions="Center">
-
-            <Border WidthRequest="34"
-                    HeightRequest="34"
-                    BackgroundColor="#403A2410"
-                    Stroke="#66F59E0B"
-                    StrokeThickness="1"
+            <Border WidthRequest="34" HeightRequest="34"
+                    BackgroundColor="#403A2410" Stroke="#66F59E0B" StrokeThickness="1"
                     StrokeShape="RoundRectangle 10">
-                <Label Text="G"
-                       FontSize="18"
-                       FontAttributes="Bold"
-                       TextColor="{DynamicResource Primary}"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center" />
+                <Label Text="G" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Primary}"
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
             </Border>
 
-            <Grid Grid.Column="1"
-                  ColumnDefinitions="*,*,*,*"
-                  ColumnSpacing="5"
-                  HorizontalOptions="Fill"
-                  VerticalOptions="Center">
-
-                <Border x:Name="OverviewItem"
-                        Grid.Column="0"
-                        WidthRequest="42"
-                        HeightRequest="38"
-                        HorizontalOptions="Center"
-                        BackgroundColor="#331F0E12"
-                        Stroke="#554A2630"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 11">
-                    <Label x:Name="OverviewIcon"
-                           Text="⌂"
-                           FontSize="21"
-                           TextColor="{DynamicResource Primary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnOverviewTapped" />
-                    </Border.GestureRecognizers>
+            <Grid Grid.Column="1" ColumnDefinitions="*,*,*,*" ColumnSpacing="5"
+                  HorizontalOptions="Fill" VerticalOptions="Center">
+                <Border x:Name="OverviewItem" Grid.Column="0" WidthRequest="42" HeightRequest="38"
+                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
+                    <Image x:Name="OverviewIcon" Source="nav_home.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
                 </Border>
-
-                <Border x:Name="ScannerItem"
-                        Grid.Column="1"
-                        WidthRequest="42"
-                        HeightRequest="38"
-                        HorizontalOptions="Center"
-                        BackgroundColor="#331F0E12"
-                        Stroke="#554A2630"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 11">
-                    <Label x:Name="ScannerIcon"
-                           Text="✦"
-                           FontSize="20"
-                           TextColor="{DynamicResource Primary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnScannerTapped" />
-                    </Border.GestureRecognizers>
+                <Border x:Name="ScannerItem" Grid.Column="1" WidthRequest="42" HeightRequest="38"
+                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
+                    <Image x:Name="ScannerIcon" Source="nav_webcam.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
                 </Border>
-
-                <Border x:Name="AnalyticsItem"
-                        Grid.Column="2"
-                        WidthRequest="42"
-                        HeightRequest="38"
-                        HorizontalOptions="Center"
-                        BackgroundColor="#331F0E12"
-                        Stroke="#554A2630"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 11">
-                    <Label x:Name="AnalyticsIcon"
-                           Text="⌁"
-                           FontSize="22"
-                           TextColor="{DynamicResource Primary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAnalyticsTapped" />
-                    </Border.GestureRecognizers>
+                <Border x:Name="AnalyticsItem" Grid.Column="2" WidthRequest="42" HeightRequest="38"
+                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
+                    <Image x:Name="AnalyticsIcon" Source="nav_reports.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
                 </Border>
-
-                <Border x:Name="SettingsItem"
-                        Grid.Column="3"
-                        WidthRequest="42"
-                        HeightRequest="38"
-                        HorizontalOptions="Center"
-                        BackgroundColor="#331F0E12"
-                        Stroke="#554A2630"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 11">
-                    <Label x:Name="SettingsIcon"
-                           Text="⚙"
-                           FontSize="20"
-                           TextColor="{DynamicResource Primary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnSettingsTapped" />
-                    </Border.GestureRecognizers>
+                <Border x:Name="SettingsItem" Grid.Column="3" WidthRequest="42" HeightRequest="38"
+                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
+                    <Image x:Name="SettingsIcon" Source="nav_settings.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
                 </Border>
             </Grid>
 
-            <HorizontalStackLayout Grid.Column="2"
-                                   Spacing="5"
-                                   VerticalOptions="Center">
-                <Border WidthRequest="34"
-                        HeightRequest="28"
-                        BackgroundColor="#332A1318"
-                        Stroke="#453A2630"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 14">
-                    <BoxView WidthRequest="6"
-                             HeightRequest="6"
-                             BackgroundColor="{DynamicResource Primary}"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center" />
+            <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
+                <Border WidthRequest="34" HeightRequest="28" BackgroundColor="#332A1318" Stroke="#453A2630"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 14">
+                    <BoxView WidthRequest="6" HeightRequest="6" BackgroundColor="{DynamicResource Primary}"
+                             HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
-                <Border WidthRequest="34"
-                        HeightRequest="34"
-                        BackgroundColor="#332A1318"
-                        Stroke="{DynamicResource Error}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 17">
-                    <Label Text="↪"
-                           FontSize="19"
-                           TextColor="{DynamicResource Error}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutClicked" />
-                    </Border.GestureRecognizers>
+                <Border WidthRequest="34" HeightRequest="34" BackgroundColor="#332A1318" Stroke="{DynamicResource Error}"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 17">
+                    <Image Source="nav_logout.svg" WidthRequest="18" HeightRequest="18" Opacity="0.9" />
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
                 </Border>
             </HorizontalStackLayout>
         </Grid>
