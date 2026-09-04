@@ -2,65 +2,227 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.LoginPage"
-             BackgroundColor="{DynamicResource Surface}"
+             BackgroundColor="#F4F7F5"
              Shell.NavBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
 
-    <ScrollView>
-        <Grid Padding="24,34,24,30" RowDefinitions="Auto,Auto,Auto" RowSpacing="22" VerticalOptions="Center">
-            <VerticalStackLayout Grid.Row="0" Spacing="8" HorizontalOptions="Center">
-                <Border WidthRequest="68" HeightRequest="68" BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 22" HorizontalOptions="Center">
-                    <Label Text="G" FontSize="34" FontAttributes="Bold" TextColor="{DynamicResource OnPrimary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-                </Border>
-                <Label Text="GLORIOUS SYSTEM" FontSize="20" FontAttributes="Bold" CharacterSpacing="1.5" TextColor="{DynamicResource OnSurface}" HorizontalOptions="Center" />
-                <Label Text="Smart hydroponic monitoring" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center" />
-            </VerticalStackLayout>
+    <!-- Windows 8 / Metro-inspired login: typography, open space, flat color blocks. -->
+    <Grid ColumnDefinitions="1.05*,1.35*" RowDefinitions="*">
 
-            <Border Grid.Row="1" Style="{DynamicResource ElevatedCard}" Padding="26" StrokeShape="RoundRectangle 24" Margin="0">
-                <VerticalStackLayout Spacing="18">
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Welcome back" Style="{DynamicResource HeadlineSmall}" />
-                        <Label Text="Sign in to your monitoring dashboard" Style="{DynamicResource GSPageSubtitle}" />
+        <!-- Identity / system side -->
+        <Grid Grid.Column="0" BackgroundColor="#176B4D" Padding="56,48,48,44">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="GLORIOUSSYTEM"
+                           FontSize="25"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1"
+                           TextColor="White" />
+                    <Label Text="HYDROPONIC MONITORING SYSTEM"
+                           FontSize="11"
+                           CharacterSpacing="1.5"
+                           TextColor="#D5F1E3" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1"
+                                     VerticalOptions="Center"
+                                     Spacing="18">
+                    <Label Text="SMART FARMING.&#10;MADE VISIBLE."
+                           FontSize="38"
+                           FontAttributes="Bold"
+                           LineHeight="0.95"
+                           TextColor="White" />
+                    <BoxView HeightRequest="4"
+                             WidthRequest="72"
+                             HorizontalOptions="Start"
+                             Color="#8BE0B4" />
+                    <Label Text="Monitor your hydroponic lettuce system,&#10;environment and water conditions&#10;from one place."
+                           FontSize="15"
+                           LineHeight="1.25"
+                           TextColor="#E2F5EA" />
+
+                    <!-- Simple flat hydroponic visual -->
+                    <Grid HeightRequest="150"
+                          WidthRequest="230"
+                          HorizontalOptions="Start"
+                          Margin="0,16,0,0">
+                        <BoxView VerticalOptions="End"
+                                 HeightRequest="7"
+                                 Color="#8BE0B4" />
+                        <BoxView WidthRequest="7"
+                                 HeightRequest="110"
+                                 VerticalOptions="End"
+                                 HorizontalOptions="Center"
+                                 Color="#8BE0B4" />
+                        <BoxView WidthRequest="125"
+                                 HeightRequest="7"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Color="#8BE0B4" />
+                        <Label Text="LETTUCE"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               CharacterSpacing="2"
+                               TextColor="#8BE0B4"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Start" />
+                        <Label Text="WATER  •  LIGHT  •  AIR"
+                               FontSize="9"
+                               CharacterSpacing="1"
+                               TextColor="#D5F1E3"
+                               HorizontalOptions="Center"
+                               VerticalOptions="End"
+                               Margin="0,0,0,15" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="2" Spacing="8">
+                    <BoxView WidthRequest="9" HeightRequest="9" Color="#8BE0B4" VerticalOptions="Center" />
+                    <Label Text="SYSTEM ONLINE"
+                           FontSize="10"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1.3"
+                           TextColor="White" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Grid>
+
+        <!-- Login workspace -->
+        <ScrollView Grid.Column="1">
+            <Grid Padding="70,54,90,50"
+                  RowDefinitions="Auto,*,Auto"
+                  MinimumHeightRequest="700">
+
+                <Label Text="SECURE ACCESS"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="2"
+                       TextColor="#176B4D" />
+
+                <VerticalStackLayout Grid.Row="1"
+                                     VerticalOptions="Center"
+                                     MaximumWidthRequest="430"
+                                     Spacing="30">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="SIGN IN"
+                               FontSize="48"
+                               FontAttributes="Bold"
+                               TextColor="#17211D" />
+                        <Label Text="Enter your account details to continue."
+                               FontSize="15"
+                               TextColor="#60706A" />
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="EMAIL" FontSize="10" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Border Style="{DynamicResource GSInput}">
-                            <Entry x:Name="EmailEntry" Placeholder="Enter your email" Keyboard="Email" BackgroundColor="Transparent" TextChanged="OnFieldChanged" ReturnType="Next" Completed="OnEmailCompleted" />
+                        <Label Text="EMAIL"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.5"
+                               TextColor="#34423C" />
+                        <Border BackgroundColor="Transparent"
+                                Stroke="#AAB8B1"
+                                StrokeThickness="1"
+                                StrokeShape="Rectangle"
+                                HeightRequest="54">
+                            <Entry x:Name="EmailEntry"
+                                   Placeholder="Enter your email"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#17211D"
+                                   PlaceholderColor="#899790"
+                                   TextChanged="OnFieldChanged"
+                                   ReturnType="Next"
+                                   Completed="OnEmailCompleted"
+                                   Margin="10,0" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="PASSWORD" FontSize="10" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Border Style="{DynamicResource GSInput}">
-                            <Entry x:Name="PasswordEntry" Placeholder="Enter your password" IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}" BackgroundColor="Transparent" TextChanged="OnFieldChanged" ReturnType="Done" Completed="OnPasswordCompleted" />
+                        <Label Text="PASSWORD"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.5"
+                               TextColor="#34423C" />
+                        <Border BackgroundColor="Transparent"
+                                Stroke="#AAB8B1"
+                                StrokeThickness="1"
+                                StrokeShape="Rectangle"
+                                HeightRequest="54">
+                            <Entry x:Name="PasswordEntry"
+                                   Placeholder="Enter your password"
+                                   IsPassword="{Binding Source={x:Reference ShowPasswordCheckBox}, Path=IsChecked, Converter={StaticResource InverseBoolConverter}}"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#17211D"
+                                   PlaceholderColor="#899790"
+                                   TextChanged="OnFieldChanged"
+                                   ReturnType="Done"
+                                   Completed="OnPasswordCompleted"
+                                   Margin="10,0" />
                         </Border>
-                        <HorizontalStackLayout Spacing="7">
-                            <CheckBox x:Name="ShowPasswordCheckBox" Color="{DynamicResource Primary}" />
-                            <Label Text="Show password" Style="{DynamicResource BodySmall}" VerticalOptions="Center" />
+                        <HorizontalStackLayout Spacing="6">
+                            <CheckBox x:Name="ShowPasswordCheckBox" Color="#176B4D" />
+                            <Label Text="Show password"
+                                   FontSize="12"
+                                   TextColor="#60706A"
+                                   VerticalOptions="Center" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                         <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                            <CheckBox x:Name="RememberMeCheckBox" Color="{DynamicResource Primary}" />
-                            <Label Text="Remember me" Style="{DynamicResource BodySmall}" VerticalOptions="Center" />
+                            <CheckBox x:Name="RememberMeCheckBox" Color="#176B4D" />
+                            <Label Text="Remember me"
+                                   FontSize="12"
+                                   TextColor="#60706A"
+                                   VerticalOptions="Center" />
                         </HorizontalStackLayout>
-                        <Button Grid.Column="1" Text="Forgot password?" Style="{DynamicResource TertiaryButton}" Clicked="OnForgotPasswordClicked" Padding="4" HeightRequest="38" FontSize="11" />
+                        <Button Grid.Column="1"
+                                Text="Forgot password?"
+                                BackgroundColor="Transparent"
+                                TextColor="#176B4D"
+                                FontSize="12"
+                                Padding="0"
+                                HeightRequest="36"
+                                Clicked="OnForgotPasswordClicked" />
                     </Grid>
 
-                    <Label x:Name="ErrorLabel" Text="" FontSize="12" TextColor="{DynamicResource Error}" IsVisible="False" HorizontalOptions="Center" />
+                    <Label x:Name="ErrorLabel"
+                           Text=""
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#C62828"
+                           IsVisible="False" />
 
-                    <Button x:Name="LoginButton" Text="Sign In" Style="{DynamicResource PrimaryButton}" Clicked="OnLoginClicked" IsEnabled="False" HeightRequest="52" />
+                    <Button x:Name="LoginButton"
+                            Text="SIGN IN   →"
+                            BackgroundColor="#176B4D"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CharacterSpacing="1"
+                            CornerRadius="0"
+                            HeightRequest="58"
+                            HorizontalOptions="Fill"
+                            Clicked="OnLoginClicked"
+                            IsEnabled="False" />
                 </VerticalStackLayout>
-            </Border>
 
-            <VerticalStackLayout Grid.Row="2" Spacing="5" HorizontalOptions="Center">
-                <Label Text="HYDROPONIC LETTUCE MONITORING" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.1" TextColor="{DynamicResource Primary}" HorizontalOptions="Center" />
-                <Label Text="Secure access to your sensor system" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalOptions="Center" />
-                <Label Text="Demo: admin@glorious.com / password123" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" FontAttributes="Italic" HorizontalOptions="Center" />
-            </VerticalStackLayout>
-        </Grid>
-    </ScrollView>
+                <VerticalStackLayout Grid.Row="2" Spacing="4">
+                    <Label Text="HYDROPONIC LETTUCE MONITORING"
+                           FontSize="9"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1.4"
+                           TextColor="#176B4D" />
+                    <Label Text="Secure access to your sensor system"
+                           FontSize="10"
+                           TextColor="#7A8882" />
+                    <Label Text="Demo: admin@glorious.com / password123"
+                           FontSize="9"
+                           FontAttributes="Italic"
+                           TextColor="#9AA59F" />
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>
