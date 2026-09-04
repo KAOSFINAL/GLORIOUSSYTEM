@@ -23,78 +23,20 @@ public class SensorDisplayItem : INotifyPropertyChanged
     bool _hasUnit = false;
     bool _hasThresholds = false;
 
-    public string Name
-    {
-        get => _name;
-        set { _name = value; OnPropertyChanged(); }
-    }
-
-    public string SubText
-    {
-        get => _subText;
-        set { _subText = value; OnPropertyChanged(); }
-    }
-
-    public string ValueText
-    {
-        get => _valueText;
-        set { _valueText = value; OnPropertyChanged(); }
-    }
-
-    public string UnitText
-    {
-        get => _unitText;
-        set { _unitText = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasUnit)); }
-    }
-
-    public string MinThresholdText
-    {
-        get => _minThresholdText;
-        set { _minThresholdText = value; OnPropertyChanged(); }
-    }
-
-    public string MaxThresholdText
-    {
-        get => _maxThresholdText;
-        set { _maxThresholdText = value; OnPropertyChanged(); }
-    }
-
-    public Color StatusColor
-    {
-        get => _statusColor;
-        set { _statusColor = value; OnPropertyChanged(); }
-    }
-
-    public Color ValueColor
-    {
-        get => _valueColor;
-        set { _valueColor = value; OnPropertyChanged(); }
-    }
-
-    public Color ThresholdProgressColor
-    {
-        get => _thresholdProgressColor;
-        set { _thresholdProgressColor = value; OnPropertyChanged(); }
-    }
-
-    public double ThresholdProgress
-    {
-        get => _thresholdProgress;
-        set { _thresholdProgress = value; OnPropertyChanged(); }
-    }
-
+    public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+    public string SubText { get => _subText; set { _subText = value; OnPropertyChanged(); } }
+    public string ValueText { get => _valueText; set { _valueText = value; OnPropertyChanged(); } }
+    public string UnitText { get => _unitText; set { _unitText = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasUnit)); } }
+    public string MinThresholdText { get => _minThresholdText; set { _minThresholdText = value; OnPropertyChanged(); } }
+    public string MaxThresholdText { get => _maxThresholdText; set { _maxThresholdText = value; OnPropertyChanged(); } }
+    public Color StatusColor { get => _statusColor; set { _statusColor = value; OnPropertyChanged(); } }
+    public Color ValueColor { get => _valueColor; set { _valueColor = value; OnPropertyChanged(); } }
+    public Color ThresholdProgressColor { get => _thresholdProgressColor; set { _thresholdProgressColor = value; OnPropertyChanged(); } }
+    public double ThresholdProgress { get => _thresholdProgress; set { _thresholdProgress = value; OnPropertyChanged(); } }
     public bool HasUnit => !string.IsNullOrEmpty(_unitText);
-
-    public bool HasThresholds
-    {
-        get => _hasThresholds;
-        set { _hasThresholds = value; OnPropertyChanged(); }
-    }
-
+    public bool HasThresholds { get => _hasThresholds; set { _hasThresholds = value; OnPropertyChanged(); } }
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    void OnPropertyChanged([CallerMemberName] string? name = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
 
 public class SensorGroup : ObservableCollection<SensorDisplayItem>
@@ -106,14 +48,14 @@ public class SensorGroup : ObservableCollection<SensorDisplayItem>
     public int CriticalCount { get; set; }
     public int OfflineCount { get; set; }
 
-    public Color OnlineColor => Color.FromArgb("#10B981");
-    public Color WarningColor => Color.FromArgb("#F59E0B");
-    public Color CriticalColor => Color.FromArgb("#EF4444");
+    // Reference design palette: gold primary, tangerine warning/error, muted burgundy for offline.
+    public Color OnlineColor => Color.FromArgb("#F59E0B");
+    public Color WarningColor => Color.FromArgb("#F97316");
+    public Color CriticalColor => Color.FromArgb("#F97316");
 
     public bool HasOnline => OnlineCount > 0;
     public bool HasWarning => WarningCount > 0;
     public bool HasCritical => CriticalCount > 0;
-
     public int SensorCount => Count;
 
     public SensorGroup(string name, string icon, IEnumerable<SensorDisplayItem> items) : base(items)
@@ -125,10 +67,10 @@ public class SensorGroup : ObservableCollection<SensorDisplayItem>
 
 public partial class MainPage : ContentPage
 {
-    static readonly Color HasDataColor = Color.FromArgb("#10B981");
-    static readonly Color NoDataColor = Color.FromArgb("#64748B");
-    static readonly Color WarningColor = Color.FromArgb("#F59E0B");
-    static readonly Color CriticalColor = Color.FromArgb("#EF4444");
+    static readonly Color HasDataColor = Color.FromArgb("#F59E0B");
+    static readonly Color NoDataColor = Color.FromArgb("#7A4A55");
+    static readonly Color WarningColor = Color.FromArgb("#F97316");
+    static readonly Color CriticalColor = Color.FromArgb("#F97316");
 
     bool _isRefreshing = false;
     bool _isFirstLoad = true;
@@ -184,13 +126,10 @@ public partial class MainPage : ContentPage
     {
         if (IsRefreshing) return;
         IsRefreshing = true;
-        try
-        {
-            await Task.Run(LoadSensors);
-        }
+        try { await Task.Run(LoadSensors); }
         finally
         {
-            await Task.Delay(500); // Show refresh indicator briefly
+            await Task.Delay(500);
             IsRefreshing = false;
         }
     }
@@ -222,7 +161,6 @@ public partial class MainPage : ContentPage
 
                     bool outOfRange = (s.MinThreshold.HasValue && latest.Value < s.MinThreshold.Value) ||
                                       (s.MaxThreshold.HasValue && latest.Value > s.MaxThreshold.Value);
-                    bool nearThreshold = false;
 
                     if (s.MinThreshold.HasValue || s.MaxThreshold.HasValue)
                     {
@@ -234,18 +172,9 @@ public partial class MainPage : ContentPage
                         double max = s.MaxThreshold ?? double.MaxValue;
                         double range = max - min;
 
-                        if (range > 0 && latest.Value >= min && latest.Value <= max)
-                        {
-                            item.ThresholdProgress = (latest.Value - min) / range;
-                        }
-                        else if (latest.Value < min)
-                        {
-                            item.ThresholdProgress = 0;
-                        }
-                        else
-                        {
-                            item.ThresholdProgress = 1;
-                        }
+                        if (range > 0 && latest.Value >= min && latest.Value <= max) item.ThresholdProgress = (latest.Value - min) / range;
+                        else if (latest.Value < min) item.ThresholdProgress = 0;
+                        else item.ThresholdProgress = 1;
 
                         if (outOfRange)
                         {
@@ -255,13 +184,11 @@ public partial class MainPage : ContentPage
                         }
                         else
                         {
-                            // Check if near threshold (within 10%)
                             double lowerBound = min + range * 0.1;
                             double upperBound = max - range * 0.1;
                             if ((s.MinThreshold.HasValue && latest.Value <= lowerBound) ||
                                 (s.MaxThreshold.HasValue && latest.Value >= upperBound))
                             {
-                                nearThreshold = true;
                                 item.StatusColor = WarningColor;
                                 item.ValueColor = WarningColor;
                                 item.ThresholdProgressColor = WarningColor;
@@ -304,11 +231,7 @@ public partial class MainPage : ContentPage
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 SensorList.ItemsSource = groups;
-
-                // Update last updated timestamp
                 LastUpdatedLabel.Text = DateTime.Now.ToString("HH:mm:ss");
-
-                // Trigger entrance animations on first load
                 if (_isFirstLoad)
                 {
                     _isFirstLoad = false;
@@ -318,43 +241,31 @@ public partial class MainPage : ContentPage
         }
         catch (Exception ex)
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Error", $"Failed to load sensors: {ex.Message}", "OK");
-            });
+            MainThread.BeginInvokeOnMainThread(async () => await DisplayAlert("Error", $"Failed to load sensors: {ex.Message}", "OK"));
         }
     }
 
     SensorGroup CreateGroup(string name, string icon, List<Sensor> sensors, Func<Sensor, SensorDisplayItem> selector)
     {
         var items = sensors.Select(selector).ToList();
-        var group = new SensorGroup(name, icon, items)
+        return new SensorGroup(name, icon, items)
         {
             OnlineCount = items.Count(i => i.StatusColor == HasDataColor),
             WarningCount = items.Count(i => i.StatusColor == WarningColor),
             CriticalCount = items.Count(i => i.StatusColor == CriticalColor),
             OfflineCount = items.Count(i => i.StatusColor == NoDataColor)
         };
-        return group;
     }
 
     async void AnimateEntrance(ObservableCollection<SensorGroup> groups)
     {
-        // Fade in the collection view
         SensorList.Opacity = 0;
         await SensorList.FadeToAsync(1, 300, Easing.CubicOut);
-
-        // Stagger animate each group header and items
-        // Note: MAUI CollectionView doesn't easily expose item views for stagger animation
-        // This is a simplified entrance - in production you'd use a custom layout or behaviors
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        if (!_isFirstLoad)
-        {
-            LoadSensors();
-        }
+        if (!_isFirstLoad) LoadSensors();
     }
 }
