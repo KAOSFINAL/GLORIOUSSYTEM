@@ -31,8 +31,8 @@ public partial class AppSidebar : ContentView
         Opacity = 0;
         TranslationX = -18;
         await Task.WhenAll(
-            FadeToAsync(1, 260, Easing.CubicOut),
-            TranslateToAsync(0, 320, Easing.CubicOut));
+            ViewExtensions.FadeToAsync(this, 1, 260, Easing.CubicOut),
+            ViewExtensions.TranslateToAsync(this, 0, 0, 320, Easing.CubicOut));
     }
 
     void UpdateSelection(string route)
