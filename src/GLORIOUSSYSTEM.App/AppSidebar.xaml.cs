@@ -48,12 +48,11 @@ public partial class AppSidebar : ContentView
         SetItem(SettingsItem, SettingsIcon, route == "settings", active, inactive, primary, muted);
     }
 
-    static void SetItem(Border item, Border icon, bool selected, Color? active, Color? inactive, Color? primary, Color? muted)
+    static void SetItem(Border item, Label icon, bool selected, Color? active, Color? inactive, Color? primary, Color? muted)
     {
         item.BackgroundColor = selected ? active : inactive;
         icon.BackgroundColor = selected ? primary : (Application.Current?.Resources["SurfaceContainer"] as Color);
-        if (icon.Content is Label label)
-            label.TextColor = selected ? Colors.White : muted;
+        icon.TextColor = selected ? Colors.White : muted;
     }
 
     async Task Navigate(string route, Border item)
