@@ -17,7 +17,7 @@ public partial class AppShell : Shell
         _ = AnimateCurrentPageAsync();
     }
 
-    async Task AnimateCurrentPageAsync()
+    private async Task AnimateCurrentPageAsync()
     {
         if (_isAnimating || CurrentPage is null)
             return;
@@ -27,14 +27,14 @@ public partial class AppShell : Shell
         {
             var page = CurrentPage;
             page.Opacity = 0;
-            page.TranslationY = 12;
+            page.TranslationY = 14;
             await Task.WhenAll(
-                page.FadeTo(1, 240, Easing.CubicOut),
-                page.TranslateTo(0, 300, Easing.CubicOut));
+                page.FadeToAsync(1, 240, Easing.CubicOut),
+                page.TranslateToAsync(0, 300, Easing.CubicOut));
         }
         catch
         {
-            // Navigation should never fail because an animation could not run.
+            // Navigation must remain functional if an animation cannot run.
         }
         finally
         {
