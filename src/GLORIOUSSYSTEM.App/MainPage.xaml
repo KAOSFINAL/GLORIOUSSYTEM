@@ -13,170 +13,73 @@
         <ScrollView Grid.Column="1">
             <VerticalStackLayout Padding="42,34,52,44" Spacing="0">
 
-                <!-- PAGE HEADER -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,42">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="OVERVIEW"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               CharacterSpacing="2.5"
-                               TextColor="{DynamicResource Primary}" />
-                        <Label Text="Hydroponic monitoring"
-                               FontSize="36"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="A live view of your lettuce growing environment."
-                               FontSize="14"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label Text="OVERVIEW" FontSize="11" FontAttributes="Bold" CharacterSpacing="2.5" TextColor="{DynamicResource Primary}" />
+                        <Label Text="Hydroponic monitoring" FontSize="36" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="A live view of your lettuce growing environment." FontSize="14" TextColor="{DynamicResource OnSurfaceVariant}" />
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1"
-                                         Spacing="2"
-                                         HorizontalOptions="End"
-                                         VerticalOptions="Center">
-                        <Label Text="●"
-                               FontSize="20"
-                               HorizontalTextAlignment="End"
-                               TextColor="{DynamicResource StatusOnline}" />
-                        <Label Text="SYSTEM ONLINE"
-                               FontSize="9"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.2"
-                               HorizontalTextAlignment="End"
-                               TextColor="{DynamicResource StatusOnline}" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="End" VerticalOptions="Center">
+                        <Label Text="●" FontSize="20" HorizontalTextAlignment="End" TextColor="{DynamicResource StatusOnline}" />
+                        <Label Text="SYSTEM ONLINE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.2" HorizontalTextAlignment="End" TextColor="{DynamicResource StatusOnline}" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- PANORAMA SUMMARY -->
-                <Grid ColumnDefinitions="1.15*,1*,1*"
-                      ColumnSpacing="36"
-                      Margin="0,0,0,48">
+                <Grid ColumnDefinitions="1.15*,1*,1*" ColumnSpacing="36" Margin="0,0,0,48">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="FARM HEALTH"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.8"
-                               TextColor="{DynamicResource Primary}" />
-                        <Label Text="94"
-                               FontSize="48"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="GOOD • HEALTH SCORE"
-                               FontSize="9"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1"
-                               TextColor="{DynamicResource StatusOnline}" />
+                        <Label Text="FARM HEALTH" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Primary}" />
+                        <Label Text="94" FontSize="48" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="GOOD • HEALTH SCORE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource StatusOnline}" />
                     </VerticalStackLayout>
-
                     <VerticalStackLayout Grid.Column="1" Spacing="4">
-                        <Label Text="WATER"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.8"
-                               TextColor="{DynamicResource Secondary}" />
-                        <Label Text="pH 6.2"
-                               FontSize="30"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="NORMAL • WITHIN RANGE"
-                               FontSize="9"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1"
-                               TextColor="{DynamicResource StatusOnline}" />
+                        <Label Text="WATER" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Secondary}" />
+                        <Label Text="pH 6.2" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="NORMAL • WITHIN RANGE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource StatusOnline}" />
                     </VerticalStackLayout>
-
                     <VerticalStackLayout Grid.Column="2" Spacing="4">
-                        <Label Text="SOLAR"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.8"
-                               TextColor="{DynamicResource Tertiary}" />
-                        <Label Text="78%"
-                               FontSize="30"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="BATTERY • CHARGING"
-                               FontSize="9"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1"
-                               TextColor="{DynamicResource StatusOnline}" />
+                        <Label Text="SOLAR" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Tertiary}" />
+                        <Label Text="78%" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="BATTERY • CHARGING" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource StatusOnline}" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- LIVE SENSOR NETWORK -->
                 <VerticalStackLayout Spacing="4" Margin="0,0,0,30">
                     <Grid ColumnDefinitions="*,Auto">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="LIVE SENSOR NETWORK"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="2"
-                                   TextColor="{DynamicResource Primary}" />
-                            <Label Text="Real-time readings"
-                                   FontSize="23"
-                                   FontAttributes="Bold"
-                                   TextColor="{DynamicResource OnSurface}" />
+                            <Label Text="LIVE SENSOR NETWORK" FontSize="11" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource Primary}" />
+                            <Label Text="Real-time readings" FontSize="23" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="1"
-                               Text="●  LIVE"
-                               FontSize="9"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.2"
-                               TextColor="{DynamicResource StatusOnline}"
-                               VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="●  LIVE" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.2" TextColor="{DynamicResource StatusOnline}" VerticalOptions="Center" />
                     </Grid>
                 </VerticalStackLayout>
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="58" Margin="0,0,0,44">
-                    <!-- WATER -->
                     <VerticalStackLayout Spacing="0">
-                        <Label Text="WATER"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.8"
-                               TextColor="{DynamicResource Secondary}"
-                               Margin="0,0,0,14" />
-
-                        <Grid ColumnDefinitions="*,Auto"
-                              Padding="0,9"
-                              RowDefinitions="Auto,Auto,Auto">
+                        <Label Text="WATER" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Secondary}" Margin="0,0,0,14" />
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,9" RowDefinitions="Auto,Auto,Auto">
                             <Label Text="pH" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="6.2" FontSize="22" FontAttributes="Bold" />
                             <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" Margin="0,7" />
                             <Label Grid.Row="2" Text="EC" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Row="2" Grid.Column="1" Text="1.8" FontSize="22" FontAttributes="Bold" />
                         </Grid>
-
-                        <Grid ColumnDefinitions="*,Auto"
-                              Padding="0,9"
-                              RowDefinitions="Auto,Auto">
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,9" RowDefinitions="Auto,Auto">
                             <BoxView Grid.Row="0" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" Margin="0,0,0,7" />
                             <Label Grid.Row="1" Text="Water Level" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Row="1" Grid.Column="1" Text="84%" FontSize="22" FontAttributes="Bold" TextColor="{DynamicResource StatusOnline}" />
                         </Grid>
                     </VerticalStackLayout>
 
-                    <!-- ENVIRONMENT -->
                     <VerticalStackLayout Grid.Column="1" Spacing="0">
-                        <Label Text="ENVIRONMENT"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.8"
-                               TextColor="{DynamicResource Primary}"
-                               Margin="0,0,0,14" />
-
-                        <Grid ColumnDefinitions="*,Auto"
-                              Padding="0,9"
-                              RowDefinitions="Auto,Auto,Auto">
+                        <Label Text="ENVIRONMENT" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Primary}" Margin="0,0,0,14" />
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,9" RowDefinitions="Auto,Auto,Auto">
                             <Label Text="Temperature" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="26.4 °C" FontSize="22" FontAttributes="Bold" />
                             <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" Margin="0,7" />
                             <Label Grid.Row="2" Text="Humidity" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Row="2" Grid.Column="1" Text="72%" FontSize="22" FontAttributes="Bold" />
                         </Grid>
-
-                        <Grid ColumnDefinitions="*,Auto"
-                              Padding="0,9"
-                              RowDefinitions="Auto,Auto">
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,9" RowDefinitions="Auto,Auto">
                             <BoxView Grid.Row="0" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" Margin="0,0,0,7" />
                             <Label Grid.Row="1" Text="Air" FontSize="13" FontAttributes="Bold" />
                             <Label Grid.Row="1" Grid.Column="1" Text="NORMAL" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource StatusOnline}" />
@@ -184,15 +87,8 @@
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- RECENT ACTIVITY -->
                 <VerticalStackLayout Spacing="0" Margin="0,0,0,34">
-                    <Label Text="RECENT ACTIVITY"
-                           FontSize="11"
-                           FontAttributes="Bold"
-                           CharacterSpacing="2"
-                           TextColor="{DynamicResource Primary}"
-                           Margin="0,0,0,18" />
-
+                    <Label Text="RECENT ACTIVITY" FontSize="11" FontAttributes="Bold" CharacterSpacing="2" TextColor="{DynamicResource Primary}" Margin="0,0,0,18" />
                     <Grid ColumnDefinitions="70,*" Padding="0,8">
                         <Label Text="17:50" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}" />
                         <Label Grid.Column="1" Text="Sensor network synchronized" FontSize="13" />
@@ -209,29 +105,20 @@
                     </Grid>
                 </VerticalStackLayout>
 
-                <!-- FOOTER -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,10,0,0">
                     <VerticalStackLayout Spacing="2">
-                        <Label Text="LAST SENSOR SYNC"
-                               FontSize="8"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.2"
-                               TextColor="{DynamicResource OnSurfaceVariant}" />
-                        <Label x:Name="LastUpdatedLabel"
-                               Text="--"
-                               FontSize="11"
-                               FontAttributes="Bold" />
+                        <Label Text="LAST SENSOR SYNC" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.2" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Label x:Name="LastUpdatedLabel" Text="--" FontSize="11" FontAttributes="Bold" />
                     </VerticalStackLayout>
-                    <Button Grid.Column="1"
-                            Text="REFRESH"
-                            Style="{DynamicResource PrimaryButton}"
-                            WidthRequest="100"
-                            HeightRequest="40"
-                            CornerRadius="0"
-                            Clicked="OnRefreshClicked" />
+                    <Button Grid.Column="1" Text="REFRESH" Style="{DynamicResource PrimaryButton}" WidthRequest="100" HeightRequest="40" CornerRadius="0" Clicked="OnRefreshClicked" />
                 </Grid>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Hidden data host retained for MainPage.xaml.cs sensor loading and refresh logic. -->
+        <RefreshView x:Name="RefreshView" IsVisible="False" Grid.Column="1">
+            <CollectionView x:Name="SensorList" />
+        </RefreshView>
     </Grid>
 </ContentPage>
