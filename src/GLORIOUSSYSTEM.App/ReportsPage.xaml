@@ -2,373 +2,82 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.ReportsPage"
-             BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#0F1012}"
+             BackgroundColor="{DynamicResource Surface}"
              Title="Reports">
-
-    <RefreshView RefreshColor="{DynamicResource Primary}"
-                 Command="{Binding RefreshCommand}"
-                 IsRefreshing="{Binding IsRefreshing}">
+    <RefreshView RefreshColor="{DynamicResource Primary}" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <ScrollView>
-            <VerticalStackLayout Padding="24,28,24,42" Spacing="22">
-
-                <!-- Header -->
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="ANALYTICS"
-                               FontSize="11"
-                               FontAttributes="Bold"
-                               CharacterSpacing="2"
-                               TextColor="{DynamicResource Primary}" />
-                        <Label Text="Reports &amp; Insights"
-                               FontSize="32"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                        <Label Text="Monitor sensor performance and water quality trends."
-                               FontSize="13"
-                               LineHeight="1.2"
-                               TextColor="{AppThemeBinding Light=#737780, Dark=#98989F}" />
+            <VerticalStackLayout Padding="24,26,24,38" Spacing="20">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="ANALYTICS" FontSize="10" FontAttributes="Bold" CharacterSpacing="1.8" TextColor="{DynamicResource Primary}" />
+                        <Label Text="Reports &amp; Insights" Style="{DynamicResource GSPageTitle}" />
+                        <Label Text="Track sensor activity and water-quality trends" Style="{DynamicResource GSPageSubtitle}" />
                     </VerticalStackLayout>
-
-                    <Border Grid.Column="1"
-                            WidthRequest="52"
-                            HeightRequest="52"
-                            BackgroundColor="{AppThemeBinding Light=#E8F8F2, Dark=#12352B}"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 16"
-                            VerticalOptions="Start">
-                        <Label Text="▥"
-                               FontSize="22"
-                               TextColor="{DynamicResource Primary}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                    <Border Grid.Column="1" Style="{DynamicResource GSIconTile}" VerticalOptions="Start">
+                        <Label Text="▥" FontSize="21" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
                     </Border>
                 </Grid>
 
-                <!-- Overview -->
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="11">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="System overview"
-                               FontSize="19"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                        <Label Grid.Column="1"
-                               Text="LIVE"
-                               FontSize="10"
-                               FontAttributes="Bold"
-                               CharacterSpacing="1.4"
-                               TextColor="{DynamicResource StatusOnline}"
-                               VerticalOptions="Center" />
+                        <Label Text="System overview" Style="{DynamicResource GSSectionTitle}" />
+                        <Border Grid.Column="1" Style="{DynamicResource GSStatusPill}"><Label Text="LIVE" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource Primary}" /></Border>
                     </Grid>
-
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Border Padding="15,16"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191A1D}"
-                                Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 18">
-                            <VerticalStackLayout Spacing="7">
-                                <Label Text="SENSORS"
-                                       FontSize="9"
-                                       FontAttributes="Bold"
-                                       CharacterSpacing="1.2"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                                <Label x:Name="TotalSensorsLabel"
-                                       Text="--"
-                                       FontSize="28"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                                <Label Text="Total"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Grid.Column="1"
-                                Padding="15,16"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191A1D}"
-                                Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 18">
-                            <VerticalStackLayout Spacing="7">
-                                <Label Text="STATUS"
-                                       FontSize="9"
-                                       FontAttributes="Bold"
-                                       CharacterSpacing="1.2"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                                <Label x:Name="OnlineSensorsLabel"
-                                       Text="--"
-                                       FontSize="28"
-                                       FontAttributes="Bold"
-                                       TextColor="{DynamicResource StatusOnline}" />
-                                <Label Text="Online"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Grid.Column="2"
-                                Padding="15,16"
-                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191A1D}"
-                                Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 18">
-                            <VerticalStackLayout Spacing="7">
-                                <Label Text="ALERTS"
-                                       FontSize="9"
-                                       FontAttributes="Bold"
-                                       CharacterSpacing="1.2"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                                <Label x:Name="AlertCountLabel"
-                                       Text="--"
-                                       FontSize="28"
-                                       FontAttributes="Bold"
-                                       TextColor="{DynamicResource StatusCritical}" />
-                                <Label Text="Active"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#8A8D94, Dark=#8F9097}" />
-                            </VerticalStackLayout>
-                        </Border>
+                        <Border BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="15"><VerticalStackLayout Spacing="5"><Label Text="SENSORS" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" /><Label x:Name="TotalSensorsLabel" Text="--" FontSize="28" FontAttributes="Bold" /><Label Text="Total" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout></Border>
+                        <Border Grid.Column="1" BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="15"><VerticalStackLayout Spacing="5"><Label Text="STATUS" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" /><Label x:Name="OnlineSensorsLabel" Text="--" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource StatusOnline}" /><Label Text="Online" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout></Border>
+                        <Border Grid.Column="2" BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18" Padding="15"><VerticalStackLayout Spacing="5"><Label Text="ALERTS" FontSize="9" FontAttributes="Bold" CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" /><Label x:Name="AlertCountLabel" Text="--" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource StatusCritical}" /><Label Text="Active" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout></Border>
                     </Grid>
                 </VerticalStackLayout>
 
-                <!-- pH Analytics -->
-                <Border Padding="20"
-                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191A1D}"
-                        Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 22">
-                    <VerticalStackLayout Spacing="17">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                            <VerticalStackLayout Spacing="4">
-                                <HorizontalStackLayout Spacing="9">
-                                    <Border WidthRequest="9"
-                                            HeightRequest="9"
-                                            BackgroundColor="{DynamicResource Primary}"
-                                            StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 5"
-                                            VerticalOptions="Center" />
-                                    <Label Text="pH history"
-                                           FontSize="20"
-                                           FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                                </HorizontalStackLayout>
-                                <Label Text="Water acidity trend"
-                                       FontSize="11"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
+                <Border Padding="20" BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 22">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="3">
+                                <HorizontalStackLayout Spacing="8"><Border WidthRequest="8" HeightRequest="8" BackgroundColor="{DynamicResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 4" VerticalOptions="Center" /><Label Text="pH history" FontSize="20" FontAttributes="Bold" /></HorizontalStackLayout>
+                                <Label Text="Water acidity trend" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
                             </VerticalStackLayout>
-
-                            <Border Grid.Column="1"
-                                    Padding="1"
-                                    BackgroundColor="{AppThemeBinding Light=#F1F2F4, Dark=#242529}"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12"
-                                    VerticalOptions="Center">
-                                <Picker x:Name="ChartTimeRangePicker"
-                                        Title="Range"
-                                        WidthRequest="118"
-                                        FontSize="12"
-                                        SelectedIndex="2">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>1 Hour</x:String>
-                                            <x:String>6 Hours</x:String>
-                                            <x:String>24 Hours</x:String>
-                                            <x:String>7 Days</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
+                            <Border Grid.Column="1" BackgroundColor="{DynamicResource SurfaceContainerHigh}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="2" VerticalOptions="Center">
+                                <Picker x:Name="ChartTimeRangePicker" Title="Range" WidthRequest="116" FontSize="12" SelectedIndex="2">
+                                    <Picker.ItemsSource><x:Array Type="{x:Type x:String}"><x:String>1 Hour</x:String><x:String>6 Hours</x:String><x:String>24 Hours</x:String><x:String>7 Days</x:String></x:Array></Picker.ItemsSource>
                                 </Picker>
                             </Border>
                         </Grid>
-
-                        <Border Padding="0"
-                                BackgroundColor="{AppThemeBinding Light=#FAFAFB, Dark=#111214}"
-                                Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 17">
-                            <GraphicsView x:Name="ReadingsChart"
-                                          HeightRequest="300"
-                                          HorizontalOptions="Fill"
-                                          VerticalOptions="Fill"
-                                          BackgroundColor="Transparent" />
+                        <Border Padding="0" BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18">
+                            <GraphicsView x:Name="ReadingsChart" HeightRequest="300" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="Transparent" />
                         </Border>
-
-                        <HorizontalStackLayout x:Name="ChartLegend"
-                                               Spacing="14" />
-
-                        <BoxView HeightRequest="1"
-                                 Color="{AppThemeBinding Light=#ECEDEF, Dark=#292A2E}" />
-
-                        <Grid x:Name="ChartStats"
-                              ColumnDefinitions="*,*,*"
-                              IsVisible="False">
-                            <VerticalStackLayout Grid.Column="0" Spacing="3">
-                                <Label x:Name="CurrentValueLabel"
-                                       Text="--"
-                                       FontSize="23"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                                <Label Text="Current pH"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" Spacing="3">
-                                <Label x:Name="MinValueLabel"
-                                       Text="--"
-                                       FontSize="23"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                                <Label Text="Minimum"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2" Spacing="3">
-                                <Label x:Name="MaxValueLabel"
-                                       Text="--"
-                                       FontSize="23"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#17181B, Dark=#F5F5F7}" />
-                                <Label Text="Maximum"
-                                       FontSize="10"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
-                            </VerticalStackLayout>
+                        <HorizontalStackLayout x:Name="ChartLegend" Spacing="14" />
+                        <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                        <Grid x:Name="ChartStats" ColumnDefinitions="*,*,*" IsVisible="False">
+                            <VerticalStackLayout Spacing="3"><Label x:Name="CurrentValueLabel" Text="--" FontSize="23" FontAttributes="Bold" /><Label Text="Current pH" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3"><Label x:Name="MinValueLabel" Text="--" FontSize="23" FontAttributes="Bold" /><Label Text="Minimum" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="3"><Label x:Name="MaxValueLabel" Text="--" FontSize="23" FontAttributes="Bold" /><Label Text="Maximum" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- API Connection -->
-                <Border Padding="20"
-                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#191A1D}"
-                        Stroke="{AppThemeBinding Light=#E7E8EB, Dark=#292A2E}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 20">
-                    <VerticalStackLayout Spacing="14">
+                <Border Padding="20" BackgroundColor="{DynamicResource SurfaceBright}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 20">
+                    <VerticalStackLayout Spacing="13">
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11">
-                            <Border WidthRequest="40"
-                                    HeightRequest="40"
-                                    BackgroundColor="{AppThemeBinding Light=#E8F8F2, Dark=#12352B}"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12">
-                                <Label Text="↔"
-                                       FontSize="18"
-                                       TextColor="{DynamicResource Primary}"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center" />
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="API connection"
-                                       FontSize="17"
-                                       FontAttributes="Bold" />
-                                <Label Text="Sensor service communication"
-                                       FontSize="11"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
-                            </VerticalStackLayout>
-                            <Button x:Name="TestApiButton"
-                                    Grid.Column="2"
-                                    Text="Test"
-                                    Style="{DynamicResource PrimaryButton}"
-                                    Clicked="OnTestApiClicked"
-                                    WidthRequest="78"
-                                    HeightRequest="40"
-                                    FontSize="13"
-                                    Padding="8,0" />
+                            <Border Style="{DynamicResource GSIconTile}" WidthRequest="40" HeightRequest="40"><Label Text="↔" FontSize="18" TextColor="{DynamicResource Primary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center"><Label Text="API connection" FontSize="17" FontAttributes="Bold" /><Label Text="Sensor service communication" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" /></VerticalStackLayout>
+                            <Button x:Name="TestApiButton" Grid.Column="2" Text="Test" Style="{DynamicResource PrimaryButton}" Clicked="OnTestApiClicked" WidthRequest="78" HeightRequest="40" FontSize="12" Padding="8,0" />
                         </Grid>
-
-                        <Border Padding="12,10"
-                                BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#111214}"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 11">
-                            <HorizontalStackLayout Spacing="8">
-                                <ActivityIndicator x:Name="ApiTestLoading"
-                                                   IsRunning="False"
-                                                   IsVisible="False"
-                                                   Color="{DynamicResource Primary}"
-                                                   WidthRequest="18"
-                                                   HeightRequest="18" />
-                                <Label x:Name="ApiStatusLabel"
-                                       Text="Not tested"
-                                       FontSize="12"
-                                       VerticalOptions="Center"
-                                       TextColor="{AppThemeBinding Light=#777A82, Dark=#9899A0}" />
-                            </HorizontalStackLayout>
-                        </Border>
-
-                        <Border x:Name="ApiResultCard"
-                                Padding="12"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 12"
-                                IsVisible="False">
-                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="9">
-                                <Border WidthRequest="28"
-                                        HeightRequest="28"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 8">
-                                    <Label x:Name="ApiStatusIconLabel"
-                                           FontSize="13"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Label Grid.Column="1"
-                                       x:Name="ApiDetailLabel"
-                                       Text="--"
-                                       FontSize="12"
-                                       VerticalOptions="Center" />
-                                <Label Grid.Column="2"
-                                       Text="Latency"
-                                       FontSize="10"
-                                       VerticalOptions="Center"
-                                       TextColor="{AppThemeBinding Light=#858890, Dark=#94959C}" />
-                                <Label Grid.Column="3"
-                                       x:Name="ApiLatencyLabel"
-                                       Text="-- ms"
-                                       FontSize="12"
-                                       FontAttributes="Bold"
-                                       VerticalOptions="Center" />
-                            </Grid>
-                        </Border>
-                        <Label x:Name="ApiErrorLabel"
-                               Text=""
-                               FontSize="12"
-                               TextColor="{DynamicResource Error}"
-                               IsVisible="False" />
+                        <Border Padding="12,10" BackgroundColor="{DynamicResource SurfaceContainer}" StrokeThickness="0" StrokeShape="RoundRectangle 12"><HorizontalStackLayout Spacing="8"><ActivityIndicator x:Name="ApiTestLoading" IsRunning="False" IsVisible="False" Color="{DynamicResource Primary}" WidthRequest="18" HeightRequest="18" /><Label x:Name="ApiStatusLabel" Text="Not tested" FontSize="12" VerticalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" /></HorizontalStackLayout></Border>
+                        <Border x:Name="ApiResultCard" Padding="12" StrokeThickness="0" StrokeShape="RoundRectangle 13" IsVisible="False"><Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="9"><Border WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 8"><Label x:Name="ApiStatusIconLabel" FontSize="13" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" /></Border><Label Grid.Column="1" x:Name="ApiDetailLabel" Text="--" FontSize="12" VerticalOptions="Center" /><Label Grid.Column="2" Text="Latency" FontSize="10" VerticalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" /><Label Grid.Column="3" x:Name="ApiLatencyLabel" Text="-- ms" FontSize="12" FontAttributes="Bold" VerticalOptions="Center" /></Grid></Border>
+                        <Label x:Name="ApiErrorLabel" Text="" FontSize="12" TextColor="{DynamicResource Error}" IsVisible="False" />
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Quick Actions -->
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Quick actions"
-                           FontSize="19"
-                           FontAttributes="Bold" />
-                    <Grid ColumnDefinitions="*,*"
-                          ColumnSpacing="10"
-                          RowDefinitions="Auto,Auto"
-                          RowSpacing="10">
-                        <Button Grid.Row="0"
-                                Grid.Column="0"
-                                Text="Export data"
-                                Style="{DynamicResource SecondaryButton}"
-                                Clicked="OnExportDataClicked"
-                                HeightRequest="50" />
-                        <Button Grid.Row="0"
-                                Grid.Column="1"
-                                Text="View logs"
-                                Style="{DynamicResource SecondaryButton}"
-                                Clicked="OnViewLogsClicked"
-                                HeightRequest="50" />
-                        <Button Grid.Row="1"
-                                Grid.Column="0"
-                                Text="Calibrate sensors"
-                                Style="{DynamicResource TertiaryButton}"
-                                Clicked="OnCalibrateClicked"
-                                HeightRequest="50" />
-                        <Button Grid.Row="1"
-                                Grid.Column="1"
-                                Text="System info"
-                                Style="{DynamicResource TertiaryButton}"
-                                Clicked="OnSystemInfoClicked"
-                                HeightRequest="50" />
+                <VerticalStackLayout Spacing="11">
+                    <Label Text="Quick actions" Style="{DynamicResource GSSectionTitle}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="10">
+                        <Button Grid.Row="0" Grid.Column="0" Text="Export data" Style="{DynamicResource SecondaryButton}" Clicked="OnExportDataClicked" HeightRequest="48" />
+                        <Button Grid.Row="0" Grid.Column="1" Text="View logs" Style="{DynamicResource SecondaryButton}" Clicked="OnViewLogsClicked" HeightRequest="48" />
+                        <Button Grid.Row="1" Grid.Column="0" Text="Calibrate sensors" Style="{DynamicResource TertiaryButton}" Clicked="OnCalibrateClicked" HeightRequest="48" />
+                        <Button Grid.Row="1" Grid.Column="1" Text="System info" Style="{DynamicResource TertiaryButton}" Clicked="OnSystemInfoClicked" HeightRequest="48" />
                     </Grid>
                 </VerticalStackLayout>
-
             </VerticalStackLayout>
         </ScrollView>
     </RefreshView>
