@@ -1,197 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <!--
-        GLORIOUS SYSTEM - Modern Hydroponic Design System
-        A nature-inspired palette for solar-powered lettuce monitoring
-    -->
-
-    <!-- Brand Colors - Hydroponic Green Spectrum -->
-    <Color x:Key="Brand50">#ECFDF3</Color>
-    <Color x:Key="Brand100">#D1FADF</Color>
-    <Color x:Key="Brand200">#A7F3C0</Color>
-    <Color x:Key="Brand300">#6EE7B7</Color>
-    <Color x:Key="Brand400">#34D399</Color>
-    <Color x:Key="Brand500">#10B981</Color>
-    <Color x:Key="Brand600">#059669</Color>
-    <Color x:Key="Brand700">#047857</Color>
-    <Color x:Key="Brand800">#065F46</Color>
-    <Color x:Key="Brand900">#064E3B</Color>
-    <Color x:Key="Brand950">#022C22</Color>
-
-    <!-- Accent Blue - Water/Technology -->
-    <Color x:Key="AccentBlue50">#EFF6FF</Color>
-    <Color x:Key="AccentBlue100">#DBEAFE</Color>
-    <Color x:Key="AccentBlue200">#BFDBFE</Color>
-    <Color x:Key="AccentBlue300">#93C5FD</Color>
-    <Color x:Key="AccentBlue400">#60A5FA</Color>
-    <Color x:Key="AccentBlue500">#3B82F6</Color>
-    <Color x:Key="AccentBlue600">#2563EB</Color>
-    <Color x:Key="AccentBlue700">#1D4ED8</Color>
-    <Color x:Key="AccentBlue800">#1E40AF</Color>
-    <Color x:Key="AccentBlue900">#1E3A8A</Color>
-
-    <!-- Accent Amber - Warning/Sun -->
-    <Color x:Key="AccentAmber50">#FFFBEB</Color>
-    <Color x:Key="AccentAmber100">#FEF3C7</Color>
-    <Color x:Key="AccentAmber200">#FDE68A</Color>
-    <Color x:Key="AccentAmber300">#FCD34D</Color>
-    <Color x:Key="AccentAmber400">#FBBF24</Color>
-    <Color x:Key="AccentAmber500">#F59E0B</Color>
-    <Color x:Key="AccentAmber600">#D97706</Color>
-    <Color x:Key="AccentAmber700">#B45309</Color>
-    <Color x:Key="AccentAmber800">#92400E</Color>
-    <Color x:Key="AccentAmber900">#78350F</Color>
-
-    <!-- Accent Red - Alert/Critical -->
-    <Color x:Key="AccentRed50">#FEF2F2</Color>
-    <Color x:Key="AccentRed100">#FEE2E2</Color>
-    <Color x:Key="AccentRed200">#FECACA</Color>
-    <Color x:Key="AccentRed300">#FCA5A5</Color>
-    <Color x:Key="AccentRed400">#F87171</Color>
-    <Color x:Key="AccentRed500">#EF4444</Color>
-    <Color x:Key="AccentRed600">#DC2626</Color>
-    <Color x:Key="AccentRed700">#B91C1C</Color>
-    <Color x:Key="AccentRed800">#991B1B</Color>
-    <Color x:Key="AccentRed900">#7F1D1D</Color>
-
-    <!-- Semantic Color Aliases (Light Theme) -->
-    <Color x:Key="Primary">#059669</Color>
-    <Color x:Key="PrimaryContainer">#D1FADF</Color>
-    <Color x:Key="OnPrimary">#FFFFFF</Color>
-    <Color x:Key="OnPrimaryContainer">#064E3B</Color>
-
-    <Color x:Key="Secondary">#1D4ED8</Color>
-    <Color x:Key="SecondaryContainer">#DBEAFE</Color>
-    <Color x:Key="OnSecondary">#FFFFFF</Color>
-    <Color x:Key="OnSecondaryContainer">#1E3A8A</Color>
-
-    <Color x:Key="Tertiary">#D97706</Color>
-    <Color x:Key="TertiaryContainer">#FEF3C7</Color>
-    <Color x:Key="OnTertiary">#FFFFFF</Color>
-    <Color x:Key="OnTertiaryContainer">#78350F</Color>
-
-    <Color x:Key="Error">#DC2626</Color>
-    <Color x:Key="ErrorContainer">#FEE2E2</Color>
-    <Color x:Key="OnError">#FFFFFF</Color>
-    <Color x:Key="OnErrorContainer">#7F1D1D</Color>
-
-    <Color x:Key="Surface">#FAFAFA</Color>
-    <Color x:Key="SurfaceDim">#E8E8E8</Color>
-    <Color x:Key="SurfaceBright">#FFFFFF</Color>
-    <Color x:Key="SurfaceContainer">#F5F5F5</Color>
-    <Color x:Key="SurfaceContainerHigh">#EEEEEE</Color>
-    <Color x:Key="SurfaceContainerHighest">#E0E0E0</Color>
-    <Color x:Key="OnSurface">#1C1C1E</Color>
-    <Color x:Key="OnSurfaceVariant">#49454F</Color>
-
-    <Color x:Key="Outline">#79747E</Color>
-    <Color x:Key="OutlineVariant">#CAC4D0</Color>
-
-    <Color x:Key="Shadow">#000000</Color>
-    <Color x:Key="Scrim">#000000</Color>
-
-    <Color x:Key="InverseSurface">#313033</Color>
-    <Color x:Key="InverseOnSurface">#F4EFF4</Color>
-    <Color x:Key="InversePrimary">#6EE7B7</Color>
-
-    <!-- Semantic Color Aliases (Dark Theme) -->
-    <Color x:Key="PrimaryDark">#34D399</Color>
-    <Color x:Key="PrimaryContainerDark">#064E3B</Color>
-    <Color x:Key="OnPrimaryDark">#022C22</Color>
-    <Color x:Key="OnPrimaryContainerDark">#A7F3C0</Color>
-
-    <Color x:Key="SecondaryDark">#60A5FA</Color>
-    <Color x:Key="SecondaryContainerDark">#1E3A8A</Color>
-    <Color x:Key="OnSecondaryDark">#1E3A8A</Color>
-    <Color x:Key="OnSecondaryContainerDark">#DBEAFE</Color>
-
-    <Color x:Key="TertiaryDark">#FBBF24</Color>
-    <Color x:Key="TertiaryContainerDark">#78350F</Color>
-    <Color x:Key="OnTertiaryDark">#78350F</Color>
-    <Color x:Key="OnTertiaryContainerDark">#FEF3C7</Color>
-
-    <Color x:Key="ErrorDark">#F87171</Color>
-    <Color x:Key="ErrorContainerDark">#7F1D1D</Color>
-    <Color x:Key="OnErrorDark">#7F1D1D</Color>
-    <Color x:Key="OnErrorContainerDark">#FEE2E2</Color>
-
-    <Color x:Key="SurfaceDark">#1C1C1E</Color>
-    <Color x:Key="SurfaceDimDark">#141414</Color>
-    <Color x:Key="SurfaceBrightDark">#2C2C2E</Color>
-    <Color x:Key="SurfaceContainerDark">#242426</Color>
-    <Color x:Key="SurfaceContainerHighDark">#2E2E30</Color>
-    <Color x:Key="SurfaceContainerHighestDark">#3A3A3C</Color>
-    <Color x:Key="OnSurfaceDark">#F4EFF4</Color>
-    <Color x:Key="OnSurfaceVariantDark">#CAC4D0</Color>
-
-    <Color x:Key="OutlineDark">#938F99</Color>
-    <Color x:Key="OutlineVariantDark">#49454F</Color>
-
-    <Color x:Key="ShadowDark">#000000</Color>
-    <Color x:Key="ScrimDark">#000000</Color>
-
-    <!-- Legacy Support (for backward compatibility) -->
-    <Color x:Key="BgDark">#0F172A</Color>
-    <Color x:Key="CardDark">#1E293B</Color>
-    <Color x:Key="BorderDark">#334155</Color>
-    <Color x:Key="TextPrimary">#F1F5F9</Color>
-    <Color x:Key="TextSecondary">#94A3B8</Color>
-    <Color x:Key="TextMuted">#64748B</Color>
-    <Color x:Key="AccentGreen">#10B981</Color>
-    <Color x:Key="AccentBlue">#3B82F6</Color>
-    <Color x:Key="AccentAmber">#F59E0B</Color>
-    <Color x:Key="AccentRed">#EF4444</Color>
-
-    <!-- Status Colors -->
-    <Color x:Key="StatusOnline">#10B981</Color>
-    <Color x:Key="StatusOffline">#64748B</Color>
-    <Color x:Key="StatusWarning">#F59E0B</Color>
-    <Color x:Key="StatusCritical">#EF4444</Color>
-    <Color x:Key="StatusUnknown">#94A3B8</Color>
-
-    <!-- Brushes -->
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource Primary}"/>
-    <SolidColorBrush x:Key="PrimaryContainerBrush" Color="{DynamicResource PrimaryContainer}"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource Secondary}"/>
-    <SolidColorBrush x:Key="SecondaryContainerBrush" Color="{DynamicResource SecondaryContainer}"/>
-    <SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource Tertiary}"/>
-    <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource Surface}"/>
-    <SolidColorBrush x:Key="SurfaceContainerBrush" Color="{DynamicResource SurfaceContainer}"/>
-    <SolidColorBrush x:Key="SurfaceContainerHighBrush" Color="{DynamicResource SurfaceContainerHigh}"/>
-    <SolidColorBrush x:Key="OnSurfaceBrush" Color="{DynamicResource OnSurface}"/>
-    <SolidColorBrush x:Key="OnSurfaceVariantBrush" Color="{DynamicResource OnSurfaceVariant}"/>
-    <SolidColorBrush x:Key="OutlineBrush" Color="{DynamicResource Outline}"/>
-    <SolidColorBrush x:Key="OutlineVariantBrush" Color="{DynamicResource OutlineVariant}"/>
-    <SolidColorBrush x:Key="ErrorBrush" Color="{DynamicResource Error}"/>
-    <SolidColorBrush x:Key="ErrorContainerBrush" Color="{DynamicResource ErrorContainer}"/>
-
-    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{DynamicResource PrimaryDark}"/>
-    <SolidColorBrush x:Key="PrimaryContainerDarkBrush" Color="{DynamicResource PrimaryContainerDark}"/>
-    <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{DynamicResource SecondaryDark}"/>
-    <SolidColorBrush x:Key="SurfaceDarkBrush" Color="{DynamicResource SurfaceDark}"/>
-    <SolidColorBrush x:Key="SurfaceContainerDarkBrush" Color="{DynamicResource SurfaceContainerDark}"/>
-    <SolidColorBrush x:Key="OnSurfaceDarkBrush" Color="{DynamicResource OnSurfaceDark}"/>
-    <SolidColorBrush x:Key="OnSurfaceVariantDarkBrush" Color="{DynamicResource OnSurfaceVariantDark}"/>
-    <SolidColorBrush x:Key="OutlineDarkBrush" Color="{DynamicResource OutlineDark}"/>
-    <SolidColorBrush x:Key="ErrorDarkBrush" Color="{DynamicResource ErrorDark}"/>
-
-    <!-- Legacy Brushes (aliases for backward compatibility) -->
-    <SolidColorBrush x:Key="BgDarkBrush" Color="{DynamicResource BgDark}"/>
-    <SolidColorBrush x:Key="CardDarkBrush" Color="{DynamicResource CardDark}"/>
-    <SolidColorBrush x:Key="BorderDarkBrush" Color="{DynamicResource BorderDark}"/>
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource TextPrimary}"/>
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource TextSecondary}"/>
-    <SolidColorBrush x:Key="TextMutedBrush" Color="{DynamicResource TextMuted}"/>
-    <SolidColorBrush x:Key="AccentGreenBrush" Color="{DynamicResource AccentGreen}"/>
-    <SolidColorBrush x:Key="AccentBlueBrush" Color="{DynamicResource AccentBlue}"/>
-    <SolidColorBrush x:Key="AccentAmberBrush" Color="{DynamicResource AccentAmber}"/>
-    <SolidColorBrush x:Key="AccentRedBrush" Color="{DynamicResource AccentRed}"/>
-    <SolidColorBrush x:Key="StatusOnlineBrush" Color="{DynamicResource StatusOnline}"/>
-    <SolidColorBrush x:Key="StatusOfflineBrush" Color="{DynamicResource StatusOffline}"/>
-    <SolidColorBrush x:Key="StatusWarningBrush" Color="{DynamicResource StatusWarning}"/>
-    <SolidColorBrush x:Key="StatusCriticalBrush" Color="{DynamicResource StatusCritical}"/>
-
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!-- Living Farm palette -->
+    <Color x:Key="Brand50">#EFFAF3</Color><Color x:Key="Brand100">#DDF4E5</Color><Color x:Key="Brand200">#BCE8CA</Color><Color x:Key="Brand300">#8BD5A2</Color><Color x:Key="Brand400">#55BD78</Color><Color x:Key="Brand500">#2E9D59</Color><Color x:Key="Brand600">#247F48</Color><Color x:Key="Brand700">#1D663B</Color><Color x:Key="Brand800">#185130</Color><Color x:Key="Brand900">#123F27</Color><Color x:Key="Brand950">#09291A</Color>
+    <Color x:Key="AccentBlue50">#EEF9FC</Color><Color x:Key="AccentBlue100">#D8F0F6</Color><Color x:Key="AccentBlue200">#B5E1EC</Color><Color x:Key="AccentBlue300">#80CADB</Color><Color x:Key="AccentBlue400">#4BAFC7</Color><Color x:Key="AccentBlue500">#278FAA</Color><Color x:Key="AccentBlue600">#21758D</Color><Color x:Key="AccentBlue700">#1D6074</Color><Color x:Key="AccentBlue800">#1C4F5F</Color><Color x:Key="AccentBlue900">#193F4D</Color>
+    <Color x:Key="AccentAmber50">#FFF9E8</Color><Color x:Key="AccentAmber100">#FEF0BF</Color><Color x:Key="AccentAmber200">#FDE08A</Color><Color x:Key="AccentAmber300">#F9CB50</Color><Color x:Key="AccentAmber400">#EAB43B</Color><Color x:Key="AccentAmber500">#C99527</Color><Color x:Key="AccentAmber600">#A97920</Color><Color x:Key="AccentAmber700">#88601E</Color><Color x:Key="AccentAmber800">#6F4D1D</Color><Color x:Key="AccentAmber900">#5C401B</Color>
+    <Color x:Key="AccentRed50">#FFF1F1</Color><Color x:Key="AccentRed100">#FFDCDC</Color><Color x:Key="AccentRed200">#FFC0C0</Color><Color x:Key="AccentRed300">#FF9696</Color><Color x:Key="AccentRed400">#F66F6F</Color><Color x:Key="AccentRed500">#D94B4B</Color><Color x:Key="AccentRed600">#B83C3C</Color><Color x:Key="AccentRed700">#963333</Color><Color x:Key="AccentRed800">#7B2D2D</Color><Color x:Key="AccentRed900">#662929</Color>
+    <Color x:Key="Primary">#247F48</Color><Color x:Key="PrimaryContainer">#DDF4E5</Color><Color x:Key="OnPrimary">#FFFFFF</Color><Color x:Key="OnPrimaryContainer">#123F27</Color>
+    <Color x:Key="Secondary">#278FAA</Color><Color x:Key="SecondaryContainer">#D8F0F6</Color><Color x:Key="OnSecondary">#FFFFFF</Color><Color x:Key="OnSecondaryContainer">#193F4D</Color>
+    <Color x:Key="Tertiary">#C99527</Color><Color x:Key="TertiaryContainer">#FEF0BF</Color><Color x:Key="OnTertiary">#FFFFFF</Color><Color x:Key="OnTertiaryContainer">#5C401B</Color>
+    <Color x:Key="Error">#B83C3C</Color><Color x:Key="ErrorContainer">#FFDCDC</Color><Color x:Key="OnError">#FFFFFF</Color><Color x:Key="OnErrorContainer">#662929</Color>
+    <Color x:Key="Surface">#F5F8F4</Color><Color x:Key="SurfaceDim">#E5EAE5</Color><Color x:Key="SurfaceBright">#FFFFFF</Color><Color x:Key="SurfaceContainer">#EDF2ED</Color><Color x:Key="SurfaceContainerHigh">#E7EDE7</Color><Color x:Key="SurfaceContainerHighest">#DDE5DE</Color><Color x:Key="OnSurface">#18221B</Color><Color x:Key="OnSurfaceVariant">#637067</Color>
+    <Color x:Key="Outline">#9AA79D</Color><Color x:Key="OutlineVariant">#D4DDD5</Color><Color x:Key="Shadow">#102016</Color><Color x:Key="Scrim">#102016</Color><Color x:Key="InverseSurface">#27312A</Color><Color x:Key="InverseOnSurface">#EEF5EF</Color><Color x:Key="InversePrimary">#8BD5A2</Color>
+    <Color x:Key="PrimaryDark">#8BD5A2</Color><Color x:Key="PrimaryContainerDark">#185130</Color><Color x:Key="OnPrimaryDark">#09291A</Color><Color x:Key="OnPrimaryContainerDark">#BCE8CA</Color><Color x:Key="SecondaryDark">#80CADB</Color><Color x:Key="SecondaryContainerDark">#1C4F5F</Color><Color x:Key="OnSecondaryDark">#193F4D</Color><Color x:Key="OnSecondaryContainerDark">#D8F0F6</Color><Color x:Key="TertiaryDark">#F9CB50</Color><Color x:Key="TertiaryContainerDark">#6F4D1D</Color><Color x:Key="OnTertiaryDark">#5C401B</Color><Color x:Key="OnTertiaryContainerDark">#FEF0BF</Color><Color x:Key="ErrorDark">#FF9696</Color><Color x:Key="ErrorContainerDark">#7B2D2D</Color><Color x:Key="OnErrorDark">#662929</Color><Color x:Key="OnErrorContainerDark">#FFDCDC</Color>
+    <Color x:Key="SurfaceDark">#151C17</Color><Color x:Key="SurfaceDimDark">#101510</Color><Color x:Key="SurfaceBrightDark">#29332C</Color><Color x:Key="SurfaceContainerDark">#202921</Color><Color x:Key="SurfaceContainerHighDark">#2A342C</Color><Color x:Key="SurfaceContainerHighestDark">#344037</Color><Color x:Key="OnSurfaceDark">#EEF5EF</Color><Color x:Key="OnSurfaceVariantDark">#B9C5BB</Color><Color x:Key="OutlineDark">#7F8D82</Color><Color x:Key="OutlineVariantDark">#465148</Color>
+    <!-- Legacy aliases -->
+    <Color x:Key="BgDark">#101510</Color><Color x:Key="CardDark">#202921</Color><Color x:Key="BorderDark">#344037</Color><Color x:Key="TextPrimary">#EEF5EF</Color><Color x:Key="TextSecondary">#B9C5BB</Color><Color x:Key="TextMuted">#7F8D82</Color><Color x:Key="AccentGreen">#2E9D59</Color><Color x:Key="AccentBlue">#278FAA</Color><Color x:Key="AccentAmber">#C99527</Color><Color x:Key="AccentRed">#D94B4B</Color><Color x:Key="StatusOnline">#2E9D59</Color><Color x:Key="StatusOffline">#7F8D82</Color><Color x:Key="StatusWarning">#C99527</Color><Color x:Key="StatusCritical">#D94B4B</Color><Color x:Key="StatusUnknown">#9AA79D</Color>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource Primary}"/><SolidColorBrush x:Key="PrimaryContainerBrush" Color="{DynamicResource PrimaryContainer}"/><SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource Secondary}"/><SolidColorBrush x:Key="SecondaryContainerBrush" Color="{DynamicResource SecondaryContainer}"/><SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource Tertiary}"/><SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource Surface}"/><SolidColorBrush x:Key="SurfaceContainerBrush" Color="{DynamicResource SurfaceContainer}"/><SolidColorBrush x:Key="SurfaceContainerHighBrush" Color="{DynamicResource SurfaceContainerHigh}"/><SolidColorBrush x:Key="OnSurfaceBrush" Color="{DynamicResource OnSurface}"/><SolidColorBrush x:Key="OnSurfaceVariantBrush" Color="{DynamicResource OnSurfaceVariant}"/><SolidColorBrush x:Key="OutlineBrush" Color="{DynamicResource Outline}"/><SolidColorBrush x:Key="OutlineVariantBrush" Color="{DynamicResource OutlineVariant}"/><SolidColorBrush x:Key="ErrorBrush" Color="{DynamicResource Error}"/><SolidColorBrush x:Key="ErrorContainerBrush" Color="{DynamicResource ErrorContainer}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{DynamicResource PrimaryDark}"/><SolidColorBrush x:Key="PrimaryContainerDarkBrush" Color="{DynamicResource PrimaryContainerDark}"/><SolidColorBrush x:Key="SecondaryDarkBrush" Color="{DynamicResource SecondaryDark}"/><SolidColorBrush x:Key="SurfaceDarkBrush" Color="{DynamicResource SurfaceDark}"/><SolidColorBrush x:Key="SurfaceContainerDarkBrush" Color="{DynamicResource SurfaceContainerDark}"/><SolidColorBrush x:Key="OnSurfaceDarkBrush" Color="{DynamicResource OnSurfaceDark}"/><SolidColorBrush x:Key="OnSurfaceVariantDarkBrush" Color="{DynamicResource OnSurfaceVariantDark}"/><SolidColorBrush x:Key="OutlineDarkBrush" Color="{DynamicResource OutlineDark}"/><SolidColorBrush x:Key="ErrorDarkBrush" Color="{DynamicResource ErrorDark}"/>
+    <SolidColorBrush x:Key="BgDarkBrush" Color="{DynamicResource BgDark}"/><SolidColorBrush x:Key="CardDarkBrush" Color="{DynamicResource CardDark}"/><SolidColorBrush x:Key="BorderDarkBrush" Color="{DynamicResource BorderDark}"/><SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource TextPrimary}"/><SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource TextSecondary}"/><SolidColorBrush x:Key="TextMutedBrush" Color="{DynamicResource TextMuted}"/><SolidColorBrush x:Key="AccentGreenBrush" Color="{DynamicResource AccentGreen}"/><SolidColorBrush x:Key="AccentBlueBrush" Color="{DynamicResource AccentBlue}"/><SolidColorBrush x:Key="AccentAmberBrush" Color="{DynamicResource AccentAmber}"/><SolidColorBrush x:Key="AccentRedBrush" Color="{DynamicResource AccentRed}"/><SolidColorBrush x:Key="StatusOnlineBrush" Color="{DynamicResource StatusOnline}"/><SolidColorBrush x:Key="StatusOfflineBrush" Color="{DynamicResource StatusOffline}"/><SolidColorBrush x:Key="StatusWarningBrush" Color="{DynamicResource StatusWarning}"/><SolidColorBrush x:Key="StatusCriticalBrush" Color="{DynamicResource StatusCritical}"/>
 </ResourceDictionary>
