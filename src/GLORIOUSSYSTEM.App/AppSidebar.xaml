@@ -13,7 +13,6 @@
               ColumnSpacing="7"
               VerticalOptions="Center">
 
-            <!-- Compact brand -->
             <Border WidthRequest="34"
                     HeightRequest="34"
                     BackgroundColor="#403A2410"
@@ -28,7 +27,6 @@
                        VerticalTextAlignment="Center" />
             </Border>
 
-            <!-- Icon-only navigation so it remains usable on narrow phones -->
             <Grid Grid.Column="1"
                   ColumnDefinitions="*,*,*,*"
                   ColumnSpacing="5"
@@ -44,7 +42,8 @@
                         Stroke="#554A2630"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 11">
-                    <Label Text="⌂"
+                    <Label x:Name="OverviewIcon"
+                           Text="⌂"
                            FontSize="21"
                            TextColor="{DynamicResource Primary}"
                            HorizontalTextAlignment="Center"
@@ -63,7 +62,8 @@
                         Stroke="#554A2630"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 11">
-                    <Label Text="✦"
+                    <Label x:Name="ScannerIcon"
+                           Text="✦"
                            FontSize="20"
                            TextColor="{DynamicResource Primary}"
                            HorizontalTextAlignment="Center"
@@ -82,7 +82,8 @@
                         Stroke="#554A2630"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 11">
-                    <Label Text="⌁"
+                    <Label x:Name="AnalyticsIcon"
+                           Text="⌁"
                            FontSize="22"
                            TextColor="{DynamicResource Primary}"
                            HorizontalTextAlignment="Center"
@@ -101,7 +102,8 @@
                         Stroke="#554A2630"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 11">
-                    <Label Text="⚙"
+                    <Label x:Name="SettingsIcon"
+                           Text="⚙"
                            FontSize="20"
                            TextColor="{DynamicResource Primary}"
                            HorizontalTextAlignment="Center"
@@ -112,7 +114,6 @@
                 </Border>
             </Grid>
 
-            <!-- Compact status + icon-only sign out -->
             <HorizontalStackLayout Grid.Column="2"
                                    Spacing="5"
                                    VerticalOptions="Center">
