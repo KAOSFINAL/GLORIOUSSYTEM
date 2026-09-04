@@ -58,11 +58,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\GLORIOUSSYSTEM.Data\GLORIOUSSYSTEM.Data.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="Models\leaf_model.onnx" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="Models\leaf_model.onnx.data" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Models\leaf_model_multitask.onnx" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Models\leaf_model_multitask.onnx.data" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
+
 </Project>
