@@ -31,8 +31,8 @@ public partial class AppSidebar : ContentView
         Opacity = 0;
         TranslationX = -18;
         await Task.WhenAll(
-            FadeTo(1, 260, Easing.CubicOut),
-            TranslateTo(0, 320, Easing.CubicOut));
+            FadeToAsync(1, 260, Easing.CubicOut),
+            TranslateToAsync(0, 320, Easing.CubicOut));
     }
 
     void UpdateSelection(string route)
@@ -52,14 +52,14 @@ public partial class AppSidebar : ContentView
     {
         item.BackgroundColor = selected ? active : inactive;
         icon.BackgroundColor = selected ? primary : (Application.Current?.Resources["SurfaceContainer"] as Color);
-        foreach (var child in icon.Content is Label label ? new[] { label } : Array.Empty<Label>())
-            child.TextColor = selected ? Colors.White : muted;
+        if (icon.Content is Label label)
+            label.TextColor = selected ? Colors.White : muted;
     }
 
     async Task Navigate(string route, Border item)
     {
-        await item.ScaleTo(0.97, 70, Easing.CubicOut);
-        await item.ScaleTo(1, 120, Easing.CubicOut);
+        await item.ScaleToAsync(0.97, 70, Easing.CubicOut);
+        await item.ScaleToAsync(1, 120, Easing.CubicOut);
         if (CurrentRoute == route)
             return;
         CurrentRoute = route;
