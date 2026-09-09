@@ -17,12 +17,12 @@ public partial class App : Application
         InitializeComponent();
         ConfigureServices();
 
-        // The Figma design uses the dark hydroponics palette. Only establish
-        // these defaults when the user has not already chosen a theme.
+        // Start with the low-glare command-center theme while preserving any
+        // appearance choices the user has already made.
         if (!Preferences.ContainsKey("Theme_DarkMode"))
             Preferences.Set("Theme_DarkMode", true);
         if (!Preferences.ContainsKey("Theme_PrimaryIndex"))
-            Preferences.Set("Theme_PrimaryIndex", 2);
+            Preferences.Set("Theme_PrimaryIndex", 0);
         if (!Preferences.ContainsKey("Theme_AccentIndex"))
             Preferences.Set("Theme_AccentIndex", 0);
 

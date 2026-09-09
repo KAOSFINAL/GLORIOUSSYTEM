@@ -86,13 +86,13 @@ public sealed class SensorSetting : INotifyPropertyChanged
         }
     }
 
-    public string CategoryIcon => Category == "WATER" ? "≈" : "☼";
-    public Color CategoryColor => Category == "WATER" ? Color.FromArgb("#1686A3") : Color.FromArgb("#247F48");
-    public Color CategoryContainerColor => Category == "WATER" ? Color.FromArgb("#D8F0F6") : Color.FromArgb("#DDF4E5");
+    public string CategoryIcon => Category == "WATER" ? "W" : "E";
+    public Color CategoryColor => Category == "WATER" ? Color.FromArgb("#66BFFF") : Color.FromArgb("#5EE0A0");
+    public Color CategoryContainerColor => Category == "WATER" ? Color.FromArgb("#142F46") : Color.FromArgb("#16382B");
 
     public string ThresholdStatusText => !Enabled ? "DISABLED" : !HasThresholds ? "SET LIMITS" : "ACTIVE";
-    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#647067") : !HasThresholds ? Color.FromArgb("#C99527") : Color.FromArgb("#247F48");
-    public Color ThresholdStatusTextColor => Colors.White;
+    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#263541") : !HasThresholds ? Color.FromArgb("#382F16") : Color.FromArgb("#16382B");
+    public Color ThresholdStatusTextColor => !Enabled ? Color.FromArgb("#F4F7FA") : !HasThresholds ? Color.FromArgb("#FFF2C7") : Color.FromArgb("#D9F7E8");
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -116,6 +116,7 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
     private readonly ObservableCollection<SensorSetting> _settings = new();
     private bool _hasUnsavedChanges;
     private bool _darkModeEnabled;
+    private bool _isLoading;
 
     public bool DarkModeEnabled
     {
@@ -129,16 +130,15 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
     {
         InitializeComponent();
         BindingContext = this;
-        SettingsList.ItemsSource = _settings;
+        BindableLayout.SetItemsSource(SettingsList, _settings);
         LoadThemePreferences();
-        _ = LoadAsync();
     }
 
     private void LoadThemePreferences()
     {
         PrimaryColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, 7);
         AccentColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, 7);
-        DarkModeEnabled = Preferences.Get("Theme_DarkMode", false);
+        DarkModeEnabled = Preferences.Get("Theme_DarkMode", true);
         DarkModeSwitch.IsToggled = DarkModeEnabled;
         ThemeManager.Apply();
         UpdateColorPreviews();
@@ -146,6 +146,8 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
     private async Task LoadAsync()
     {
+        if (_isLoading) return;
+        _isLoading = true;
         try
         {
             using var scope = App.Services!.CreateScope();
@@ -154,6 +156,8 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                foreach (var existing in _settings)
+                    existing.PropertyChanged -= OnSettingPropertyChanged;
                 _settings.Clear();
                 foreach (var sensor in sensors)
                 {
@@ -178,13 +182,17 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         {
             await DisplayAlertAsync("Error", $"Failed to load settings:\n\n{ex.Message}", "OK");
         }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     private void UpdateSaveButtonState()
     {
         _hasUnsavedChanges = _settings.Any(s => s.HasChanges);
         SaveButton.IsEnabled = _hasUnsavedChanges;
-        SaveButton.Text = _hasUnsavedChanges ? "Save changes  •  UNSAVED" : "Save changes";
+        SaveButton.Text = _hasUnsavedChanges ? "Save changes - unsaved" : "Save changes";
     }
 
     private void OnSettingPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -220,8 +228,8 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
             await db.SaveChangesAsync();
             UpdateSaveButtonState();
-            SaveButton.Text = "Changes saved  ✓";
-            await Task.Delay(800);
+            SaveButton.Text = "Changes saved";
+            await Task.Delay(350);
             SaveButton.Text = "Save changes";
         }
         catch (Exception ex)
@@ -282,22 +290,24 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
         PrimaryColorPicker.SelectedIndex = 0;
         AccentColorPicker.SelectedIndex = 0;
-        DarkModeSwitch.IsToggled = false;
+        DarkModeSwitch.IsToggled = true;
 
         Preferences.Set("Theme_PrimaryIndex", 0);
         Preferences.Set("Theme_AccentIndex", 0);
-        Preferences.Set("Theme_DarkMode", false);
+        Preferences.Set("Theme_DarkMode", true);
 
         ThemeManager.Apply();
         UpdateColorPreviews();
         await LoadAsync();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         ThemeManager.Apply();
         UpdateColorPreviews();
+        await Task.Yield();
+        await LoadAsync();
     }
 
     protected override void OnDisappearing()

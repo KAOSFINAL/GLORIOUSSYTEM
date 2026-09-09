@@ -6,12 +6,25 @@ namespace GLORIOUSSYSTEM.App;
 
 /// <summary>
 /// Single source of truth for the GLORIOUSSYSTEM visual theme.
-/// The runtime palette intentionally matches the GLORIOUSSYSTEMATIC/Figma design.
+/// The palette uses neutral surfaces, one hydroponic-green action color, and a
+/// dedicated solar-gold accent so operational states remain easy to scan.
 /// </summary>
 public static class ThemeManager
 {
     private const string ThemeVersionKey = "Theme_Version";
-    private const int CurrentThemeVersion = 7;
+    private const int CurrentThemeVersion = 9;
+
+    private static readonly string[] PrimaryOptions =
+    {
+        "#5EE0A0", "#66BFFF", "#A3E635", "#40D9D1",
+        "#A78BFA", "#FB923C", "#FB7185", "#2DD4BF"
+    };
+
+    private static readonly string[] AccentOptions =
+    {
+        "#F4C95D", "#66BFFF", "#A78BFA", "#40D9D1",
+        "#A3E635", "#FB923C", "#FB7185", "#2DD4BF"
+    };
 
     public static event EventHandler? ThemeChanged;
 
@@ -39,63 +52,70 @@ public static class ThemeManager
             return;
 
         var resources = app.Resources;
-        const string primary = "#F59E0B";
-        const string primaryContainer = "#3A2410";
-        const string secondary = "#F97316";
-        const string secondaryContainer = "#35170F";
-        const string tertiary = "#FCD34D";
-        const string tertiaryContainer = "#3B2A0A";
-        const string error = "#F97316";
-        const string errorContainer = "#3A1710";
-        const string surface = "#160A0C";
-        const string surfaceDim = "#100607";
-        const string surfaceBright = "#2A1318";
-        const string surfaceContainer = "#1F0E12";
-        const string surfaceContainerHigh = "#211014";
-        const string surfaceContainerHighest = "#2A1318";
-        const string onSurface = "#FDF0E8";
-        const string onSurfaceVariant = "#7A4A55";
-        const string outline = "#6B3742";
-        const string outlineVariant = "#3A1B22";
-        const string shadow = "#080304";
+        var darkMode = Preferences.Get("Theme_DarkMode", true);
+        var primaryIndex = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, PrimaryOptions.Length - 1);
+        var accentIndex = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, AccentOptions.Length - 1);
 
-        app.UserAppTheme = AppTheme.Dark;
+        var primary = PrimaryOptions[primaryIndex];
+        var secondary = AccentOptions[accentIndex];
+        const string tertiary = "#66BFFF";
+        const string error = "#FF7185";
+        const string success = "#5EE0A0";
+        const string warning = "#F4C95D";
+
+        var primaryContainer = darkMode ? "#16382B" : "#D9F7E8";
+        var secondaryContainer = darkMode ? "#382F16" : "#FFF2C7";
+        var tertiaryContainer = darkMode ? "#142F46" : "#DDEEFF";
+        var errorContainer = darkMode ? "#3C1C25" : "#FFE3E8";
+        var surface = darkMode ? "#0A0F14" : "#F5F8FA";
+        var surfaceDim = darkMode ? "#070B0F" : "#E9EFF3";
+        var surfaceBright = darkMode ? "#17212B" : "#FFFFFF";
+        var surfaceContainer = darkMode ? "#111922" : "#FFFFFF";
+        var surfaceContainerHigh = darkMode ? "#17212B" : "#EEF3F6";
+        var surfaceContainerHighest = darkMode ? "#1D2935" : "#E3EAEE";
+        var onSurface = darkMode ? "#F4F7FA" : "#111820";
+        var onSurfaceVariant = darkMode ? "#A8B5C2" : "#536271";
+        var outline = darkMode ? "#405161" : "#91A0AD";
+        var outlineVariant = darkMode ? "#263541" : "#D4DEE5";
+        var shadow = darkMode ? "#030609" : "#1A2630";
+
+        app.UserAppTheme = darkMode ? AppTheme.Dark : AppTheme.Light;
 
         Set(resources, "Primary", primary);
         Set(resources, "PrimaryDark", primary);
         Set(resources, "PrimaryContainer", primaryContainer);
         Set(resources, "PrimaryContainerDark", primaryContainer);
-        Set(resources, "OnPrimary", "#1A0A00");
-        Set(resources, "OnPrimaryDark", "#1A0A00");
-        Set(resources, "OnPrimaryContainer", "#FDE68A");
-        Set(resources, "OnPrimaryContainerDark", "#FDE68A");
+        Set(resources, "OnPrimary", "#07130E");
+        Set(resources, "OnPrimaryDark", "#07130E");
+        Set(resources, "OnPrimaryContainer", darkMode ? "#D9F7E8" : "#17382B");
+        Set(resources, "OnPrimaryContainerDark", darkMode ? "#D9F7E8" : "#17382B");
 
         Set(resources, "Secondary", secondary);
         Set(resources, "SecondaryDark", secondary);
         Set(resources, "SecondaryContainer", secondaryContainer);
         Set(resources, "SecondaryContainerDark", secondaryContainer);
-        Set(resources, "OnSecondary", "#1A0A00");
-        Set(resources, "OnSecondaryDark", "#1A0A00");
-        Set(resources, "OnSecondaryContainer", "#FED7AA");
-        Set(resources, "OnSecondaryContainerDark", "#FED7AA");
+        Set(resources, "OnSecondary", "#161105");
+        Set(resources, "OnSecondaryDark", "#161105");
+        Set(resources, "OnSecondaryContainer", darkMode ? "#FFF2C7" : "#382F16");
+        Set(resources, "OnSecondaryContainerDark", darkMode ? "#FFF2C7" : "#382F16");
 
         Set(resources, "Tertiary", tertiary);
         Set(resources, "TertiaryDark", tertiary);
         Set(resources, "TertiaryContainer", tertiaryContainer);
         Set(resources, "TertiaryContainerDark", tertiaryContainer);
-        Set(resources, "OnTertiary", "#1A0A00");
-        Set(resources, "OnTertiaryDark", "#1A0A00");
-        Set(resources, "OnTertiaryContainer", "#FEF3C7");
-        Set(resources, "OnTertiaryContainerDark", "#FEF3C7");
+        Set(resources, "OnTertiary", "#07131E");
+        Set(resources, "OnTertiaryDark", "#07131E");
+        Set(resources, "OnTertiaryContainer", darkMode ? "#DDEEFF" : "#142F46");
+        Set(resources, "OnTertiaryContainerDark", darkMode ? "#DDEEFF" : "#142F46");
 
         Set(resources, "Error", error);
         Set(resources, "ErrorDark", error);
         Set(resources, "ErrorContainer", errorContainer);
         Set(resources, "ErrorContainerDark", errorContainer);
-        Set(resources, "OnError", "#1A0500");
-        Set(resources, "OnErrorDark", "#1A0500");
-        Set(resources, "OnErrorContainer", "#FED7AA");
-        Set(resources, "OnErrorContainerDark", "#FED7AA");
+        Set(resources, "OnError", "#23070E");
+        Set(resources, "OnErrorDark", "#23070E");
+        Set(resources, "OnErrorContainer", darkMode ? "#FFE3E8" : "#3C1C25");
+        Set(resources, "OnErrorContainerDark", darkMode ? "#FFE3E8" : "#3C1C25");
 
         Set(resources, "Surface", surface);
         Set(resources, "SurfaceDark", surface);
@@ -121,26 +141,25 @@ public static class ThemeManager
         Set(resources, "Scrim", shadow);
         Set(resources, "InverseSurface", onSurface);
         Set(resources, "InverseOnSurface", surface);
-        Set(resources, "InversePrimary", "#B45309");
+        Set(resources, "InversePrimary", primary);
 
-        // Semantic statuses use the same gold/orange language as the reference
-        // instead of reintroducing the old green/blue status palette.
-        Set(resources, "StatusOnline", primary);
+        // Semantic colors do not change with appearance customization.
+        Set(resources, "StatusOnline", success);
         Set(resources, "StatusOffline", onSurfaceVariant);
-        Set(resources, "StatusWarning", tertiary);
-        Set(resources, "StatusCritical", secondary);
+        Set(resources, "StatusWarning", warning);
+        Set(resources, "StatusCritical", error);
         Set(resources, "StatusUnknown", outline);
-        Set(resources, "Success", primary);
-        Set(resources, "Warning", tertiary);
-        Set(resources, "Info", secondary);
+        Set(resources, "Success", success);
+        Set(resources, "Warning", warning);
+        Set(resources, "Info", tertiary);
 
         // Compatibility aliases used by older pages.
         Set(resources, "AccentGreen", primary);
-        Set(resources, "AccentBlue", secondary);
-        Set(resources, "AccentAmber", primary);
-        Set(resources, "AccentRed", secondary);
+        Set(resources, "AccentBlue", tertiary);
+        Set(resources, "AccentAmber", secondary);
+        Set(resources, "AccentRed", error);
         Set(resources, "TextPrimary", onSurface);
-        Set(resources, "TextSecondary", "#B98A94");
+        Set(resources, "TextSecondary", onSurfaceVariant);
         Set(resources, "TextMuted", onSurfaceVariant);
         Set(resources, "BgDark", surface);
         Set(resources, "CardDark", surfaceContainer);
@@ -168,14 +187,14 @@ public static class ThemeManager
         SetBrush(resources, "ErrorBrush", error);
         SetBrush(resources, "ErrorDarkBrush", error);
         SetBrush(resources, "AccentGreenBrush", primary);
-        SetBrush(resources, "AccentBlueBrush", secondary);
+        SetBrush(resources, "AccentBlueBrush", tertiary);
         SetBrush(resources, "TextPrimaryBrush", onSurface);
-        SetBrush(resources, "TextSecondaryBrush", "#B98A94");
+        SetBrush(resources, "TextSecondaryBrush", onSurfaceVariant);
         SetBrush(resources, "TextMutedBrush", onSurfaceVariant);
-        SetBrush(resources, "StatusOnlineBrush", primary);
+        SetBrush(resources, "StatusOnlineBrush", success);
         SetBrush(resources, "StatusOfflineBrush", onSurfaceVariant);
-        SetBrush(resources, "StatusWarningBrush", tertiary);
-        SetBrush(resources, "StatusCriticalBrush", secondary);
+        SetBrush(resources, "StatusWarningBrush", warning);
+        SetBrush(resources, "StatusCriticalBrush", error);
 
         Set(resources, "Background", surface);
         Set(resources, "CardBackground", surfaceContainer);
@@ -194,10 +213,10 @@ public static class ThemeManager
         Set(resources, "AppTextSecondary", onSurfaceVariant);
         Set(resources, "AppPrimarySoft", primaryContainer);
         Set(resources, "AppAccentSoft", secondaryContainer);
-        Set(resources, "AppSuccess", primary);
-        Set(resources, "AppWarning", tertiary);
-        Set(resources, "AppError", secondary);
-        Set(resources, "AppInfo", secondary);
+        Set(resources, "AppSuccess", success);
+        Set(resources, "AppWarning", warning);
+        Set(resources, "AppError", error);
+        Set(resources, "AppInfo", tertiary);
 
         Preferences.Set(ThemeVersionKey, CurrentThemeVersion);
         ThemeChanged?.Invoke(null, EventArgs.Empty);

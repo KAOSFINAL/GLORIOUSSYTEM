@@ -41,8 +41,13 @@ public partial class LoginPage : ContentPage
     {
         if (LoginButton.IsEnabled)
         {
-            OnLoginClicked(sender, e);
+            OnLoginClicked(LoginButton, e);
         }
+    }
+
+    void OnShowPasswordChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        PasswordEntry.IsPassword = !e.Value;
     }
 
     void UpdateLoginButtonState()
@@ -60,8 +65,8 @@ public partial class LoginPage : ContentPage
 
         try
         {
-            var email = EmailEntry.Text?.Trim();
-            var password = PasswordEntry.Text?.Trim();
+            var email = EmailEntry.Text?.Trim() ?? "";
+            var password = PasswordEntry.Text ?? "";
 
             // Validate credentials against database
             var (success, user) = await ValidateCredentialsAsync(email, password);
@@ -117,7 +122,7 @@ public partial class LoginPage : ContentPage
     {
         try
         {
-            using var scope = App.Services.CreateScope();
+            using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
 
             var user = await db.Users
@@ -154,6 +159,6 @@ public partial class LoginPage : ContentPage
 
     async void OnForgotPasswordClicked(object? sender, EventArgs e)
     {
-        await DisplayAlert("Forgot Password", "Contact your system administrator to reset your password.", "OK");
+        await DisplayAlertAsync("Forgot Password", "Contact your system administrator to reset your password.", "OK");
     }
 }

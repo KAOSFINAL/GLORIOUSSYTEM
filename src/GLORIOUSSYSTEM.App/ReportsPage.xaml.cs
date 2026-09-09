@@ -8,19 +8,13 @@ namespace GLORIOUSSYSTEM.App;
 public partial class ReportsPage : ContentPage
 {
     private bool _isRefreshing;
-    private bool _isFirstLoad = true;
     private bool _isLoading;
 
     private readonly PhChartDrawable _chartDrawable;
 
     public ReportsPage()
     {
-        LogToFile("=== ReportsPage constructor STARTED ===");
-
         InitializeComponent();
-
-        LogToFile("=== ReportsPage InitializeComponent COMPLETED ===");
-
         BindingContext = this;
 
         // Native MAUI GraphicsView chart
@@ -31,9 +25,6 @@ public partial class ReportsPage : ContentPage
         ChartTimeRangePicker.SelectedIndex = 2;
         ChartTimeRangePicker.SelectedIndexChanged += OnTimeRangeChanged;
 
-        _ = LoadAsync();
-
-        LogToFile("=== ReportsPage constructor COMPLETED ===");
     }
 
 
@@ -70,11 +61,7 @@ public partial class ReportsPage : ContentPage
         {
             await LoadAsync();
         }
-        finally
-        {
-            await Task.Delay(300);
-            IsRefreshing = false;
-        }
+        finally { IsRefreshing = false; }
     }
 
 
@@ -95,7 +82,7 @@ public partial class ReportsPage : ContentPage
         {
             var result = await Task.Run(() =>
             {
-                using var scope = App.Services.CreateScope();
+                using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
 
                 var db = scope.ServiceProvider
                     .GetRequiredService<HydroponicDbContext>();
@@ -165,15 +152,6 @@ public partial class ReportsPage : ContentPage
                 AlertCountLabel.Text =
                     result.Alerts.ToString();
 
-                if (_isFirstLoad)
-                {
-                    AnimateCounters(
-                        result.TotalSensors,
-                        result.OnlineSensors,
-                        result.Alerts);
-
-                    _isFirstLoad = false;
-                }
             });
 
 
@@ -246,7 +224,7 @@ public partial class ReportsPage : ContentPage
             var readings = await Task.Run(() =>
             {
                 using var scope =
-                    App.Services.CreateScope();
+                    (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
 
                 var db =
                     scope.ServiceProvider
@@ -408,17 +386,14 @@ public partial class ReportsPage : ContentPage
                     Colors.Red);
 
 
-        var changeIcon =
-            change >= 0
-                ? "↗"
-                : "↘";
+        var changeIcon = change >= 0 ? "+" : "-";
 
 
         ChartLegend.Children.Add(
             new Label
             {
                 Text =
-                    $"Range: {earliest.Value:F1} – {latest.Value:F1}",
+                    $"Range: {earliest.Value:F1} to {latest.Value:F1}",
 
                 FontSize = 12,
 
@@ -446,94 +421,6 @@ public partial class ReportsPage : ContentPage
 
 
     // ============================================================
-    // Counter Animation
-    // ============================================================
-
-    private void AnimateCounters(
-        int totalSensors,
-        int onlineSensors,
-        int alerts)
-    {
-        _ = AnimateCounterAsync(
-            TotalSensorsLabel,
-            totalSensors,
-            0);
-
-        _ = AnimateCounterAsync(
-            OnlineSensorsLabel,
-            onlineSensors,
-            100);
-
-        _ = AnimateCounterAsync(
-            AlertCountLabel,
-            alerts,
-            200);
-    }
-
-
-    private async Task AnimateCounterAsync(
-        Label label,
-        int target,
-        int delay)
-    {
-        if (delay > 0)
-            await Task.Delay(delay);
-
-
-        const int duration = 600;
-
-        var start =
-            DateTime.UtcNow;
-
-
-        while (true)
-        {
-            var elapsed =
-                (DateTime.UtcNow - start)
-                .TotalMilliseconds;
-
-
-            var progress =
-                Math.Clamp(
-                    elapsed / duration,
-                    0,
-                    1);
-
-
-            var eased =
-                Easing.CubicOut.Ease(progress);
-
-
-            var current =
-                (int)(target * eased);
-
-
-            await MainThread.InvokeOnMainThreadAsync(
-                () =>
-                {
-                    label.Text =
-                        current.ToString();
-                });
-
-
-            if (progress >= 1)
-                break;
-
-
-            await Task.Delay(16);
-        }
-
-
-        await MainThread.InvokeOnMainThreadAsync(
-            () =>
-            {
-                label.Text =
-                    target.ToString();
-            });
-    }
-
-
-    // ============================================================
     // API Test
     // ============================================================
 
@@ -554,14 +441,14 @@ public partial class ReportsPage : ContentPage
 
         var successColor =
             GetResourceColor(
-                "StatusOnline",
-                Color.FromArgb("#10B981"));
+                "PrimaryContainer",
+                Color.FromArgb("#16382B"));
 
 
         var errorColor =
             GetResourceColor(
-                "Error",
-                Color.FromArgb("#DC2626"));
+                "ErrorContainer",
+                Color.FromArgb("#3C1C25"));
 
 
         try
@@ -592,10 +479,10 @@ public partial class ReportsPage : ContentPage
 
 
             ApiStatusIconLabel.Text =
-                "✓";
+                "OK";
 
             ApiStatusIconLabel.TextColor =
-                Colors.White;
+                GetResourceColor("Primary", Color.FromArgb("#5EE0A0"));
 
 
             ApiStatusLabel.Text =
@@ -642,10 +529,10 @@ public partial class ReportsPage : ContentPage
 
 
             ApiStatusIconLabel.Text =
-                "✕";
+                "ERR";
 
             ApiStatusIconLabel.TextColor =
-                Colors.White;
+                GetResourceColor("Error", Color.FromArgb("#FF7185"));
 
 
             ApiStatusLabel.Text =
@@ -740,14 +627,11 @@ public partial class ReportsPage : ContentPage
     // Page Lifecycle
     // ============================================================
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        if (!_isFirstLoad)
-        {
-            _ = LoadAsync();
-        }
+        await Task.Yield();
+        await LoadAsync();
     }
 
 
@@ -777,29 +661,7 @@ public partial class ReportsPage : ContentPage
     private static void LogToFile(
         string message)
     {
-        try
-        {
-            var logPath =
-                Path.Combine(
-                    AppContext.BaseDirectory,
-                    "startup_log.txt");
-
-
-            var timestamp =
-                DateTime.Now.ToString(
-                    "HH:mm:ss.fff");
-
-
-            File.AppendAllText(
-                logPath,
-                $"[{timestamp}] " +
-                $"{message}" +
-                Environment.NewLine);
-        }
-        catch
-        {
-            // Logging must never crash the application.
-        }
+        System.Diagnostics.Debug.WriteLine(message);
     }
 }
 
@@ -828,4 +690,3 @@ internal sealed class PhChartPoint
 
     public double Value { get; set; }
 }
-

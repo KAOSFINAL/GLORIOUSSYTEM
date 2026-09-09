@@ -27,35 +27,73 @@ public partial class WebcamPage : ContentPage
     LeafClassifierService? _classifier;
     string? _initError;
     bool _isClassifying;
+    Task? _classifierInitialization;
+    bool? _isWideLayout;
 
     public WebcamPage()
     {
         InitializeComponent();
-
-        try
-        {
-            _classifier = new LeafClassifierService();
-        }
-        catch (Exception ex)
-        {
-            _initError = ex.Message;
-        }
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _classifierInitialization ??= InitializeClassifierAsync();
+    }
 
-        if (_initError != null)
+    void OnWorkspaceSizeChanged(object? sender, EventArgs e)
+    {
+        var isWide = WorkspaceGrid.Width >= 820;
+        if (!isWide)
+            PreviewContainer.HeightRequest = Math.Clamp(WorkspaceGrid.Width * 0.78, 280, 420);
+        if (_isWideLayout == isWide) return;
+        _isWideLayout = isWide;
+
+        WorkspaceGrid.ColumnDefinitions.Clear();
+        WorkspaceGrid.RowDefinitions.Clear();
+
+        if (isWide)
         {
-            LoadingLabel.Text = "AI model unavailable";
-            LoadingBorder.IsVisible = false;
+            WorkspaceGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.65, GridUnitType.Star) });
+            WorkspaceGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+            WorkspaceGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Grid.SetColumn(ResultsColumn, 1);
+            Grid.SetRow(ResultsColumn, 0);
+            WorkspaceGrid.ColumnSpacing = 20;
+            WorkspaceGrid.RowSpacing = 0;
+            PreviewContainer.HeightRequest = 470;
+        }
+        else
+        {
+            WorkspaceGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+            WorkspaceGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            WorkspaceGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Grid.SetColumn(ResultsColumn, 0);
+            Grid.SetRow(ResultsColumn, 1);
+            WorkspaceGrid.ColumnSpacing = 0;
+            WorkspaceGrid.RowSpacing = 20;
+        }
+    }
+
+    async Task InitializeClassifierAsync()
+    {
+        ModelStatusLabel.Text = "PREPARING";
+        try
+        {
+            _classifier = await Task.Run(() => new LeafClassifierService());
+            ModelStatusLabel.Text = "READY";
+        }
+        catch (Exception ex)
+        {
+            _initError = ex.Message;
+            ModelStatusLabel.Text = "UNAVAILABLE";
+            ModelStatusLabel.TextColor = GetResourceColor("Error", Colors.Red);
         }
     }
 
     async void OnChoosePhotoClicked(object sender, EventArgs e)
     {
-        if (!EnsureClassifier()) return;
+        if (!await EnsureClassifierAsync()) return;
 
         try
         {
@@ -76,7 +114,7 @@ public partial class WebcamPage : ContentPage
 
     async void OnTakePhotoClicked(object sender, EventArgs e)
     {
-        if (!EnsureClassifier()) return;
+        if (!await EnsureClassifierAsync()) return;
 
         if (!MediaPicker.Default.IsCaptureSupported)
         {
@@ -104,11 +142,13 @@ public partial class WebcamPage : ContentPage
         }
     }
 
-    bool EnsureClassifier()
+    async Task<bool> EnsureClassifierAsync()
     {
+        _classifierInitialization ??= InitializeClassifierAsync();
+        await _classifierInitialization;
         if (_classifier != null) return true;
 
-        _ = DisplayAlertAsync("AI Model Error", _initError ?? "The CNN model could not be loaded.", "OK");
+        await DisplayAlertAsync("AI model unavailable", _initError ?? "The crop model could not be loaded.", "OK");
         return false;
     }
 
@@ -173,8 +213,8 @@ public partial class WebcamPage : ContentPage
         PredictionsList.IsVisible = false;
 
         var isLettuce = prediction.IsLettuce;
-        var lettuceColor = isLettuce ? Color.FromArgb("#10B981") : Color.FromArgb("#EF4444");
-        var lettuceIcon = isLettuce ? "🌿" : "🚫";
+        var lettuceColor = isLettuce ? Color.FromArgb("#5EE0A0") : Color.FromArgb("#FF7185");
+        var lettuceIcon = isLettuce ? "OK" : "NO";
 
         LettuceStatusBorder.BackgroundColor = lettuceColor;
         LettuceStatusIcon.Text = lettuceIcon;
@@ -212,7 +252,7 @@ public partial class WebcamPage : ContentPage
             new()
             {
                 Label = "Lettuce Detection",
-                Icon = "🌿",
+                Icon = "OK",
                 Confidence = prediction.LettuceConfidence,
                 Color = lettuceColor
             }
@@ -247,19 +287,19 @@ public partial class WebcamPage : ContentPage
 
     static (Color Color, string Icon) GetHealthInfo(string healthLabel) => healthLabel.ToLower() switch
     {
-        "healthy" => (Color.FromArgb("#10B981"), "✅"),
-        "deficient" => (Color.FromArgb("#F59E0B"), "⚠️"),
-        "diseased" => (Color.FromArgb("#EF4444"), "🦠"),
-        _ => (Colors.Gray, "❓")
+        "healthy" => (Color.FromArgb("#5EE0A0"), "H"),
+        "deficient" => (Color.FromArgb("#F4C95D"), "N"),
+        "diseased" => (Color.FromArgb("#FF7185"), "D"),
+        _ => (Colors.Gray, "?")
     };
 
     static (Color Color, string Icon) GetAgeInfo(string ageLabel) => ageLabel.ToLower() switch
     {
-        "seedling" => (Color.FromArgb("#8B5CF6"), "🌱"),
-        "vegetative" => (Color.FromArgb("#10B981"), "🌿"),
-        "mature" => (Color.FromArgb("#3B82F6"), "🥬"),
-        "harvest_ready" => (Color.FromArgb("#F59E0B"), "🌾"),
-        _ => (Colors.Gray, "❓")
+        "seedling" => (Color.FromArgb("#A78BFA"), "S"),
+        "vegetative" => (Color.FromArgb("#5EE0A0"), "V"),
+        "mature" => (Color.FromArgb("#66BFFF"), "M"),
+        "harvest_ready" => (Color.FromArgb("#F4C95D"), "R"),
+        _ => (Colors.Gray, "?")
     };
 
     void OnClearClicked(object sender, EventArgs e)
@@ -285,9 +325,14 @@ public partial class WebcamPage : ContentPage
         ResultsCard.Opacity = 0;
         ResultsCard.TranslationY = 20;
         await Task.WhenAll(
-            ResultsCard.FadeToAsync(1, 300, Easing.CubicOut),
-            ResultsCard.TranslateToAsync(0, 0, 300, Easing.CubicOut));
+            ResultsCard.FadeToAsync(1, 180, Easing.CubicOut),
+            ResultsCard.TranslateToAsync(0, 0, 180, Easing.CubicOut));
     }
+
+    static Color GetResourceColor(string key, Color fallback)
+        => Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : fallback;
 }
 
 static class StringExtensions

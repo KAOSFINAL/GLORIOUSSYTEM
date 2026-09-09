@@ -4,6 +4,8 @@ namespace GLORIOUSSYSTEM.App;
 
 public partial class AppSidebar : ContentView
 {
+    bool _isNavigating;
+
     public static readonly BindableProperty CurrentRouteProperty =
         BindableProperty.Create(nameof(CurrentRoute), typeof(string), typeof(AppSidebar), "dashboard", propertyChanged: OnCurrentRouteChanged);
 
@@ -16,23 +18,13 @@ public partial class AppSidebar : ContentView
     public AppSidebar()
     {
         InitializeComponent();
-        Loaded += OnLoaded;
+        Loaded += (_, _) => UpdateSelection(CurrentRoute);
     }
 
     static void OnCurrentRouteChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is AppSidebar sidebar && sidebar.IsLoaded)
             sidebar.UpdateSelection((string)newValue);
-    }
-
-    async void OnLoaded(object? sender, EventArgs e)
-    {
-        UpdateSelection(CurrentRoute);
-        Opacity = 0;
-        TranslationX = -18;
-        await Task.WhenAll(
-            Microsoft.Maui.Controls.ViewExtensions.FadeToAsync(this, 1, 260, Easing.CubicOut),
-            Microsoft.Maui.Controls.ViewExtensions.TranslateToAsync(this, 0, 0, 320, Easing.CubicOut));
     }
 
     void UpdateSelection(string route)
@@ -54,20 +46,28 @@ public partial class AppSidebar : ContentView
         icon.Opacity = selected ? 1.0 : 0.62;
     }
 
-    async Task Navigate(string route, Border item)
+    async Task Navigate(string route)
     {
-        await Microsoft.Maui.Controls.ViewExtensions.ScaleToAsync(item, 0.97, 70, Easing.CubicOut);
-        await Microsoft.Maui.Controls.ViewExtensions.ScaleToAsync(item, 1, 120, Easing.CubicOut);
-        if (CurrentRoute == route)
+        if (_isNavigating || CurrentRoute == route || Shell.Current == null)
             return;
-        CurrentRoute = route;
-        await Shell.Current.GoToAsync($"//{route}");
+
+        _isNavigating = true;
+        try
+        {
+            CurrentRoute = route;
+            UpdateSelection(route);
+            await Shell.Current.GoToAsync($"//{route}", false);
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 
-    async void OnOverviewTapped(object? sender, TappedEventArgs e) => await Navigate("dashboard", OverviewItem);
-    async void OnScannerTapped(object? sender, TappedEventArgs e) => await Navigate("webcam", ScannerItem);
-    async void OnAnalyticsTapped(object? sender, TappedEventArgs e) => await Navigate("reports", AnalyticsItem);
-    async void OnSettingsTapped(object? sender, TappedEventArgs e) => await Navigate("settings", SettingsItem);
+    async void OnOverviewTapped(object? sender, TappedEventArgs e) => await Navigate("dashboard");
+    async void OnScannerTapped(object? sender, TappedEventArgs e) => await Navigate("webcam");
+    async void OnAnalyticsTapped(object? sender, TappedEventArgs e) => await Navigate("reports");
+    async void OnSettingsTapped(object? sender, TappedEventArgs e) => await Navigate("settings");
 
     async void OnLogoutClicked(object? sender, EventArgs e)
     {

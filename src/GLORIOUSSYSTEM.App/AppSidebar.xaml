@@ -2,63 +2,70 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GLORIOUSSYSTEM.App.AppSidebar"
-             BackgroundColor="#CC160A0C">
-    <Border Margin="6,4,6,6"
-            Padding="7,6"
-            BackgroundColor="#CC160A0C"
-            Stroke="#453A2630"
+             BackgroundColor="{DynamicResource Surface}">
+    <Border Margin="8,4,8,8"
+            Padding="7"
+            BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+            Stroke="{DynamicResource OutlineVariant}"
             StrokeThickness="1"
-            StrokeShape="RoundRectangle 16">
-        <Grid ColumnDefinitions="Auto,*,Auto"
-              ColumnSpacing="7"
-              VerticalOptions="Center">
-            <Border WidthRequest="34" HeightRequest="34"
-                    BackgroundColor="#403A2410" Stroke="#66F59E0B" StrokeThickness="1"
-                    StrokeShape="RoundRectangle 10">
-                <Label Text="G" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Primary}"
-                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-            </Border>
-
-            <Grid Grid.Column="1" ColumnDefinitions="*,*,*,*" ColumnSpacing="5"
-                  HorizontalOptions="Fill" VerticalOptions="Center">
-                <Border x:Name="OverviewItem" Grid.Column="0" WidthRequest="42" HeightRequest="38"
-                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
-                    <Image x:Name="OverviewIcon" Source="nav_home.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+            StrokeShape="RoundRectangle 20">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
+                <Border x:Name="OverviewItem" Grid.Column="0" HeightRequest="54"
+                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
+                        SemanticProperties.Description="Dashboard">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image x:Name="OverviewIcon" Source="nav_home.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
+                        <Label Text="Dashboard" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
                 </Border>
-                <Border x:Name="ScannerItem" Grid.Column="1" WidthRequest="42" HeightRequest="38"
-                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
-                    <Image x:Name="ScannerIcon" Source="nav_webcam.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+
+                <Border x:Name="ScannerItem" Grid.Column="1" HeightRequest="54"
+                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
+                        SemanticProperties.Description="Webcam">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image x:Name="ScannerIcon" Source="nav_webcam.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
+                        <Label Text="Webcam" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
                 </Border>
-                <Border x:Name="AnalyticsItem" Grid.Column="2" WidthRequest="42" HeightRequest="38"
-                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
-                    <Image x:Name="AnalyticsIcon" Source="nav_reports.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+
+                <Border x:Name="AnalyticsItem" Grid.Column="2" HeightRequest="54"
+                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
+                        SemanticProperties.Description="Reports">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image x:Name="AnalyticsIcon" Source="nav_reports.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
+                        <Label Text="Reports" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
                 </Border>
-                <Border x:Name="SettingsItem" Grid.Column="3" WidthRequest="42" HeightRequest="38"
-                        HorizontalOptions="Center" BackgroundColor="#331F0E12" Stroke="#554A2630"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 11">
-                    <Image x:Name="SettingsIcon" Source="nav_settings.svg" WidthRequest="20" HeightRequest="20" Opacity="0.7" />
+
+                <Border x:Name="SettingsItem" Grid.Column="3" HeightRequest="54"
+                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
+                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
+                        SemanticProperties.Description="Settings">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image x:Name="SettingsIcon" Source="nav_settings.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
+                        <Label Text="Settings" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
                     <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
                 </Border>
             </Grid>
 
-            <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
-                <Border WidthRequest="34" HeightRequest="28" BackgroundColor="#332A1318" Stroke="#453A2630"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 14">
-                    <BoxView WidthRequest="6" HeightRequest="6" BackgroundColor="{DynamicResource Primary}"
-                             HorizontalOptions="Center" VerticalOptions="Center" />
-                </Border>
-                <Border WidthRequest="34" HeightRequest="34" BackgroundColor="#332A1318" Stroke="{DynamicResource Error}"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 17">
+            <Border Grid.Column="1" WidthRequest="48" HeightRequest="54"
+                    BackgroundColor="{DynamicResource ErrorContainer}" Stroke="Transparent"
+                    StrokeThickness="1" StrokeShape="RoundRectangle 15"
+                    SemanticProperties.Description="Log out">
+                <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
                     <Image Source="nav_logout.svg" WidthRequest="18" HeightRequest="18" Opacity="0.9" />
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
-                </Border>
-            </HorizontalStackLayout>
+                    <Label Text="Logout" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnErrorContainer}" />
+                </VerticalStackLayout>
+                <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
+            </Border>
         </Grid>
     </Border>
 </ContentView>

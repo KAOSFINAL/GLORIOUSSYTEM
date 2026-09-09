@@ -19,8 +19,8 @@ public class SensorDisplayItem : INotifyPropertyChanged
     Color _statusColor = Colors.Gray;
     Color _valueColor = Colors.Gray;
     Color _thresholdProgressColor = Colors.Gray;
+    string _statusText = "No recent data";
     double _thresholdProgress = 0;
-    bool _hasUnit = false;
     bool _hasThresholds = false;
 
     public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
@@ -35,6 +35,7 @@ public class SensorDisplayItem : INotifyPropertyChanged
     public double ThresholdProgress { get => _thresholdProgress; set { _thresholdProgress = value; OnPropertyChanged(); } }
     public bool HasUnit => !string.IsNullOrEmpty(_unitText);
     public bool HasThresholds { get => _hasThresholds; set { _hasThresholds = value; OnPropertyChanged(); } }
+    public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(); } }
     public event PropertyChangedEventHandler? PropertyChanged;
     void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
@@ -48,10 +49,9 @@ public class SensorGroup : ObservableCollection<SensorDisplayItem>
     public int CriticalCount { get; set; }
     public int OfflineCount { get; set; }
 
-    // Reference design palette: gold primary, tangerine warning/error, muted burgundy for offline.
-    public Color OnlineColor => Color.FromArgb("#F59E0B");
-    public Color WarningColor => Color.FromArgb("#F97316");
-    public Color CriticalColor => Color.FromArgb("#F97316");
+    public Color OnlineColor => Color.FromArgb("#5EE0A0");
+    public Color WarningColor => Color.FromArgb("#F4C95D");
+    public Color CriticalColor => Color.FromArgb("#FF7185");
 
     public bool HasOnline => OnlineCount > 0;
     public bool HasWarning => WarningCount > 0;
@@ -67,46 +67,35 @@ public class SensorGroup : ObservableCollection<SensorDisplayItem>
 
 public partial class MainPage : ContentPage
 {
-    static readonly Color HasDataColor = Color.FromArgb("#F59E0B");
-    static readonly Color NoDataColor = Color.FromArgb("#7A4A55");
-    static readonly Color WarningColor = Color.FromArgb("#F97316");
-    static readonly Color CriticalColor = Color.FromArgb("#F97316");
-
-    bool _isRefreshing = false;
-    bool _isFirstLoad = true;
-
-    private static void LogToFile(string message)
+    sealed class ReadingSnapshot
     {
-        try
-        {
-            var logPath = Path.Combine(AppContext.BaseDirectory, "startup_log.txt");
-            var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            File.AppendAllText(logPath, $"[{timestamp}] {message}\n");
-        }
-        catch { }
+        public double Value { get; init; }
+        public string? Metric { get; init; }
+        public DateTime Timestamp { get; init; }
     }
+
+    sealed class SensorSnapshot
+    {
+        public string Name { get; init; } = "";
+        public string Type { get; init; } = "";
+        public string? Model { get; init; }
+        public double? MinThreshold { get; init; }
+        public double? MaxThreshold { get; init; }
+        public ReadingSnapshot? Latest { get; init; }
+    }
+
+    static readonly Color HasDataColor = Color.FromArgb("#5EE0A0");
+    static readonly Color NoDataColor = Color.FromArgb("#A8B5C2");
+    static readonly Color WarningColor = Color.FromArgb("#F4C95D");
+    static readonly Color CriticalColor = Color.FromArgb("#FF7185");
+
+    bool _isRefreshing;
+    bool _isLoading;
 
     public MainPage()
     {
-        LogToFile("=== MainPage constructor STARTED ===");
-        System.Diagnostics.Debug.WriteLine("=== MainPage constructor STARTED ===");
-        try
-        {
-            InitializeComponent();
-            LogToFile("=== MainPage InitializeComponent COMPLETED ===");
-            System.Diagnostics.Debug.WriteLine("=== MainPage InitializeComponent COMPLETED ===");
-            LoadSensors();
-            LogToFile("=== MainPage LoadSensors CALLED ===");
-            System.Diagnostics.Debug.WriteLine("=== MainPage LoadSensors CALLED ===");
-        }
-        catch (Exception ex)
-        {
-            LogToFile($"!!! MainPage constructor FAILED: {ex}");
-            System.Diagnostics.Debug.WriteLine($"!!! MainPage constructor FAILED: {ex}");
-            throw;
-        }
-        LogToFile("=== MainPage constructor COMPLETED ===");
-        System.Diagnostics.Debug.WriteLine("=== MainPage constructor COMPLETED ===");
+        InitializeComponent();
+        BindingContext = this;
     }
 
     public bool IsRefreshing
@@ -126,27 +115,49 @@ public partial class MainPage : ContentPage
     {
         if (IsRefreshing) return;
         IsRefreshing = true;
-        try { await Task.Run(LoadSensors); }
-        finally
-        {
-            await Task.Delay(500);
-            IsRefreshing = false;
-        }
+        try { await LoadSensorsAsync(); }
+        finally { IsRefreshing = false; }
     }
 
     void OnRefreshClicked(object sender, EventArgs e) => _ = RefreshAsync();
 
-    void LoadSensors()
+    async void OnReportsRequested(object sender, EventArgs e) => await Shell.Current.GoToAsync("//reports");
+
+    async void OnScanRequested(object sender, EventArgs e) => await Shell.Current.GoToAsync("//webcam");
+
+    async Task LoadSensorsAsync()
     {
+        if (_isLoading) return;
+        _isLoading = true;
+
         try
         {
-            using var scope = App.Services.CreateScope();
+            using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
-            var sensors = db.Sensors.Include(s => s.Readings).ToList();
+            var sensors = await db.Sensors
+                .AsNoTracking()
+                .Select(s => new SensorSnapshot
+                {
+                    Name = s.Name,
+                    Type = s.Type,
+                    Model = s.Model,
+                    MinThreshold = s.MinThreshold,
+                    MaxThreshold = s.MaxThreshold,
+                    Latest = s.Readings
+                        .OrderByDescending(r => r.Timestamp)
+                        .Select(r => new ReadingSnapshot
+                        {
+                            Value = r.Value,
+                            Metric = r.Metric,
+                            Timestamp = r.Timestamp
+                        })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
 
-            SensorDisplayItem ToItem(Sensor s)
+            SensorDisplayItem ToItem(SensorSnapshot s)
             {
-                var latest = s.Readings.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+                var latest = s.Latest;
                 var item = new SensorDisplayItem
                 {
                     Name = s.Name,
@@ -168,36 +179,38 @@ public partial class MainPage : ContentPage
                         item.MinThresholdText = s.MinThreshold.HasValue ? $"{s.MinThreshold.Value:F1}" : "--";
                         item.MaxThresholdText = s.MaxThreshold.HasValue ? $"{s.MaxThreshold.Value:F1}" : "--";
 
-                        double min = s.MinThreshold ?? double.MinValue;
-                        double max = s.MaxThreshold ?? double.MaxValue;
-                        double range = max - min;
+                        var min = s.MinThreshold;
+                        var max = s.MaxThreshold;
 
-                        if (range > 0 && latest.Value >= min && latest.Value <= max) item.ThresholdProgress = (latest.Value - min) / range;
-                        else if (latest.Value < min) item.ThresholdProgress = 0;
-                        else item.ThresholdProgress = 1;
+                        if (min.HasValue && max.HasValue && max.Value > min.Value)
+                            item.ThresholdProgress = Math.Clamp((latest.Value - min.Value) / (max.Value - min.Value), 0, 1);
+                        else
+                            item.ThresholdProgress = 0.5;
 
                         if (outOfRange)
                         {
                             item.StatusColor = CriticalColor;
                             item.ValueColor = CriticalColor;
                             item.ThresholdProgressColor = CriticalColor;
+                            item.StatusText = "Needs attention";
                         }
                         else
                         {
-                            double lowerBound = min + range * 0.1;
-                            double upperBound = max - range * 0.1;
-                            if ((s.MinThreshold.HasValue && latest.Value <= lowerBound) ||
-                                (s.MaxThreshold.HasValue && latest.Value >= upperBound))
+                            var nearMinimum = min.HasValue && latest.Value <= min.Value + Math.Max(Math.Abs(min.Value) * 0.1, 0.1);
+                            var nearMaximum = max.HasValue && latest.Value >= max.Value - Math.Max(Math.Abs(max.Value) * 0.1, 0.1);
+                            if (nearMinimum || nearMaximum)
                             {
                                 item.StatusColor = WarningColor;
                                 item.ValueColor = WarningColor;
                                 item.ThresholdProgressColor = WarningColor;
+                                item.StatusText = "Near limit";
                             }
                             else
                             {
                                 item.StatusColor = HasDataColor;
                                 item.ValueColor = HasDataColor;
                                 item.ThresholdProgressColor = HasDataColor;
+                                item.StatusText = "In range";
                             }
                         }
                     }
@@ -205,6 +218,7 @@ public partial class MainPage : ContentPage
                     {
                         item.StatusColor = HasDataColor;
                         item.ValueColor = HasDataColor;
+                        item.StatusText = "Live";
                     }
                 }
                 else
@@ -212,40 +226,70 @@ public partial class MainPage : ContentPage
                     item.ValueText = "--";
                     item.StatusColor = NoDataColor;
                     item.ValueColor = NoDataColor;
+                    item.StatusText = "No recent data";
                 }
 
                 return item;
             }
 
-            var waterQualitySensors = sensors.Where(s => new[] { "pH", "TDS", "WaterTemp", "UltrasonicLevel" }.Contains(s.Type)).ToList();
+            var waterQualitySensors = sensors.Where(s => new[] { "pH", "EC", "TDS", "WaterTemp", "UltrasonicLevel" }.Contains(s.Type)).ToList();
             var environmentalSensors = sensors.Where(s => s.Type == "BME280").ToList();
             var flowSensors = sensors.Where(s => s.Type == "FlowRate").ToList();
+            var solarSensors = sensors.Where(s => new[] { "SolarPower", "SolarVoltage", "BatteryPercent", "BatteryVoltage" }.Contains(s.Type)).ToList();
+
+            var ecSensor = sensors.FirstOrDefault(s => s.Type == "EC")
+                ?? sensors.FirstOrDefault(s => s.Type == "TDS");
+            var solarSensor = sensors.FirstOrDefault(s => s.Type == "SolarPower")
+                ?? sensors.FirstOrDefault(s => s.Type == "SolarVoltage");
+            var batterySensor = sensors.FirstOrDefault(s => s.Type == "BatteryPercent")
+                ?? sensors.FirstOrDefault(s => s.Type == "BatteryVoltage");
+
+            var ecReading = ecSensor?.Latest;
+            var solarReading = solarSensor?.Latest;
+            var batteryReading = batterySensor?.Latest;
 
             var groups = new ObservableCollection<SensorGroup>
             {
-                CreateGroup("WATER QUALITY", "💧", waterQualitySensors, ToItem),
-                CreateGroup("ENVIRONMENTAL", "🌡️", environmentalSensors, ToItem),
-                CreateGroup("WATER FLOW", "💨", flowSensors, ToItem),
+                CreateGroup("WATER QUALITY", "sensor_water.svg", waterQualitySensors, ToItem),
+                CreateGroup("ENVIRONMENT", "sensor_environment.svg", environmentalSensors, ToItem),
+                CreateGroup("WATER FLOW", "sensor_flow.svg", flowSensors, ToItem),
             };
 
-            MainThread.BeginInvokeOnMainThread(() =>
+            if (solarSensors.Count > 0)
+                groups.Add(CreateGroup("SOLAR POWER", "sensor_solar.svg", solarSensors, ToItem));
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                SensorList.ItemsSource = groups;
-                LastUpdatedLabel.Text = DateTime.Now.ToString("HH:mm:ss");
-                if (_isFirstLoad)
-                {
-                    _isFirstLoad = false;
-                    AnimateEntrance(groups);
-                }
+                BindableLayout.SetItemsSource(SensorList, groups);
+                EcValueLabel.Text = ecReading?.Value.ToString("F1") ?? "--";
+                EcUnitLabel.Text = ecReading?.Metric ?? "";
+                EcSourceLabel.Text = ecSensor == null ? "Add EC sensor" : ecSensor.Type == "TDS" ? "TDS source" : "Conductivity source";
+
+                SolarPowerValueLabel.Text = solarReading?.Value.ToString("F0") ?? "--";
+                SolarPowerUnitLabel.Text = solarReading?.Metric ?? "";
+                SolarSourceLabel.Text = solarSensor == null ? "Add SolarPower sensor" : solarSensor.Name;
+
+                BatteryValueLabel.Text = batteryReading?.Value.ToString("F0") ?? "--";
+                BatteryUnitLabel.Text = batteryReading?.Metric ?? "";
+                BatterySourceLabel.Text = batterySensor == null ? "Add battery sensor" : batterySensor.Name;
+                var latestTimestamp = sensors.Where(s => s.Latest != null).Select(s => s.Latest!.Timestamp).DefaultIfEmpty().Max();
+                LastUpdatedLabel.Text = latestTimestamp == default
+                    ? "No readings yet"
+                    : $"Updated {latestTimestamp.ToLocalTime():HH:mm}";
             });
         }
         catch (Exception ex)
         {
-            MainThread.BeginInvokeOnMainThread(async () => await DisplayAlert("Error", $"Failed to load sensors: {ex.Message}", "OK"));
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+                await DisplayAlertAsync("Sensor data unavailable", ex.Message, "OK"));
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
-    SensorGroup CreateGroup(string name, string icon, List<Sensor> sensors, Func<Sensor, SensorDisplayItem> selector)
+    SensorGroup CreateGroup(string name, string icon, List<SensorSnapshot> sensors, Func<SensorSnapshot, SensorDisplayItem> selector)
     {
         var items = sensors.Select(selector).ToList();
         return new SensorGroup(name, icon, items)
@@ -257,15 +301,10 @@ public partial class MainPage : ContentPage
         };
     }
 
-    async void AnimateEntrance(ObservableCollection<SensorGroup> groups)
-    {
-        SensorList.Opacity = 0;
-        await SensorList.FadeToAsync(1, 300, Easing.CubicOut);
-    }
-
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (!_isFirstLoad) LoadSensors();
+        await Task.Yield();
+        await LoadSensorsAsync();
     }
 }

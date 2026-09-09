@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF2C7"/><stop offset="1" stop-color="#F4C95D"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#1FAF72"/><stop offset="1" stop-color="#A7F3D0"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="54" fill="#111922"/>
+  <circle cx="60" cy="60" r="53" fill="none" stroke="#405161" stroke-width="2"/>
+  <path d="M60 20v9M60 91v9M20 60h9M91 60h9M31.7 31.7l6.4 6.4M81.9 81.9l6.4 6.4M88.3 31.7l-6.4 6.4M38.1 81.9l-6.4 6.4" stroke="url(#sun)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M29 66.5c11.8-2.6 23.4.1 31 9.7 7.3-15.5 18.6-23 31-22.5-1.2 17.7-13.3 31.5-31 31.5-15 0-26.2-6.5-31-18.7Z" fill="url(#leaf)"/>
+  <path d="M39 73c7.2-1.7 13.9.1 21 3.2m0 0c7.4-8.7 15.2-13.6 23.6-15.5" fill="none" stroke="#111922" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M42 91h36" stroke="#5EE0A0" stroke-width="4" stroke-linecap="round"/>
+</svg>

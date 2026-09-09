@@ -50,8 +50,12 @@ public class LeafClassifierService
 
     public LeafPrediction Classify(string imagePath)
     {
-        using var original = SKBitmap.Decode(imagePath);
-        using var resized = original.Resize(new SKImageInfo(224, 224), SKFilterQuality.Medium);
+        using var original = SKBitmap.Decode(imagePath)
+            ?? throw new InvalidDataException("The selected image format could not be decoded.");
+        using var resized = original.Resize(
+            new SKImageInfo(224, 224),
+            new SKSamplingOptions(SKFilterMode.Linear))
+            ?? throw new InvalidDataException("The selected image could not be resized.");
 
         var input = new DenseTensor<float>(new[] { 1, 3, 224, 224 });
 

@@ -23,8 +23,8 @@ CREATE TABLE Sensors (
     Id INTEGER PRIMARY KEY,
     NodeId INTEGER NOT NULL,
     Name TEXT NOT NULL,
-    Type TEXT NOT NULL,            -- 'pH','TDS','WaterTemp','UltrasonicLevel','BME280','FlowRate'
-    Model TEXT,                    -- 'PH-4502C','DFR0300','DS18B20','JSN-SR04T','BME280','YF-S201'
+    Type TEXT NOT NULL,            -- 'pH','EC','TDS','WaterTemp','UltrasonicLevel','BME280','FlowRate','SolarPower','BatteryPercent'
+    Model TEXT,                    -- e.g. 'PH-4502C','DFR0300','PZEM-017','INA219'
     PipeId INTEGER,                -- set for flow sensors (one per pipe)
     PositionIndex INTEGER,         -- set for BME280 arrays, tracks physical placement
     Notes TEXT,
@@ -135,6 +135,10 @@ INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
     (1, 'Water Temperature', 'WaterTemp', 'DS18B20', '1-Wire, reservoir'),
     (1, 'Reservoir Level', 'UltrasonicLevel', 'JSN-SR04T', 'Waterproof, reservoir');
 
+-- Electrical conductivity is distinct from legacy TDS/PPM telemetry.
+INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
+    (1, 'Reservoir EC', 'EC', 'DFRobot EC', 'Electrical conductivity, reservoir, mS/cm');
+
 -- Environmental sensors (Node 2) - 1x BME280
 INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
     (2, 'BME280 #1', 'BME280', 'BME280', 1),
@@ -142,6 +146,11 @@ INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
 -- Flow sensor (single unit on main supply)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PipeId) VALUES
     (2, 'Flow Main Supply', 'FlowRate', 'YF-S201', NULL);
+
+-- Solar telemetry powers the field-facing status cards in the app.
+INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
+    (2, 'Solar Array Output', 'SolarPower', 'PZEM-017', 'Solar DC output, Watts'),
+    (2, 'Battery Charge', 'BatteryPercent', 'INA219', 'Battery state of charge, percent');
 
 -- Display/Output devices
 INSERT INTO Displays (NodeId, Name, Type, Model, Width, Height, TouchEnabled) VALUES
