@@ -22,6 +22,9 @@ public class SensorDisplayItem : INotifyPropertyChanged
     string _statusText = "No recent data";
     double _thresholdProgress = 0;
     bool _hasThresholds = false;
+    SensorDisplayState _state = SensorDisplayState.Offline;
+    string _categoryName = "";
+    MaterialIconKind _categoryIcon;
 
     public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
     public string SubText { get => _subText; set { _subText = value; OnPropertyChanged(); } }
@@ -36,6 +39,9 @@ public class SensorDisplayItem : INotifyPropertyChanged
     public bool HasUnit => !string.IsNullOrEmpty(_unitText);
     public bool HasThresholds { get => _hasThresholds; set { _hasThresholds = value; OnPropertyChanged(); } }
     public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(); } }
+    public SensorDisplayState State { get => _state; set { _state = value; OnPropertyChanged(); } }
+    public string CategoryName { get => _categoryName; set { _categoryName = value; OnPropertyChanged(); } }
+    public MaterialIconKind CategoryIcon { get => _categoryIcon; set { _categoryIcon = value; OnPropertyChanged(); } }
     public event PropertyChangedEventHandler? PropertyChanged;
     void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
@@ -43,22 +49,18 @@ public class SensorDisplayItem : INotifyPropertyChanged
 public class SensorGroup : ObservableCollection<SensorDisplayItem>
 {
     public string CategoryName { get; set; } = "";
-    public string CategoryIcon { get; set; } = "";
+    public MaterialIconKind CategoryIcon { get; set; }
     public int OnlineCount { get; set; }
     public int WarningCount { get; set; }
     public int CriticalCount { get; set; }
     public int OfflineCount { get; set; }
-
-    public Color OnlineColor => Color.FromArgb("#5EE0A0");
-    public Color WarningColor => Color.FromArgb("#F4C95D");
-    public Color CriticalColor => Color.FromArgb("#FF7185");
 
     public bool HasOnline => OnlineCount > 0;
     public bool HasWarning => WarningCount > 0;
     public bool HasCritical => CriticalCount > 0;
     public int SensorCount => Count;
 
-    public SensorGroup(string name, string icon, IEnumerable<SensorDisplayItem> items) : base(items)
+    public SensorGroup(string name, MaterialIconKind icon, IEnumerable<SensorDisplayItem> items) : base(items)
     {
         CategoryName = name;
         CategoryIcon = icon;
@@ -84,18 +86,19 @@ public partial class MainPage : ContentPage
         public ReadingSnapshot? Latest { get; init; }
     }
 
-    static readonly Color HasDataColor = Color.FromArgb("#5EE0A0");
-    static readonly Color NoDataColor = Color.FromArgb("#A8B5C2");
-    static readonly Color WarningColor = Color.FromArgb("#F4C95D");
-    static readonly Color CriticalColor = Color.FromArgb("#FF7185");
-
     bool _isRefreshing;
     bool _isLoading;
+    readonly ObservableCollection<SensorDisplayItem> _carouselItems = [];
+    DateTime _lastLoadedUtc = DateTime.MinValue;
+    static readonly TimeSpan AutomaticRefreshInterval = TimeSpan.FromSeconds(20);
 
     public MainPage()
     {
         InitializeComponent();
         BindingContext = this;
+        SensorCarousel.ItemsSource = _carouselItems;
+        RefreshCommand = new Command(async () => await RefreshAsync());
+        ThemeManager.ThemeChanged += OnThemeChanged;
     }
 
     public bool IsRefreshing
@@ -109,7 +112,7 @@ public partial class MainPage : ContentPage
         }
     }
 
-    public ICommand RefreshCommand => new Command(async () => await RefreshAsync());
+    public ICommand RefreshCommand { get; }
 
     async Task RefreshAsync()
     {
@@ -121,9 +124,17 @@ public partial class MainPage : ContentPage
 
     void OnRefreshClicked(object sender, EventArgs e) => _ = RefreshAsync();
 
-    async void OnReportsRequested(object sender, EventArgs e) => await Shell.Current.GoToAsync("//reports");
+    void OnReportsRequested(object sender, EventArgs e)
+    {
+        if (Shell.Current is AppShell appShell)
+            appShell.NavigateTo("reports");
+    }
 
-    async void OnScanRequested(object sender, EventArgs e) => await Shell.Current.GoToAsync("//webcam");
+    void OnScanRequested(object sender, EventArgs e)
+    {
+        if (Shell.Current is AppShell appShell)
+            appShell.NavigateTo("webcam");
+    }
 
     async Task LoadSensorsAsync()
     {
@@ -132,10 +143,16 @@ public partial class MainPage : ContentPage
 
         try
         {
+            var hasDataColor = GetResourceColor("StatusOnline", Colors.Green);
+            var noDataColor = GetResourceColor("StatusOffline", Colors.Gray);
+            var warningColor = GetResourceColor("StatusWarning", Colors.Orange);
+            var criticalColor = GetResourceColor("StatusCritical", Colors.Red);
+
             using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
             var sensors = await db.Sensors
                 .AsNoTracking()
+                .OrderBy(s => s.Id)
                 .Select(s => new SensorSnapshot
                 {
                     Name = s.Name,
@@ -189,9 +206,10 @@ public partial class MainPage : ContentPage
 
                         if (outOfRange)
                         {
-                            item.StatusColor = CriticalColor;
-                            item.ValueColor = CriticalColor;
-                            item.ThresholdProgressColor = CriticalColor;
+                            item.State = SensorDisplayState.Critical;
+                            item.StatusColor = criticalColor;
+                            item.ValueColor = criticalColor;
+                            item.ThresholdProgressColor = criticalColor;
                             item.StatusText = "Needs attention";
                         }
                         else
@@ -200,71 +218,72 @@ public partial class MainPage : ContentPage
                             var nearMaximum = max.HasValue && latest.Value >= max.Value - Math.Max(Math.Abs(max.Value) * 0.1, 0.1);
                             if (nearMinimum || nearMaximum)
                             {
-                                item.StatusColor = WarningColor;
-                                item.ValueColor = WarningColor;
-                                item.ThresholdProgressColor = WarningColor;
+                                item.State = SensorDisplayState.Warning;
+                                item.StatusColor = warningColor;
+                                item.ValueColor = warningColor;
+                                item.ThresholdProgressColor = warningColor;
                                 item.StatusText = "Near limit";
                             }
                             else
                             {
-                                item.StatusColor = HasDataColor;
-                                item.ValueColor = HasDataColor;
-                                item.ThresholdProgressColor = HasDataColor;
+                                item.State = SensorDisplayState.Online;
+                                item.StatusColor = hasDataColor;
+                                item.ValueColor = hasDataColor;
+                                item.ThresholdProgressColor = hasDataColor;
                                 item.StatusText = "In range";
                             }
                         }
                     }
                     else
                     {
-                        item.StatusColor = HasDataColor;
-                        item.ValueColor = HasDataColor;
+                        item.State = SensorDisplayState.Online;
+                        item.StatusColor = hasDataColor;
+                        item.ValueColor = hasDataColor;
                         item.StatusText = "Live";
                     }
                 }
                 else
                 {
                     item.ValueText = "--";
-                    item.StatusColor = NoDataColor;
-                    item.ValueColor = NoDataColor;
+                    item.State = SensorDisplayState.Offline;
+                    item.StatusColor = noDataColor;
+                    item.ValueColor = noDataColor;
                     item.StatusText = "No recent data";
                 }
 
                 return item;
             }
 
-            var waterQualitySensors = sensors.Where(s => new[] { "pH", "EC", "TDS", "WaterTemp", "UltrasonicLevel" }.Contains(s.Type)).ToList();
-            var environmentalSensors = sensors.Where(s => s.Type == "BME280").ToList();
+            // Electrical conductivity stays available in Reports and Settings,
+            // while the actual DFR0300 TDS sensor is shown on the dashboard.
+            var waterQualitySensors = sensors.Where(s => new[] { "pH", "TDS", "WaterTemp", "UltrasonicLevel" }.Contains(s.Type)).ToList();
+            var environmentalSensors = sensors.Where(s => new[] { "BME680", "BH1750" }.Contains(s.Type)).ToList();
             var flowSensors = sensors.Where(s => s.Type == "FlowRate").ToList();
             var solarSensors = sensors.Where(s => new[] { "SolarPower", "SolarVoltage", "BatteryPercent", "BatteryVoltage" }.Contains(s.Type)).ToList();
 
-            var ecSensor = sensors.FirstOrDefault(s => s.Type == "EC")
-                ?? sensors.FirstOrDefault(s => s.Type == "TDS");
             var solarSensor = sensors.FirstOrDefault(s => s.Type == "SolarPower")
                 ?? sensors.FirstOrDefault(s => s.Type == "SolarVoltage");
             var batterySensor = sensors.FirstOrDefault(s => s.Type == "BatteryPercent")
                 ?? sensors.FirstOrDefault(s => s.Type == "BatteryVoltage");
 
-            var ecReading = ecSensor?.Latest;
             var solarReading = solarSensor?.Latest;
             var batteryReading = batterySensor?.Latest;
 
             var groups = new ObservableCollection<SensorGroup>
             {
-                CreateGroup("WATER QUALITY", "sensor_water.svg", waterQualitySensors, ToItem),
-                CreateGroup("ENVIRONMENT", "sensor_environment.svg", environmentalSensors, ToItem),
-                CreateGroup("WATER FLOW", "sensor_flow.svg", flowSensors, ToItem),
+                CreateGroup("WATER QUALITY", MaterialIconKind.Water, waterQualitySensors, ToItem),
+                CreateGroup("ENVIRONMENT", MaterialIconKind.Environment, environmentalSensors, ToItem),
+                CreateGroup("WATER FLOW", MaterialIconKind.Flow, flowSensors, ToItem),
             };
 
             if (solarSensors.Count > 0)
-                groups.Add(CreateGroup("SOLAR POWER", "sensor_solar.svg", solarSensors, ToItem));
+                groups.Add(CreateGroup("SOLAR POWER", MaterialIconKind.Solar, solarSensors, ToItem));
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                BindableLayout.SetItemsSource(SensorList, groups);
-                EcValueLabel.Text = ecReading?.Value.ToString("F1") ?? "--";
-                EcUnitLabel.Text = ecReading?.Metric ?? "";
-                EcSourceLabel.Text = ecSensor == null ? "Add EC sensor" : ecSensor.Type == "TDS" ? "TDS source" : "Conductivity source";
-
+                _carouselItems.Clear();
+                foreach (var item in groups.SelectMany(group => group))
+                    _carouselItems.Add(item);
                 SolarPowerValueLabel.Text = solarReading?.Value.ToString("F0") ?? "--";
                 SolarPowerUnitLabel.Text = solarReading?.Metric ?? "";
                 SolarSourceLabel.Text = solarSensor == null ? "Add SolarPower sensor" : solarSensor.Name;
@@ -276,6 +295,7 @@ public partial class MainPage : ContentPage
                 LastUpdatedLabel.Text = latestTimestamp == default
                     ? "No readings yet"
                     : $"Updated {latestTimestamp.ToLocalTime():HH:mm}";
+                _lastLoadedUtc = DateTime.UtcNow;
             });
         }
         catch (Exception ex)
@@ -289,22 +309,43 @@ public partial class MainPage : ContentPage
         }
     }
 
-    SensorGroup CreateGroup(string name, string icon, List<SensorSnapshot> sensors, Func<SensorSnapshot, SensorDisplayItem> selector)
+    SensorGroup CreateGroup(string name, MaterialIconKind icon, List<SensorSnapshot> sensors, Func<SensorSnapshot, SensorDisplayItem> selector)
     {
         var items = sensors.Select(selector).ToList();
+        foreach (var item in items)
+        {
+            item.CategoryName = name;
+            item.CategoryIcon = icon;
+        }
+
         return new SensorGroup(name, icon, items)
         {
-            OnlineCount = items.Count(i => i.StatusColor == HasDataColor),
-            WarningCount = items.Count(i => i.StatusColor == WarningColor),
-            CriticalCount = items.Count(i => i.StatusColor == CriticalColor),
-            OfflineCount = items.Count(i => i.StatusColor == NoDataColor)
+            OnlineCount = items.Count(i => i.State == SensorDisplayState.Online),
+            WarningCount = items.Count(i => i.State == SensorDisplayState.Warning),
+            CriticalCount = items.Count(i => i.State == SensorDisplayState.Critical),
+            OfflineCount = items.Count(i => i.State == SensorDisplayState.Offline)
         };
     }
 
-    protected override async void OnAppearing()
+    void OnThemeChanged(object? sender, EventArgs e) => _lastLoadedUtc = DateTime.MinValue;
+
+    protected override void OnAppearing()
     {
         base.OnAppearing();
-        await Task.Yield();
-        await LoadSensorsAsync();
+        if (DateTime.UtcNow - _lastLoadedUtc >= AutomaticRefreshInterval)
+            Dispatcher.Dispatch(() => _ = LoadSensorsAsync());
     }
+
+    static Color GetResourceColor(string key, Color fallback)
+        => Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : fallback;
+}
+
+public enum SensorDisplayState
+{
+    Online,
+    Warning,
+    Critical,
+    Offline
 }

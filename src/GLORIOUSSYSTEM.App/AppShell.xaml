@@ -7,16 +7,16 @@
        Shell.NavBarIsVisible="False"
        Title="GLORIOUSSYSTEM">
 
-    <FlyoutItem Title="Overview" Route="dashboard" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Title="Overview" />
+    <FlyoutItem x:Name="DashboardItem" Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent x:Name="DashboardContent" Title="Dashboard" />
     </FlyoutItem>
-    <FlyoutItem Title="AI Crop Scanner" Route="webcam" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:WebcamPage}" Title="AI Crop Scanner" />
+    <FlyoutItem x:Name="WebcamItem" Title="Webcam" Route="webcam" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent x:Name="WebcamContent" Title="Webcam" />
     </FlyoutItem>
-    <FlyoutItem Title="Analytics" Route="reports" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:ReportsPage}" Title="Analytics" />
+    <FlyoutItem x:Name="ReportsItem" Title="Reports" Route="reports" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent x:Name="ReportsContent" Title="Reports" />
     </FlyoutItem>
-    <FlyoutItem Title="Settings" Route="settings" FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" Title="Settings" />
+    <FlyoutItem x:Name="SettingsItem" Title="Settings" Route="settings" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent x:Name="SettingsContent" Title="Settings" />
     </FlyoutItem>
 </Shell>

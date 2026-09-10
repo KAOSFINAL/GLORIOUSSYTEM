@@ -7,7 +7,7 @@
              BackgroundColor="{DynamicResource Surface}"
              Title="Settings"
              Shell.NavBarIsVisible="False">
-    <Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
+    <local:AdaptivePageLayout RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
         <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout MaximumWidthRequest="960" HorizontalOptions="Center"
                                  Padding="{OnIdiom Phone='18,24,18,28', Tablet='36,34,36,32', Desktop='48,38,48,36'}"
@@ -46,11 +46,11 @@
                                     StrokeShape="RoundRectangle 19">
                                 <VerticalStackLayout Spacing="13">
                                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="11">
-                                        <Border WidthRequest="42" HeightRequest="42" Margin="0" Padding="0"
-                                                BackgroundColor="{Binding CategoryContainerColor}"
+                                        <Border WidthRequest="42" HeightRequest="42" Margin="0" Padding="8"
+                                                BackgroundColor="{DynamicResource PrimaryContainer}"
                                                 Stroke="Transparent" StrokeThickness="0" StrokeShape="RoundRectangle 13">
-                                            <Label Text="{Binding CategoryIcon}" FontSize="11" FontAttributes="Bold"
-                                                   TextColor="{Binding CategoryColor}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                            <local:MaterialIcon Kind="{Binding CategoryMaterialIcon}"
+                                                                IconColor="{DynamicResource OnPrimaryContainer}" />
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
                                             <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold"
@@ -65,26 +65,59 @@
                                         </VerticalStackLayout>
                                     </Grid>
 
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="9">
-                                        <VerticalStackLayout Spacing="5">
-                                            <Label Text="MINIMUM" FontSize="8" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                            <Border HeightRequest="44" Padding="10,0" Margin="0"
-                                                    BackgroundColor="{DynamicResource SurfaceContainerHigh}"
-                                                    Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 12">
-                                                <Entry Text="{Binding MinThreshold, Mode=TwoWay, StringFormat='{0:F1}'}" Keyboard="Numeric"
-                                                       FontSize="13" TextColor="{DynamicResource OnSurface}" BackgroundColor="Transparent" />
-                                            </Border>
+                                    <Border Padding="13" Margin="0"
+                                            BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                            Stroke="Transparent" StrokeShape="RoundRectangle 16">
+                                        <VerticalStackLayout Spacing="13">
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <VerticalStackLayout Spacing="1">
+                                                    <Label Text="OPERATING RANGE" FontSize="8" FontAttributes="Bold"
+                                                           CharacterSpacing="1" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    <Label Text="{Binding RangeDescription}" FontSize="9"
+                                                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                </VerticalStackLayout>
+                                                <Button Grid.Column="1" Text="Use recommended" Style="{DynamicResource TertiaryButton}"
+                                                        HeightRequest="38" MinimumHeightRequest="38" Padding="9,5" FontSize="9"
+                                                        CommandParameter="{Binding .}" Clicked="OnUseRecommendedClicked" />
+                                            </Grid>
+
+                                            <VerticalStackLayout Spacing="4">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <Label Text="Minimum alert" FontSize="10" FontAttributes="Bold"
+                                                           TextColor="{DynamicResource OnSurface}" />
+                                                    <Label Grid.Column="1" Text="{Binding MinimumDisplay}" FontSize="10" FontAttributes="Bold"
+                                                           TextColor="{DynamicResource Primary}" />
+                                                </Grid>
+                                                <Slider Minimum="{Binding RangeMinimum}" Maximum="{Binding RangeMaximum}"
+                                                        Value="{Binding MinimumControlValue, Mode=TwoWay}"
+                                                        MinimumTrackColor="{DynamicResource Primary}"
+                                                        MaximumTrackColor="{DynamicResource SurfaceContainerHighest}"
+                                                        ThumbColor="{DynamicResource Primary}" />
+                                            </VerticalStackLayout>
+
+                                            <VerticalStackLayout Spacing="4">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <Label Text="Maximum alert" FontSize="10" FontAttributes="Bold"
+                                                           TextColor="{DynamicResource OnSurface}" />
+                                                    <Label Grid.Column="1" Text="{Binding MaximumDisplay}" FontSize="10" FontAttributes="Bold"
+                                                           TextColor="{DynamicResource Secondary}" />
+                                                </Grid>
+                                                <Slider Minimum="{Binding RangeMinimum}" Maximum="{Binding RangeMaximum}"
+                                                        Value="{Binding MaximumControlValue, Mode=TwoWay}"
+                                                        MinimumTrackColor="{DynamicResource Secondary}"
+                                                        MaximumTrackColor="{DynamicResource SurfaceContainerHighest}"
+                                                        ThumbColor="{DynamicResource Secondary}" />
+                                            </VerticalStackLayout>
+
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <Label Text="{Binding RecommendedDescription}" FontSize="9"
+                                                       TextColor="{DynamicResource OnSurfaceVariant}" VerticalOptions="Center" />
+                                                <Button Grid.Column="1" Text="Clear limits" Style="{DynamicResource TertiaryButton}"
+                                                        HeightRequest="36" MinimumHeightRequest="36" Padding="8,4" FontSize="9"
+                                                        CommandParameter="{Binding .}" Clicked="OnClearThresholdsClicked" />
+                                            </Grid>
                                         </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="1" Spacing="5">
-                                            <Label Text="MAXIMUM" FontSize="8" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                            <Border HeightRequest="44" Padding="10,0" Margin="0"
-                                                    BackgroundColor="{DynamicResource SurfaceContainerHigh}"
-                                                    Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 12">
-                                                <Entry Text="{Binding MaxThreshold, Mode=TwoWay, StringFormat='{0:F1}'}" Keyboard="Numeric"
-                                                       FontSize="13" TextColor="{DynamicResource OnSurface}" BackgroundColor="Transparent" />
-                                            </Border>
-                                        </VerticalStackLayout>
-                                    </Grid>
+                                    </Border>
 
                                     <Grid ColumnDefinitions="*,Auto">
                                         <Label Text="Alert threshold status" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" VerticalOptions="Center" />
@@ -101,6 +134,26 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
+                <Label Text="Connection" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" Margin="0,0,0,10" />
+                <Border Padding="16" Margin="0,0,0,18"
+                        BackgroundColor="{DynamicResource SurfaceContainer}"
+                        Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Sensor API address" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="For a physical phone, use the computer's local network address instead of localhost."
+                               FontSize="9" LineHeight="1.35" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="9">
+                            <Border HeightRequest="46" Padding="11,0" BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                    Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 12">
+                                <Entry x:Name="ApiBaseUrlEntry" Placeholder="http://192.168.1.10:5053/" Keyboard="Url"
+                                       FontSize="12" TextColor="{DynamicResource OnSurface}" BackgroundColor="Transparent" />
+                            </Border>
+                            <Button Grid.Column="1" Text="Save address" Style="{DynamicResource SecondaryButton}"
+                                    HeightRequest="46" Padding="12,8" FontSize="10" Clicked="OnSaveApiAddress" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
                 <Label Text="Appearance" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" Margin="0,0,0,10" />
                 <Border Padding="16" Margin="0,0,0,18"
                         BackgroundColor="{DynamicResource SurfaceContainer}"
@@ -113,17 +166,28 @@
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="Action color" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                                 <Picker x:Name="PrimaryColorPicker" Title="Choose action color" HeightRequest="40" FontSize="11"
-                                        SelectedIndexChanged="OnPrimaryColorChanged">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Emerald</x:String><x:String>Sky</x:String><x:String>Lime</x:String><x:String>Cyan</x:String>
-                                            <x:String>Violet</x:String><x:String>Orange</x:String><x:String>Rose</x:String><x:String>Teal</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
+                                        SelectedIndexChanged="OnPrimaryColorChanged" />
                             </VerticalStackLayout>
                             <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}"
                                     WidthRequest="66" HeightRequest="40" FontSize="10" Padding="8" Clicked="OnResetPrimaryColor" />
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border x:Name="BackgroundColorPreview" WidthRequest="42" HeightRequest="42" Margin="0"
+                                    BackgroundColor="{DynamicResource Surface}" Stroke="{DynamicResource Outline}"
+                                    StrokeThickness="1" StrokeShape="RoundRectangle 13">
+                                <Border WidthRequest="18" HeightRequest="18" Margin="0" Padding="0"
+                                        BackgroundColor="{DynamicResource SurfaceContainerHighest}" Stroke="Transparent"
+                                        StrokeShape="RoundRectangle 6" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="Background" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Picker x:Name="BackgroundPalettePicker" Title="Choose background" HeightRequest="40" FontSize="11"
+                                        SelectedIndexChanged="OnBackgroundPaletteChanged" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}"
+                                    WidthRequest="66" HeightRequest="40" FontSize="10" Padding="8" Clicked="OnResetBackgroundColor" />
                         </Grid>
                         <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
@@ -134,14 +198,7 @@
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="Solar accent" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
                                 <Picker x:Name="AccentColorPicker" Title="Choose accent color" HeightRequest="40" FontSize="11"
-                                        SelectedIndexChanged="OnAccentColorChanged">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Solar gold</x:String><x:String>Sky</x:String><x:String>Violet</x:String><x:String>Cyan</x:String>
-                                            <x:String>Lime</x:String><x:String>Orange</x:String><x:String>Rose</x:String><x:String>Teal</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
+                                        SelectedIndexChanged="OnAccentColorChanged" />
                             </VerticalStackLayout>
                             <Button Grid.Column="2" Text="Reset" Style="{DynamicResource TertiaryButton}"
                                     WidthRequest="66" HeightRequest="40" FontSize="10" Padding="8" Clicked="OnResetAccentColor" />
@@ -175,5 +232,5 @@
             </VerticalStackLayout>
         </ScrollView>
         <local:AppSidebar Grid.Row="1" CurrentRoute="settings" />
-    </Grid>
+    </local:AdaptivePageLayout>
 </ContentPage>

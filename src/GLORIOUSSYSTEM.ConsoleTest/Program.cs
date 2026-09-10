@@ -35,29 +35,9 @@ if (!db.Cameras.Any())
     );
 }
 
-// Seed sensors - water quality (Node 1)
-if (!db.Sensors.Any(s => s.Type == "pH"))
-{
-    db.Sensors.AddRange(
-        new Sensor { NodeId = 1, Name = "Reservoir pH (BNC)", Type = "pH", Model = "PH-4502C", Notes = "Analog, reservoir, E201-BNC electrode" },
-        new Sensor { NodeId = 1, Name = "Channel pH (Gravity)", Type = "pH", Model = "PH-4502C", Notes = "Analog, NFT channel, Gravity module" },
-        new Sensor { NodeId = 1, Name = "Reservoir TDS", Type = "TDS", Model = "DFR0300", Notes = "Analog, reservoir, Gravity module" },
-        new Sensor { NodeId = 1, Name = "Water Temperature", Type = "WaterTemp", Model = "DS18B20", Notes = "1-Wire, reservoir" },
-        new Sensor { NodeId = 1, Name = "Reservoir Level", Type = "UltrasonicLevel", Model = "JSN-SR04T", Notes = "Waterproof, reservoir" }
-    );
-}
-
-// Seed sensors - environmental (Node 2) - 1x BME280
-if (!db.Sensors.Any(s => s.Type == "BME280"))
-{
-    db.Sensors.Add(new Sensor { NodeId = 2, Name = "BME280 #1", Type = "BME280", Model = "BME280", PositionIndex = 1 });
-}
-
-// Seed sensors - flow (Node 2) - single unit on main supply
-if (!db.Sensors.Any(s => s.Type == "FlowRate"))
-{
-    db.Sensors.Add(new Sensor { NodeId = 2, Name = "Flow Main Supply", Type = "FlowRate", Model = "YF-S201" });
-}
+// Persist the base topology before reconciling the physical sensor catalog.
+await db.SaveChangesAsync();
+SensorHardwareCatalog.Reconcile(db);
 
 // Seed display
 if (!db.Displays.Any())
@@ -110,9 +90,8 @@ foreach (var sensor in sensors)
             "TDS" => 800 + (Random.Shared.NextDouble() * 100), // 800-900
             "WaterTemp" => 20 + (Random.Shared.NextDouble() * 5), // 20-25
             "UltrasonicLevel" => 40 + (Random.Shared.NextDouble() * 10), // 40-50
-            "BME280" => i == 0 ? 1013 + (Random.Shared.NextDouble() * 10) : // Pressure
-                        i == 1 ? 22 + (Random.Shared.NextDouble() * 5) : // Temp
-                        14000 + (Random.Shared.NextDouble() * 3000), // Lux
+            "BME680" => 1013 + (Random.Shared.NextDouble() * 10), // Pressure
+            "BH1750" => 14000 + (Random.Shared.NextDouble() * 3000), // Lux
             "FlowRate" => 2.0 + (Random.Shared.NextDouble() * 0.5), // 2.0-2.5
             _ => 0
         };
@@ -123,7 +102,8 @@ foreach (var sensor in sensors)
             "TDS" => "PPM",
             "WaterTemp" => "Celsius",
             "UltrasonicLevel" => "cm",
-            "BME280" => i == 0 ? "hPa" : (i == 1 ? "Celsius" : "Lux"),
+            "BME680" => "hPa",
+            "BH1750" => "Lux",
             "FlowRate" => "LPerMin",
             _ => ""
         };

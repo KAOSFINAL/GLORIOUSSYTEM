@@ -32,7 +32,21 @@ public sealed class SensorSetting : INotifyPropertyChanged
     public int Id { get => _id; set { _id = value; OnPropertyChanged(); } }
     public string Name { get => _name; set { _name = value; MarkChanged(); OnPropertyChanged(); } }
     public string Model { get => _model; set { _model = value; OnPropertyChanged(); } }
-    public string Type { get => _type; set { _type = value; OnPropertyChanged(); OnPropertyChanged(nameof(Category)); OnPropertyChanged(nameof(CategoryIcon)); OnPropertyChanged(nameof(CategoryColor)); OnPropertyChanged(nameof(CategoryContainerColor)); } }
+    public string Type
+    {
+        get => _type;
+        set
+        {
+            _type = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(Category));
+            OnPropertyChanged(nameof(CategoryIcon));
+            OnPropertyChanged(nameof(CategoryMaterialIcon));
+            OnPropertyChanged(nameof(CategoryColor));
+            OnPropertyChanged(nameof(CategoryContainerColor));
+            NotifyRangeConfiguration();
+        }
+    }
 
     public bool Enabled
     {
@@ -56,6 +70,8 @@ public sealed class SensorSetting : INotifyPropertyChanged
             _minThreshold = value;
             MarkChanged();
             OnPropertyChanged();
+            OnPropertyChanged(nameof(MinimumControlValue));
+            OnPropertyChanged(nameof(MinimumDisplay));
             NotifyThresholdState();
         }
     }
@@ -68,6 +84,8 @@ public sealed class SensorSetting : INotifyPropertyChanged
             _maxThreshold = value;
             MarkChanged();
             OnPropertyChanged();
+            OnPropertyChanged(nameof(MaximumControlValue));
+            OnPropertyChanged(nameof(MaximumDisplay));
             NotifyThresholdState();
         }
     }
@@ -87,16 +105,61 @@ public sealed class SensorSetting : INotifyPropertyChanged
     }
 
     public string CategoryIcon => Category == "WATER" ? "W" : "E";
-    public Color CategoryColor => Category == "WATER" ? Color.FromArgb("#66BFFF") : Color.FromArgb("#5EE0A0");
-    public Color CategoryContainerColor => Category == "WATER" ? Color.FromArgb("#142F46") : Color.FromArgb("#16382B");
+    public MaterialIconKind CategoryMaterialIcon => Category == "WATER" ? MaterialIconKind.Water : MaterialIconKind.Environment;
+    public Color CategoryColor => Category == "WATER" ? Color.FromArgb("#67C4F4") : Color.FromArgb("#74E0A2");
+    public Color CategoryContainerColor => Category == "WATER" ? Color.FromArgb("#123246") : Color.FromArgb("#143A27");
 
     public string ThresholdStatusText => !Enabled ? "DISABLED" : !HasThresholds ? "SET LIMITS" : "ACTIVE";
-    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#263541") : !HasThresholds ? Color.FromArgb("#382F16") : Color.FromArgb("#16382B");
-    public Color ThresholdStatusTextColor => !Enabled ? Color.FromArgb("#F4F7FA") : !HasThresholds ? Color.FromArgb("#FFF2C7") : Color.FromArgb("#D9F7E8");
+    public Color ThresholdStatusColor => !Enabled ? Color.FromArgb("#294738") : !HasThresholds ? Color.FromArgb("#3A3014") : Color.FromArgb("#143A27");
+    public Color ThresholdStatusTextColor => !Enabled ? Color.FromArgb("#F1F7F3") : !HasThresholds ? Color.FromArgb("#FFF3C4") : Color.FromArgb("#D9F7E6");
+
+    public double RangeMinimum => GetRange().Minimum;
+    public double RangeMaximum => GetRange().Maximum;
+    public double RangeStep => GetRange().Step;
+    public double RecommendedMinimum => GetRange().RecommendedMinimum;
+    public double RecommendedMaximum => GetRange().RecommendedMaximum;
+    public string UnitLabel => GetRange().Unit;
+    public string RangeDescription => $"Available {Format(RangeMinimum)}–{Format(RangeMaximum)} {UnitLabel}".TrimEnd();
+    public string RecommendedDescription => $"Recommended {Format(RecommendedMinimum)}–{Format(RecommendedMaximum)} {UnitLabel}".TrimEnd();
+
+    public double MinimumControlValue
+    {
+        get => MinThreshold ?? RecommendedMinimum;
+        set
+        {
+            var ceiling = MaxThreshold ?? RecommendedMaximum;
+            MinThreshold = Math.Min(RoundToStep(value), ceiling);
+        }
+    }
+
+    public double MaximumControlValue
+    {
+        get => MaxThreshold ?? RecommendedMaximum;
+        set
+        {
+            var floor = MinThreshold ?? RecommendedMinimum;
+            MaxThreshold = Math.Max(RoundToStep(value), floor);
+        }
+    }
+
+    public string MinimumDisplay => HasThresholds ? $"{Format(MinimumControlValue)} {UnitLabel}".TrimEnd() : "Not set";
+    public string MaximumDisplay => HasThresholds ? $"{Format(MaximumControlValue)} {UnitLabel}".TrimEnd() : "Not set";
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public void ResetChanges() => HasChanges = false;
+
+    public void ApplyRecommended()
+    {
+        MinThreshold = RecommendedMinimum;
+        MaxThreshold = RecommendedMaximum;
+    }
+
+    public void ClearThresholds()
+    {
+        MinThreshold = null;
+        MaxThreshold = null;
+    }
 
     private void MarkChanged() => HasChanges = true;
     private void NotifyThresholdState()
@@ -106,6 +169,57 @@ public sealed class SensorSetting : INotifyPropertyChanged
         OnPropertyChanged(nameof(ThresholdStatusColor));
         OnPropertyChanged(nameof(ThresholdStatusTextColor));
     }
+
+    private void NotifyRangeConfiguration()
+    {
+        OnPropertyChanged(nameof(RangeMinimum));
+        OnPropertyChanged(nameof(RangeMaximum));
+        OnPropertyChanged(nameof(RangeStep));
+        OnPropertyChanged(nameof(RecommendedMinimum));
+        OnPropertyChanged(nameof(RecommendedMaximum));
+        OnPropertyChanged(nameof(UnitLabel));
+        OnPropertyChanged(nameof(RangeDescription));
+        OnPropertyChanged(nameof(RecommendedDescription));
+        OnPropertyChanged(nameof(MinimumControlValue));
+        OnPropertyChanged(nameof(MaximumControlValue));
+        OnPropertyChanged(nameof(MinimumDisplay));
+        OnPropertyChanged(nameof(MaximumDisplay));
+    }
+
+    private double RoundToStep(double value)
+    {
+        var step = Math.Max(RangeStep, 0.01);
+        var rounded = Math.Round(value / step) * step;
+        return Math.Clamp(rounded, RangeMinimum, RangeMaximum);
+    }
+
+    private string Format(double value)
+        => RangeStep < 1 ? value.ToString("F1", CultureInfo.InvariantCulture) : value.ToString("F0", CultureInfo.InvariantCulture);
+
+    private SensorRange GetRange() => Type switch
+    {
+        "pH" => new(0, 14, 0.1, 5.5, 6.5, "pH"),
+        "EC" => new(0, 5, 0.1, 1.2, 2.4, "mS/cm"),
+        "TDS" => new(0, 2000, 10, 600, 1000, "ppm"),
+        "WaterTemp" => new(0, 40, 0.5, 18, 26, "°C"),
+        "UltrasonicLevel" => new(0, 200, 1, 20, 120, "cm"),
+        "BME680" => new(-10, 60, 0.5, 18, 30, "°C"),
+        "BH1750" => new(0, 100000, 100, 200, 20000, "lux"),
+        "FlowRate" => new(0, 20, 0.1, 1, 5, "L/min"),
+        "SolarPower" => new(0, 1000, 5, 50, 800, "W"),
+        "SolarVoltage" => new(0, 100, 0.5, 12, 60, "V"),
+        "BatteryPercent" => new(0, 100, 1, 20, 95, "%"),
+        "BatteryVoltage" => new(0, 60, 0.1, 11.5, 54, "V"),
+        _ => new(0, 100, 1, 20, 80, "")
+    };
+
+    private readonly record struct SensorRange(
+        double Minimum,
+        double Maximum,
+        double Step,
+        double RecommendedMinimum,
+        double RecommendedMaximum,
+        string Unit);
 
     private void OnPropertyChanged([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -117,6 +231,8 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
     private bool _hasUnsavedChanges;
     private bool _darkModeEnabled;
     private bool _isLoading;
+    private bool _hasLoaded;
+    private bool _isInitializingThemeControls;
 
     public bool DarkModeEnabled
     {
@@ -131,15 +247,27 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         InitializeComponent();
         BindingContext = this;
         BindableLayout.SetItemsSource(SettingsList, _settings);
+        PrimaryColorPicker.ItemsSource = ThemeManager.PrimaryNames.ToList();
+        AccentColorPicker.ItemsSource = ThemeManager.AccentNames.ToList();
+        BackgroundPalettePicker.ItemsSource = ThemeManager.BackgroundNames.ToList();
         LoadThemePreferences();
+        ApiBaseUrlEntry.Text = Preferences.Get("Api_BaseUrl", OperatingSystem.IsAndroid()
+            ? "http://10.0.2.2:5053/"
+            : "http://localhost:5053/");
     }
 
     private void LoadThemePreferences()
     {
-        PrimaryColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_PrimaryIndex", 0), 0, 7);
-        AccentColorPicker.SelectedIndex = Math.Clamp(Preferences.Get("Theme_AccentIndex", 0), 0, 7);
+        _isInitializingThemeControls = true;
+        PrimaryColorPicker.SelectedIndex = Math.Clamp(
+            Preferences.Get("Theme_PrimaryIndex", 0), 0, ThemeManager.PrimaryNames.Count - 1);
+        AccentColorPicker.SelectedIndex = Math.Clamp(
+            Preferences.Get("Theme_AccentIndex", 0), 0, ThemeManager.AccentNames.Count - 1);
+        BackgroundPalettePicker.SelectedIndex = Math.Clamp(
+            Preferences.Get("Theme_BackgroundIndex", 0), 0, ThemeManager.BackgroundNames.Count - 1);
         DarkModeEnabled = Preferences.Get("Theme_DarkMode", true);
         DarkModeSwitch.IsToggled = DarkModeEnabled;
+        _isInitializingThemeControls = false;
         ThemeManager.Apply();
         UpdateColorPreviews();
     }
@@ -176,6 +304,7 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
                     _settings.Add(setting);
                 }
                 UpdateSaveButtonState();
+                _hasLoaded = true;
             });
         }
         catch (Exception ex)
@@ -229,8 +358,6 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
             await db.SaveChangesAsync();
             UpdateSaveButtonState();
             SaveButton.Text = "Changes saved";
-            await Task.Delay(350);
-            SaveButton.Text = "Save changes";
         }
         catch (Exception ex)
         {
@@ -242,7 +369,7 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
     private void OnPrimaryColorChanged(object? sender, EventArgs e)
     {
-        if (PrimaryColorPicker.SelectedIndex < 0) return;
+        if (_isInitializingThemeControls || PrimaryColorPicker.SelectedIndex < 0) return;
         Preferences.Set("Theme_PrimaryIndex", PrimaryColorPicker.SelectedIndex);
         ThemeManager.Apply();
         UpdateColorPreviews();
@@ -250,14 +377,23 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
     private void OnAccentColorChanged(object? sender, EventArgs e)
     {
-        if (AccentColorPicker.SelectedIndex < 0) return;
+        if (_isInitializingThemeControls || AccentColorPicker.SelectedIndex < 0) return;
         Preferences.Set("Theme_AccentIndex", AccentColorPicker.SelectedIndex);
+        ThemeManager.Apply();
+        UpdateColorPreviews();
+    }
+
+    private void OnBackgroundPaletteChanged(object? sender, EventArgs e)
+    {
+        if (_isInitializingThemeControls || BackgroundPalettePicker.SelectedIndex < 0) return;
+        Preferences.Set("Theme_BackgroundIndex", BackgroundPalettePicker.SelectedIndex);
         ThemeManager.Apply();
         UpdateColorPreviews();
     }
 
     private void OnDarkModeToggled(object? sender, ToggledEventArgs e)
     {
+        if (_isInitializingThemeControls) return;
         DarkModeEnabled = e.Value;
         Preferences.Set("Theme_DarkMode", e.Value);
         ThemeManager.Apply();
@@ -266,11 +402,41 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
     private void OnResetPrimaryColor(object? sender, EventArgs e) => PrimaryColorPicker.SelectedIndex = 0;
     private void OnResetAccentColor(object? sender, EventArgs e) => AccentColorPicker.SelectedIndex = 0;
+    private void OnResetBackgroundColor(object? sender, EventArgs e) => BackgroundPalettePicker.SelectedIndex = 0;
+
+    private void OnUseRecommendedClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button { CommandParameter: SensorSetting setting })
+            setting.ApplyRecommended();
+    }
+
+    private void OnClearThresholdsClicked(object? sender, EventArgs e)
+    {
+        if (sender is Button { CommandParameter: SensorSetting setting })
+            setting.ClearThresholds();
+    }
+
+    private async void OnSaveApiAddress(object? sender, EventArgs e)
+    {
+        var value = ApiBaseUrlEntry.Text?.Trim() ?? "";
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        {
+            await DisplayAlertAsync("Invalid address", "Enter a complete HTTP or HTTPS address, including the port.", "OK");
+            return;
+        }
+
+        value = value.EndsWith('/') ? value : value + "/";
+        ApiBaseUrlEntry.Text = value;
+        Preferences.Set("Api_BaseUrl", value);
+        await DisplayAlertAsync("Address saved", "Reports will use this sensor API address for new connection tests.", "OK");
+    }
 
     private void UpdateColorPreviews()
     {
         PrimaryColorPreview.BackgroundColor = GetResourceColor("Primary", Colors.Green);
         AccentColorPreview.BackgroundColor = GetResourceColor("Secondary", Colors.Blue);
+        BackgroundColorPreview.BackgroundColor = GetResourceColor("Surface", Colors.White);
     }
 
     private static Color GetResourceColor(string key, Color fallback)
@@ -290,31 +456,27 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
 
         PrimaryColorPicker.SelectedIndex = 0;
         AccentColorPicker.SelectedIndex = 0;
+        BackgroundPalettePicker.SelectedIndex = 0;
         DarkModeSwitch.IsToggled = true;
 
         Preferences.Set("Theme_PrimaryIndex", 0);
         Preferences.Set("Theme_AccentIndex", 0);
+        Preferences.Set("Theme_BackgroundIndex", 0);
         Preferences.Set("Theme_DarkMode", true);
+        Preferences.Remove("Api_BaseUrl");
+        ApiBaseUrlEntry.Text = OperatingSystem.IsAndroid() ? "http://10.0.2.2:5053/" : "http://localhost:5053/";
 
         ThemeManager.Apply();
         UpdateColorPreviews();
         await LoadAsync();
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
-        ThemeManager.Apply();
         UpdateColorPreviews();
-        await Task.Yield();
-        await LoadAsync();
-    }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-        foreach (var setting in _settings)
-            setting.PropertyChanged -= OnSettingPropertyChanged;
+        if (!_hasLoaded)
+            Dispatcher.Dispatch(() => _ = LoadAsync());
     }
 
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)

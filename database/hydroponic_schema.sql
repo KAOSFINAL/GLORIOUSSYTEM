@@ -23,12 +23,14 @@ CREATE TABLE Sensors (
     Id INTEGER PRIMARY KEY,
     NodeId INTEGER NOT NULL,
     Name TEXT NOT NULL,
-    Type TEXT NOT NULL,            -- 'pH','EC','TDS','WaterTemp','UltrasonicLevel','BME280','FlowRate','SolarPower','BatteryPercent'
-    Model TEXT,                    -- e.g. 'PH-4502C','DFR0300','PZEM-017','INA219'
+    Type TEXT NOT NULL,            -- 'pH','EC','TDS','WaterTemp','UltrasonicLevel','BME680','BH1750','FlowRate','SolarPower','BatteryPercent'
+    Model TEXT,                    -- e.g. 'PH-450C / E201-BNC','DFR0300','BME680','BH1750','PZEM-017','INA219'
     PipeId INTEGER,                -- set for flow sensors (one per pipe)
-    PositionIndex INTEGER,         -- set for BME280 arrays, tracks physical placement
+    PositionIndex INTEGER,         -- optional placement index for sensor arrays
     Notes TEXT,
     Enabled INTEGER NOT NULL DEFAULT 1,
+    MinThreshold REAL,
+    MaxThreshold REAL,
     FOREIGN KEY (NodeId) REFERENCES Nodes(Id),
     FOREIGN KEY (PipeId) REFERENCES Pipes(Id)
 );
@@ -129,19 +131,17 @@ INSERT INTO Cameras (Id, Name, Angle) VALUES
 
 -- Water quality sensors (Node 1)
 INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
-    (1, 'Reservoir pH (BNC)', 'pH', 'PH-4502C', 'Analog, reservoir, E201-BNC electrode'),
-    (1, 'Channel pH (Gravity)', 'pH', 'PH-4502C', 'Analog, NFT channel, Gravity module'),
-    (1, 'Reservoir TDS', 'TDS', 'DFR0300', 'Analog, reservoir, Gravity module'),
+    (1, 'Reservoir pH', 'pH', 'PH-450C / E201-BNC', 'Analog reservoir pH sensor with E201-BNC electrode'),
+    (1, 'Nutrient TDS', 'TDS', 'DFR0300', 'Analog nutrient concentration sensor in the reservoir'),
     (1, 'Water Temperature', 'WaterTemp', 'DS18B20', '1-Wire, reservoir'),
-    (1, 'Reservoir Level', 'UltrasonicLevel', 'JSN-SR04T', 'Waterproof, reservoir');
+    (1, 'Water Level', 'UltrasonicLevel', 'JSN-SR04T', 'Waterproof, reservoir');
 
--- Electrical conductivity is distinct from legacy TDS/PPM telemetry.
-INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
-    (1, 'Reservoir EC', 'EC', 'DFRobot EC', 'Electrical conductivity, reservoir, mS/cm');
-
--- Environmental sensors (Node 2) - 1x BME280
+-- Environmental sensors (Node 2)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
-    (2, 'BME280 #1', 'BME280', 'BME280', 1),
+    (2, 'Environment', 'BME680', 'BME680', 1);
+
+INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
+    (2, 'Light Intensity', 'BH1750', 'BH1750', 'Digital ambient light sensor');
 
 -- Flow sensor (single unit on main supply)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PipeId) VALUES

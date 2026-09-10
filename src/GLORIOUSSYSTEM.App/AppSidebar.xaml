@@ -1,71 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
              x:Class="GLORIOUSSYSTEM.App.AppSidebar"
-             BackgroundColor="{DynamicResource Surface}">
-    <Border Margin="8,4,8,8"
-            Padding="7"
-            BackgroundColor="{DynamicResource SurfaceContainerHigh}"
-            Stroke="{DynamicResource OutlineVariant}"
-            StrokeThickness="1"
-            StrokeShape="RoundRectangle 20">
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
-                <Border x:Name="OverviewItem" Grid.Column="0" HeightRequest="54"
-                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
-                        SemanticProperties.Description="Dashboard">
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image x:Name="OverviewIcon" Source="nav_home.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
-                        <Label Text="Dashboard" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+             BackgroundColor="Transparent">
+    <Grid>
+        <Border x:Name="DesktopNavigation" IsVisible="False"
+                WidthRequest="232" Margin="14" Padding="14"
+                HorizontalOptions="Start" VerticalOptions="Fill"
+                BackgroundColor="{DynamicResource SurfaceContainer}"
+                Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 24">
+            <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="18">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="11">
+                    <Border WidthRequest="44" HeightRequest="44" Padding="5"
+                            BackgroundColor="{DynamicResource PrimaryContainer}"
+                            Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
+                            StrokeShape="RoundRectangle 14">
+                        <Image Source="glorious_mark.svg" Aspect="AspectFit" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                        <Label Text="GLORIOUS" FontSize="14" FontAttributes="Bold"
+                               CharacterSpacing="1.2" TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="FARM CONTROL" FontSize="8" FontAttributes="Bold"
+                               CharacterSpacing="1.3" TextColor="{DynamicResource Primary}" />
                     </VerticalStackLayout>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
+                </Grid>
+
+                <Border Grid.Row="1" Padding="11,9"
+                        BackgroundColor="{DynamicResource PrimaryContainer}"
+                        Stroke="Transparent" StrokeShape="RoundRectangle 14">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Ellipse WidthRequest="8" HeightRequest="8" Fill="{DynamicResource StatusOnline}" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="0">
+                            <Label Text="SYSTEM ONLINE" FontSize="8" FontAttributes="Bold"
+                                   CharacterSpacing="1" TextColor="{DynamicResource OnPrimaryContainer}" />
+                            <Label Text="Monitoring all zones" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </VerticalStackLayout>
+                    </Grid>
                 </Border>
 
-                <Border x:Name="ScannerItem" Grid.Column="1" HeightRequest="54"
-                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
-                        SemanticProperties.Description="Webcam">
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image x:Name="ScannerIcon" Source="nav_webcam.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
-                        <Label Text="Webcam" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
-                </Border>
+                <VerticalStackLayout Grid.Row="2" Spacing="6">
+                    <Label Text="WORKSPACE" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.4"
+                           TextColor="{DynamicResource OnSurfaceVariant}" Margin="10,0,0,4" />
 
-                <Border x:Name="AnalyticsItem" Grid.Column="2" HeightRequest="54"
-                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
-                        SemanticProperties.Description="Reports">
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image x:Name="AnalyticsIcon" Source="nav_reports.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
-                        <Label Text="Reports" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
-                </Border>
+                    <Border x:Name="DesktopOverviewItem" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 14"
+                            SemanticProperties.Description="Dashboard">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <local:MaterialIcon x:Name="DesktopOverviewIcon" Kind="Home" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Grid.Column="1" Text="Dashboard" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
+                    </Border>
 
-                <Border x:Name="SettingsItem" Grid.Column="3" HeightRequest="54"
-                        BackgroundColor="{DynamicResource SurfaceBright}" Stroke="Transparent"
-                        StrokeThickness="1" StrokeShape="RoundRectangle 15"
-                        SemanticProperties.Description="Settings">
+                    <Border x:Name="DesktopScannerItem" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 14"
+                            SemanticProperties.Description="Webcam">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <local:MaterialIcon x:Name="DesktopScannerIcon" Kind="Camera" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Grid.Column="1" Text="Webcam" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="DesktopAnalyticsItem" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 14"
+                            SemanticProperties.Description="Reports">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <local:MaterialIcon x:Name="DesktopAnalyticsIcon" Kind="Analytics" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Grid.Column="1" Text="Reports" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="DesktopSettingsItem" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 14"
+                            SemanticProperties.Description="Settings">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <local:MaterialIcon x:Name="DesktopSettingsIcon" Kind="Settings" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Grid.Column="1" Text="Settings" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="3" Spacing="9">
+                    <Border Padding="11" BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                            Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 14">
+                        <VerticalStackLayout Spacing="1">
+                            <Label x:Name="DesktopUserLabel" Text="Administrator" FontSize="11" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" LineBreakMode="TailTruncation" />
+                            <Label Text="Local command center" FontSize="8" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Padding="12" BackgroundColor="{DynamicResource ErrorContainer}" Stroke="Transparent"
+                            StrokeShape="RoundRectangle 14" SemanticProperties.Description="Log out">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <local:MaterialIcon Kind="Logout" WidthRequest="19" HeightRequest="19"
+                                                IconColor="{DynamicResource OnErrorContainer}" />
+                            <Label Grid.Column="1" Text="Logout" FontSize="12" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnErrorContainer}" VerticalTextAlignment="Center" />
+                        </Grid>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <Border x:Name="MobileNavigation" Margin="8,4,8,8" Padding="7"
+                VerticalOptions="End" BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 20">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalOptions="Center">
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
+                    <Border x:Name="MobileOverviewItem" Grid.Column="0" HeightRequest="56" Stroke="Transparent"
+                            StrokeShape="RoundRectangle 15" SemanticProperties.Description="Dashboard">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <local:MaterialIcon x:Name="MobileOverviewIcon" Kind="Home" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Text="Dashboard" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnOverviewTapped" /></Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="MobileScannerItem" Grid.Column="1" HeightRequest="56" Stroke="Transparent"
+                            StrokeShape="RoundRectangle 15" SemanticProperties.Description="Webcam">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <local:MaterialIcon x:Name="MobileScannerIcon" Kind="Camera" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Text="Webcam" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnScannerTapped" /></Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="MobileAnalyticsItem" Grid.Column="2" HeightRequest="56" Stroke="Transparent"
+                            StrokeShape="RoundRectangle 15" SemanticProperties.Description="Reports">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <local:MaterialIcon x:Name="MobileAnalyticsIcon" Kind="Analytics" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Text="Reports" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAnalyticsTapped" /></Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="MobileSettingsItem" Grid.Column="3" HeightRequest="56" Stroke="Transparent"
+                            StrokeShape="RoundRectangle 15" SemanticProperties.Description="Settings">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <local:MaterialIcon x:Name="MobileSettingsIcon" Kind="Settings" WidthRequest="20" HeightRequest="20"
+                                                IconColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Text="Settings" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+                <Border Grid.Column="1" WidthRequest="50" HeightRequest="56"
+                        BackgroundColor="{DynamicResource ErrorContainer}" Stroke="Transparent"
+                        StrokeShape="RoundRectangle 15" SemanticProperties.Description="Log out">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image x:Name="SettingsIcon" Source="nav_settings.svg" WidthRequest="19" HeightRequest="19" Opacity="0.7" />
-                        <Label Text="Settings" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" HorizontalTextAlignment="Center" />
+                        <local:MaterialIcon Kind="Logout" WidthRequest="19" HeightRequest="19"
+                                            IconColor="{DynamicResource OnErrorContainer}" />
+                        <Label Text="Logout" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnErrorContainer}" />
                     </VerticalStackLayout>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSettingsTapped" /></Border.GestureRecognizers>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
                 </Border>
             </Grid>
-
-            <Border Grid.Column="1" WidthRequest="48" HeightRequest="54"
-                    BackgroundColor="{DynamicResource ErrorContainer}" Stroke="Transparent"
-                    StrokeThickness="1" StrokeShape="RoundRectangle 15"
-                    SemanticProperties.Description="Log out">
-                <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Image Source="nav_logout.svg" WidthRequest="18" HeightRequest="18" Opacity="0.9" />
-                    <Label Text="Logout" FontSize="9" FontAttributes="Bold" TextColor="{DynamicResource OnErrorContainer}" />
-                </VerticalStackLayout>
-                <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnLogoutClicked" /></Border.GestureRecognizers>
-            </Border>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </ContentView>

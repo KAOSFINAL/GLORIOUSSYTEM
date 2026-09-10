@@ -25,6 +25,8 @@ public partial class App : Application
             Preferences.Set("Theme_PrimaryIndex", 0);
         if (!Preferences.ContainsKey("Theme_AccentIndex"))
             Preferences.Set("Theme_AccentIndex", 0);
+        if (!Preferences.ContainsKey("Theme_BackgroundIndex"))
+            Preferences.Set("Theme_BackgroundIndex", 0);
 
         ThemeManager.Initialize();
     }
@@ -57,6 +59,11 @@ public partial class App : Application
             options.UseSqlite(connStr));
 
         Services = services.BuildServiceProvider();
+
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+        SensorHardwareCatalog.Reconcile(db);
+        db.SaveChanges();
     }
 
     private static void InitializeAndroidDatabase(string databasePath)
