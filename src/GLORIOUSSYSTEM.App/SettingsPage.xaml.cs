@@ -204,7 +204,6 @@ public sealed class SensorSetting : INotifyPropertyChanged
         "WaterTemp" => new(0, 40, 0.5, 18, 26, "°C"),
         "UltrasonicLevel" => new(0, 200, 1, 20, 120, "cm"),
         "BME680" => new(-10, 60, 0.5, 18, 30, "°C"),
-        "BH1750" => new(0, 100000, 100, 200, 20000, "lux"),
         "FlowRate" => new(0, 20, 0.1, 1, 5, "L/min"),
         "SolarPower" => new(0, 1000, 5, 50, 800, "W"),
         "SolarVoltage" => new(0, 100, 0.5, 12, 60, "V"),

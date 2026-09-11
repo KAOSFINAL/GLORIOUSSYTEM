@@ -110,18 +110,25 @@ public static class SensorHardwareCatalog
             sensors.Remove(duplicate);
         }
 
-        var light = sensors.FirstOrDefault(sensor =>
+        var lightSensors = sensors.Where(sensor =>
                 IsType(sensor, "BH1750") ||
                 string.Equals(sensor.Model, "BH1750", StringComparison.OrdinalIgnoreCase))
-            ?? AddSensor(environmentNodeId, "Light Intensity", "BH1750", "BH1750", "Digital ambient light sensor");
-        light.NodeId = environmentNodeId;
-        light.Name = "Light Intensity";
-        light.Type = "BH1750";
-        light.Model = "BH1750";
+            .ToList();
 
-        foreach (var reading in environment.Readings.Where(reading =>
-                     string.Equals(reading.Metric, "Lux", StringComparison.OrdinalIgnoreCase)))
-            reading.Sensor = light;
+        foreach (var lightSensor in lightSensors)
+        {
+            db.Readings.RemoveRange(lightSensor.Readings);
+            db.Sensors.Remove(lightSensor);
+            sensors.Remove(lightSensor);
+        }
+
+        // The system no longer has a light sensor, so discard legacy Lux
+        // telemetry that may still be attached to an upgraded BME record.
+        var staleLuxReadings = sensors
+            .SelectMany(sensor => sensor.Readings)
+            .Where(reading => string.Equals(reading.Metric, "Lux", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        db.Readings.RemoveRange(staleLuxReadings);
 
         var flowSensors = sensors.Where(sensor => IsType(sensor, "FlowRate")).ToList();
         if (flowSensors.Count == 0)

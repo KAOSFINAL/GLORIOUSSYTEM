@@ -23,8 +23,8 @@ CREATE TABLE Sensors (
     Id INTEGER PRIMARY KEY,
     NodeId INTEGER NOT NULL,
     Name TEXT NOT NULL,
-    Type TEXT NOT NULL,            -- 'pH','EC','TDS','WaterTemp','UltrasonicLevel','BME680','BH1750','FlowRate','SolarPower','BatteryPercent'
-    Model TEXT,                    -- e.g. 'PH-450C / E201-BNC','DFR0300','BME680','BH1750','PZEM-017','INA219'
+    Type TEXT NOT NULL,            -- 'pH','EC','TDS','WaterTemp','UltrasonicLevel','BME680','FlowRate','SolarPower','BatteryPercent'
+    Model TEXT,                    -- e.g. 'PH-450C / E201-BNC','DFR0300','BME680','PZEM-017','INA219'
     PipeId INTEGER,                -- set for flow sensors (one per pipe)
     PositionIndex INTEGER,         -- optional placement index for sensor arrays
     Notes TEXT,
@@ -40,7 +40,7 @@ CREATE TABLE Readings (
     Id INTEGER PRIMARY KEY,
     SensorId INTEGER NOT NULL,
     Timestamp TEXT NOT NULL,       -- ISO8601
-    Metric TEXT NOT NULL,          -- 'pH','PPM','Celsius','cm','hPa','Lux','LPerMin','GasResistance','IAQ'
+    Metric TEXT NOT NULL,          -- 'pH','PPM','Celsius','cm','hPa','LPerMin','GasResistance','IAQ'
     Value REAL NOT NULL,
     FOREIGN KEY (SensorId) REFERENCES Sensors(Id)
 );
@@ -139,9 +139,6 @@ INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
 -- Environmental sensors (Node 2)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PositionIndex) VALUES
     (2, 'Environment', 'BME680', 'BME680', 1);
-
-INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
-    (2, 'Light Intensity', 'BH1750', 'BH1750', 'Digital ambient light sensor');
 
 -- Flow sensor (single unit on main supply)
 INSERT INTO Sensors (NodeId, Name, Type, Model, PipeId) VALUES

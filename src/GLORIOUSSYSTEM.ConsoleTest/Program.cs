@@ -91,7 +91,6 @@ foreach (var sensor in sensors)
             "WaterTemp" => 20 + (Random.Shared.NextDouble() * 5), // 20-25
             "UltrasonicLevel" => 40 + (Random.Shared.NextDouble() * 10), // 40-50
             "BME680" => 1013 + (Random.Shared.NextDouble() * 10), // Pressure
-            "BH1750" => 14000 + (Random.Shared.NextDouble() * 3000), // Lux
             "FlowRate" => 2.0 + (Random.Shared.NextDouble() * 0.5), // 2.0-2.5
             _ => 0
         };
@@ -103,7 +102,6 @@ foreach (var sensor in sensors)
             "WaterTemp" => "Celsius",
             "UltrasonicLevel" => "cm",
             "BME680" => "hPa",
-            "BH1750" => "Lux",
             "FlowRate" => "LPerMin",
             _ => ""
         };

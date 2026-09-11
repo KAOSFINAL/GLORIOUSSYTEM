@@ -257,7 +257,7 @@ public partial class MainPage : ContentPage
             // Electrical conductivity stays available in Reports and Settings,
             // while the actual DFR0300 TDS sensor is shown on the dashboard.
             var waterQualitySensors = sensors.Where(s => new[] { "pH", "TDS", "WaterTemp", "UltrasonicLevel" }.Contains(s.Type)).ToList();
-            var environmentalSensors = sensors.Where(s => new[] { "BME680", "BH1750" }.Contains(s.Type)).ToList();
+            var environmentalSensors = sensors.Where(s => s.Type == "BME680").ToList();
             var flowSensors = sensors.Where(s => s.Type == "FlowRate").ToList();
             var solarSensors = sensors.Where(s => new[] { "SolarPower", "SolarVoltage", "BatteryPercent", "BatteryVoltage" }.Contains(s.Type)).ToList();
 
