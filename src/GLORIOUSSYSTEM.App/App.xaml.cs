@@ -63,7 +63,21 @@ public partial class App : Application
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
         SensorHardwareCatalog.Reconcile(db);
+        RemoveLegacyDemoAccount(db);
         db.SaveChanges();
+    }
+
+    private static void RemoveLegacyDemoAccount(HydroponicDbContext db)
+    {
+        // Older bundled databases included this publicly documented demo
+        // account. Remove only that exact legacy record, never user accounts.
+        var demoUser = db.Users.SingleOrDefault(user =>
+            user.Email == "admin@glorious.com" &&
+            user.Name == "Admin" &&
+            user.Role == "Admin");
+
+        if (demoUser != null)
+            db.Users.Remove(demoUser);
     }
 
     private static void InitializeAndroidDatabase(string databasePath)
