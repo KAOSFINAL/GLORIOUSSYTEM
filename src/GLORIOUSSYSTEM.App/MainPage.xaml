@@ -23,7 +23,7 @@
                                 BackgroundColor="{DynamicResource PrimaryContainer}"
                                 Stroke="{DynamicResource OutlineVariant}"
                                 StrokeThickness="1" StrokeShape="RoundRectangle 16">
-                            <Image Source="glorious_mark.svg" Margin="5" Aspect="AspectFit" />
+                            <Image Source="glorious_mark.png" Margin="5" Aspect="AspectFit" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
                             <Label Text="GLORIOUS SYSTEM" FontSize="9" FontAttributes="Bold"
