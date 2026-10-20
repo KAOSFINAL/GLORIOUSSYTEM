@@ -1,18 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:GLORIOUSSYSTEM.App"
              x:Class="GLORIOUSSYSTEM.App.LoginPage"
              Title="GLORIOUS SYSTEM"
              BackgroundColor="{DynamicResource Surface}"
              Shell.NavBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
-    <ScrollView VerticalScrollBarVisibility="Never">
-        <VerticalStackLayout MaximumWidthRequest="520"
+    <Grid x:Name="LoginResponsiveGrid" ColumnDefinitions="*" SizeChanged="OnLoginSizeChanged">
+        <Border x:Name="DesktopHero" IsVisible="False" Grid.Column="0" Margin="28,28,0,28" Padding="42"
+                BackgroundColor="{DynamicResource PrimaryContainer}"
+                Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 30">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="13">
+                    <Border WidthRequest="52" HeightRequest="52" Padding="6"
+                            BackgroundColor="{DynamicResource SurfaceContainer}"
+                            Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 16">
+                        <Image Source="glorious_mark.svg" Aspect="AspectFit" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                        <Label Text="GLORIOUS SYSTEM" FontSize="16" FontAttributes="Bold" CharacterSpacing="1.2"
+                               TextColor="{DynamicResource OnPrimaryContainer}" />
+                        <Label Text="SOLAR HYDROPONIC INTELLIGENCE" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.2"
+                               TextColor="{DynamicResource Primary}" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <VerticalStackLayout Grid.Row="1" Spacing="22" VerticalOptions="Center" MaximumWidthRequest="620">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Know what your farm needs before it becomes a problem."
+                               FontSize="42" FontAttributes="Bold" LineHeight="1.05"
+                               TextColor="{DynamicResource OnSurface}" />
+                        <Label Text="One command center for nutrient balance, water conditions, solar energy, and on-device crop health analysis."
+                               FontSize="15" LineHeight="1.45" TextColor="{DynamicResource OnSurfaceVariant}" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border Padding="14" BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1" StrokeShape="RoundRectangle 17">
+                            <VerticalStackLayout Spacing="4">
+                                <local:MaterialIcon Kind="Water" IconColor="{DynamicResource Tertiary}"
+                                                    WidthRequest="26" HeightRequest="26" HorizontalOptions="Start" />
+                                <Label Text="EC + pH" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Nutrient balance" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Padding="14" BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1" StrokeShape="RoundRectangle 17">
+                            <VerticalStackLayout Spacing="4">
+                                <local:MaterialIcon Kind="Solar" IconColor="{DynamicResource Secondary}"
+                                                    WidthRequest="26" HeightRequest="26" HorizontalOptions="Start" />
+                                <Label Text="Solar" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Energy reserve" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Padding="14" BackgroundColor="{DynamicResource SurfaceContainer}" Stroke="{DynamicResource OutlineVariant}"
+                                StrokeThickness="1" StrokeShape="RoundRectangle 17">
+                            <VerticalStackLayout Spacing="4">
+                                <local:MaterialIcon Kind="Scan" IconColor="{DynamicResource Primary}"
+                                                    WidthRequest="26" HeightRequest="26" HorizontalOptions="Start" />
+                                <Label Text="Crop AI" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Local inference" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="2" Spacing="7">
+                    <Ellipse WidthRequest="8" HeightRequest="8" Fill="{DynamicResource StatusOnline}" VerticalOptions="Center" />
+                    <Label Text="PRIVATE ON-DEVICE FARM OPERATIONS" FontSize="8" FontAttributes="Bold" CharacterSpacing="1.1"
+                           TextColor="{DynamicResource OnPrimaryContainer}" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <ScrollView x:Name="LoginFormScroll" Grid.Column="0" VerticalScrollBarVisibility="Never">
+        <VerticalStackLayout x:Name="LoginForm" MaximumWidthRequest="520"
                              HorizontalOptions="Center"
+                             VerticalOptions="Center"
                              Padding="{OnIdiom Phone='20,28,20,32', Tablet='34,46,34,40', Desktop='40,58,40,44'}"
                              Spacing="0">
-            <Border Padding="22" Margin="0,0,0,18"
+            <Border x:Name="MobileBrandCard" Padding="22" Margin="0,0,0,18"
                     BackgroundColor="{DynamicResource SurfaceContainer}"
                     Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
                     StrokeShape="RoundRectangle 24">
@@ -37,9 +106,23 @@
                 </Grid>
             </Border>
 
-            <Label Text="Welcome back" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
-            <Label Text="Sign in to view live farm conditions and crop reports."
+            <Label x:Name="AuthTitleLabel" Text="Welcome back" FontSize="30" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+            <Label x:Name="AuthSubtitleLabel" Text="Sign in to view live farm conditions and crop reports."
                    FontSize="13" LineHeight="1.35" TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,4,0,24" />
+
+            <VerticalStackLayout x:Name="NameField" IsVisible="False" Spacing="0">
+                <Label Text="FULL NAME" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.4"
+                       TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,7" />
+                <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                        Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14" HeightRequest="54" Padding="14,0" Margin="0,0,0,16">
+                    <Entry x:Name="NameEntry" Placeholder="Your name"
+                           VerticalTextAlignment="Center" BackgroundColor="Transparent"
+                           TextColor="{DynamicResource OnSurface}" PlaceholderColor="{DynamicResource OnSurfaceVariant}"
+                           FontSize="14" TextChanged="OnFieldChanged" ReturnType="Next" Completed="OnNameCompleted"
+                           SemanticProperties.Description="Full name" />
+                </Border>
+            </VerticalStackLayout>
 
             <Label Text="EMAIL" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.4"
                    TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,7" />
@@ -66,6 +149,21 @@
                        SemanticProperties.Description="Password" />
             </Border>
 
+            <VerticalStackLayout x:Name="ConfirmPasswordField" IsVisible="False" Spacing="0" Margin="0,16,0,0">
+                <Label Text="CONFIRM PASSWORD" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.4"
+                       TextColor="{DynamicResource OnSurfaceVariant}" Margin="0,0,0,7" />
+                <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                        Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14" HeightRequest="54" Padding="14,0">
+                    <Entry x:Name="ConfirmPasswordEntry" Placeholder="Re-enter your password"
+                           IsPassword="True"
+                           VerticalTextAlignment="Center" BackgroundColor="Transparent"
+                           TextColor="{DynamicResource OnSurface}" PlaceholderColor="{DynamicResource OnSurfaceVariant}"
+                           FontSize="14" TextChanged="OnFieldChanged" ReturnType="Done" Completed="OnConfirmPasswordCompleted"
+                           SemanticProperties.Description="Confirm password" />
+                </Border>
+            </VerticalStackLayout>
+
             <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
                 <HorizontalStackLayout Spacing="3">
                     <CheckBox x:Name="RememberMeCheckBox" Color="{DynamicResource Primary}" VerticalOptions="Center" />
@@ -78,7 +176,7 @@
                 </HorizontalStackLayout>
             </Grid>
 
-            <Button Text="Forgot password?" BackgroundColor="Transparent" TextColor="{DynamicResource Primary}"
+            <Button x:Name="ForgotPasswordButton" Text="Forgot password?" BackgroundColor="Transparent" TextColor="{DynamicResource Primary}"
                     FontSize="11" Padding="0" MinimumHeightRequest="36" HorizontalOptions="End"
                     Clicked="OnForgotPasswordClicked" />
 
@@ -89,15 +187,20 @@
                     HeightRequest="52" Margin="0,18,0,18" Clicked="OnLoginClicked"
                     SemanticProperties.Description="Sign in" />
 
-            <Border Padding="14,11" BackgroundColor="{DynamicResource SurfaceContainer}"
-                    Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 14">
-                <VerticalStackLayout Spacing="3">
-                    <Label Text="DEMO ACCESS" FontSize="8" FontAttributes="Bold" CharacterSpacing="1"
-                           TextColor="{DynamicResource Primary}" />
-                    <Label Text="admin@glorious.com" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
-                    <Label Text="Password: password123" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" />
-                </VerticalStackLayout>
-            </Border>
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                <BoxView HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" VerticalOptions="Center" />
+                <Label Grid.Column="1" Text="OR" FontSize="9" FontAttributes="Bold" CharacterSpacing="1.2"
+                       TextColor="{DynamicResource OnSurfaceVariant}" />
+                <BoxView Grid.Column="2" HeightRequest="1" BackgroundColor="{DynamicResource OutlineVariant}" VerticalOptions="Center" />
+            </Grid>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4" Margin="0,16,0,0">
+                <Label x:Name="ModePromptLabel" Text="New to GLORIOUS SYSTEM?" FontSize="12"
+                       TextColor="{DynamicResource OnSurfaceVariant}" VerticalOptions="Center" />
+                <Button x:Name="AuthModeButton" Text="Create account" BackgroundColor="Transparent" TextColor="{DynamicResource Primary}"
+                        FontSize="12" FontAttributes="Bold" Padding="4,0" MinimumHeightRequest="32"
+                        Clicked="OnAuthModeClicked" />
+            </HorizontalStackLayout>
         </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </Grid>
 </ContentPage>

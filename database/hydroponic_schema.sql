@@ -152,8 +152,3 @@ INSERT INTO Sensors (NodeId, Name, Type, Model, Notes) VALUES
 -- Display/Output devices
 INSERT INTO Displays (NodeId, Name, Type, Model, Width, Height, TouchEnabled) VALUES
     (2, 'Main TFT Touch', 'TFT', '4inch TFT Touch', 480, 320, 1);
-
--- Default admin user (password: password123)
--- BCrypt hash of 'password123' with cost 12
-INSERT INTO Users (Id, Name, Email, PasswordHash, IsActive, Role) VALUES
-    (1, 'Admin', 'admin@glorious.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/RK.PZvO.S', 1, 'Admin');

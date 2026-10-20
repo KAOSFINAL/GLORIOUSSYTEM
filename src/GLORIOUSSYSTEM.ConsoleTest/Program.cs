@@ -45,30 +45,6 @@ if (!db.Displays.Any())
     db.Displays.Add(new Display { NodeId = 2, Name = "Main TFT Touch", Type = "TFT", Model = "4inch TFT Touch", Width = 480, Height = 320, TouchEnabled = 1 });
 }
 
-// Seed admin user
-if (!db.Users.Any())
-{
-    db.Users.Add(new User
-    {
-        Name = "Admin",
-        Email = "admin@glorious.com",
-        PasswordHash = "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa", // BCrypt hash of 'password123' with cost 12
-        IsActive = 1,
-        CreatedAt = DateTime.UtcNow,
-        Role = "Admin"
-    });
-}
-else
-{
-    // Update existing admin user with correct password hash
-    var admin = await db.Users.FirstOrDefaultAsync<User>(u => u.Email == "admin@glorious.com");
-    if (admin != null && admin.PasswordHash != "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa")
-    {
-        admin.PasswordHash = "$2a$12$S7euzzUK2Xdhsuu7bvsQpuZ2PkMahY6ULQ6IgfqaB2nn3gpeD5bUa";
-        Console.WriteLine("Updated admin user password hash");
-    }
-}
-
 await db.SaveChangesAsync();
 
 // Add sample readings for all sensors that don't have any
@@ -135,6 +111,5 @@ Console.WriteLine("\nAll users in the database:");
 foreach (var u in db.Users.OrderBy(u => u.Id))
 {
     Console.WriteLine($"  {u.Id}: {u.Name} ({u.Email}) - Active: {u.IsActive}, Role: {u.Role}");
-    Console.WriteLine($"      PasswordHash: {u.PasswordHash}");
 }
 

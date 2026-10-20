@@ -36,12 +36,6 @@ namespace GLORIOUSSYSTEM.Data.Migrations
                 column: "Email",
                 unique: true);
 
-            // Seed admin user (password: password123)
-            // BCrypt hash of 'password123' with cost 12
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Name", "Email", "PasswordHash", "IsActive", "CreatedAt", "Role" },
-                values: new object[] { 1, "Admin", "admin@glorious.com", "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/RK.PZvO.S", 1, new DateTime(2026, 8, 24, 0, 0, 0, DateTimeKind.Utc), "Admin" });
         }
 
         /// <inheritdoc />
