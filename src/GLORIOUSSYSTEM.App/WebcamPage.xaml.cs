@@ -1,7 +1,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using GLORIOUSSYSTEM.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Storage;
 
 namespace GLORIOUSSYSTEM.App;
 
@@ -29,10 +33,15 @@ public partial class WebcamPage : ContentPage
     bool _isClassifying;
     Task? _classifierInitialization;
     bool? _isWideLayout;
+    LeafPrediction? _lastPrediction;
+    string? _currentImagePath;
 
     public WebcamPage()
     {
         InitializeComponent();
+        // The shell keeps this page alive, so start staging ONNX assets in the
+        // background during app startup instead of on the first Webcam tap.
+        _classifierInitialization = InitializeClassifierAsync();
     }
 
     protected override void OnAppearing()
@@ -80,8 +89,9 @@ public partial class WebcamPage : ContentPage
         ModelStatusLabel.Text = "PREPARING";
         try
         {
-            _classifier = await Task.Run(() => new LeafClassifierService());
-            ModelStatusLabel.Text = "READY";
+            _classifier = await LeafClassifierService.CreateAsync();
+            ModelStatusLabel.Text = $"READY - {_classifier.ModelKind}";
+            ModelStatusLabel.TextColor = GetResourceColor("OnPrimaryContainer", Colors.White);
         }
         catch (Exception ex)
         {
@@ -93,10 +103,11 @@ public partial class WebcamPage : ContentPage
 
     async void OnChoosePhotoClicked(object sender, EventArgs e)
     {
-        if (!await EnsureClassifierAsync()) return;
-
         try
         {
+            ScanErrorLabel.IsVisible = false;
+            if (!await EnsureClassifierAsync()) return;
+
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
                 FileTypes = FilePickerFileType.Images,
@@ -104,52 +115,62 @@ public partial class WebcamPage : ContentPage
             });
 
             if (result == null) return;
-            await ClassifyImage(result.FullPath);
+            await ClassifyImage(await StageImageAsync(result));
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Photo Error", ex.Message, "OK");
+            await ReportScanErrorAsync("Photo Error", ex);
         }
     }
 
     async void OnTakePhotoClicked(object sender, EventArgs e)
     {
-        if (!await EnsureClassifierAsync()) return;
-
-        if (!MediaPicker.Default.IsCaptureSupported)
-        {
-            await DisplayAlertAsync("Camera Unavailable", "Camera capture is not supported on this device.", "OK");
-            return;
-        }
-
         try
         {
+            ScanErrorLabel.IsVisible = false;
+            if (!await EnsureClassifierAsync()) return;
+
+            if (!MediaPicker.Default.IsCaptureSupported)
+            {
+                await ReportScanErrorAsync("Camera Unavailable", new NotSupportedException("Camera capture is not supported on this device."));
+                return;
+            }
+
             var result = await MediaPicker.Default.CapturePhotoAsync();
             if (result == null) return;
-            await ClassifyImage(result.FullPath);
+            await ClassifyImage(await StageImageAsync(result));
         }
         catch (PermissionException)
         {
-            await DisplayAlertAsync("Camera Permission", "Camera access was denied. Allow camera access for GLORIOUSSYSTEM and try again.", "OK");
+            await ReportScanErrorAsync("Camera Permission", new UnauthorizedAccessException("Camera access was denied. Allow camera access for GLORIOUSSYSTEM and try again."));
         }
         catch (FeatureNotSupportedException)
         {
-            await DisplayAlertAsync("Camera Unavailable", "This device does not support photo capture.", "OK");
+            await ReportScanErrorAsync("Camera Unavailable", new NotSupportedException("This device does not support photo capture."));
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Camera Error", ex.Message, "OK");
+            await ReportScanErrorAsync("Camera Error", ex);
         }
     }
 
     async Task<bool> EnsureClassifierAsync()
     {
-        _classifierInitialization ??= InitializeClassifierAsync();
-        await _classifierInitialization;
-        if (_classifier != null) return true;
+        try
+        {
+            _classifierInitialization ??= InitializeClassifierAsync();
+            await _classifierInitialization;
+            if (_classifier != null) return true;
 
-        await DisplayAlertAsync("AI model unavailable", _initError ?? "The crop model could not be loaded.", "OK");
-        return false;
+            await ReportScanErrorAsync("AI model unavailable",
+                new InvalidOperationException(_initError ?? "The crop model could not be loaded."));
+            return false;
+        }
+        catch (Exception ex)
+        {
+            await ReportScanErrorAsync("AI model unavailable", ex);
+            return false;
+        }
     }
 
     async Task ClassifyImage(string imagePath)
@@ -161,6 +182,8 @@ public partial class WebcamPage : ContentPage
             return;
         }
 
+        DeleteTemporaryImage();
+        _currentImagePath = imagePath;
         _isClassifying = true;
         SetBusyState(true);
 
@@ -179,6 +202,7 @@ public partial class WebcamPage : ContentPage
             await Task.Yield();
             var prediction = await Task.Run(() => _classifier.Classify(imagePath));
 
+            _lastPrediction = prediction;
             UpdateResults(prediction);
             LoadingBorder.IsVisible = false;
             ResultsCard.IsVisible = true;
@@ -188,7 +212,7 @@ public partial class WebcamPage : ContentPage
         {
             LoadingBorder.IsVisible = false;
             ResultsCard.IsVisible = false;
-            await DisplayAlertAsync("Scan Error", "The image could not be analyzed.\n\n" + ex.Message, "OK");
+            await ReportScanErrorAsync("Scan Error", ex);
         }
         finally
         {
@@ -204,16 +228,36 @@ public partial class WebcamPage : ContentPage
         ClearButton.IsEnabled = !busy;
     }
 
+    async Task ReportScanErrorAsync(string title, Exception exception)
+    {
+        var detail = exception.Message;
+        if (string.IsNullOrWhiteSpace(detail))
+            detail = "The photo could not be processed. Please choose a JPG or PNG image and try again.";
+
+        ScanErrorLabel.Text = detail;
+        ScanErrorLabel.IsVisible = true;
+        System.Diagnostics.Debug.WriteLine($"{title}: {exception}");
+
+        try
+        {
+            await DisplayAlertAsync(title, detail, "OK");
+        }
+        catch
+        {
+            // Keep the inline error visible if the platform cannot present a modal alert.
+        }
+    }
+
     void UpdateResults(LeafPrediction prediction)
     {
         LettuceDetectionCard.IsVisible = false;
         HealthCard.IsVisible = false;
-        AgeCard.IsVisible = false;
+        VarietyCard.IsVisible = false;
         DetailedPredictionsLabel.IsVisible = false;
         PredictionsList.IsVisible = false;
 
         var isLettuce = prediction.IsLettuce;
-        var lettuceColor = isLettuce ? Color.FromArgb("#5EE0A0") : Color.FromArgb("#FF7185");
+        var lettuceColor = isLettuce ? Color.FromArgb("#74E0A2") : Color.FromArgb("#FF7B86");
         var lettuceIcon = isLettuce ? "OK" : "NO";
 
         LettuceStatusBorder.BackgroundColor = lettuceColor;
@@ -221,7 +265,7 @@ public partial class WebcamPage : ContentPage
         LettuceStatusLabel.Text = isLettuce ? "Lettuce Detected" : "Not Lettuce";
         LettuceStatusLabel.TextColor = lettuceColor;
         LettuceConfidenceLabel.Text = $"Confidence: {prediction.LettuceConfidence:P0}";
-        LettuceDetailLabel.Text = isLettuce ? "Health and growth stage available" : "Object is outside the lettuce class";
+        LettuceDetailLabel.Text = isLettuce ? "Variety and health available" : "Object is outside the lettuce class";
         LettuceDetectionCard.IsVisible = true;
 
         if (!isLettuce) return;
@@ -235,14 +279,19 @@ public partial class WebcamPage : ContentPage
         HealthDetailLabel.Text = "Nutrient status and disease detection";
         HealthCard.IsVisible = true;
 
-        var ageInfo = GetAgeInfo(prediction.AgeLabel);
-        AgeStatusBorder.BackgroundColor = ageInfo.Color;
-        AgeStatusIcon.Text = ageInfo.Icon;
-        AgeStatusLabel.Text = $"Growth Stage: {prediction.AgeLabel.FirstCharToUpper()}";
-        AgeStatusLabel.TextColor = ageInfo.Color;
-        AgeConfidenceLabel.Text = $"Confidence: {prediction.AgeConfidence:P0}";
-        AgeDetailLabel.Text = "Estimated development phase";
-        AgeCard.IsVisible = true;
+        if (!string.IsNullOrWhiteSpace(prediction.VarietyLabel) && prediction.VarietyLabel != "unknown")
+        {
+            var varietyInfo = GetVarietyInfo(prediction.VarietyLabel);
+            VarietyStatusBorder.BackgroundColor = varietyInfo.Color;
+            VarietyStatusIcon.Text = varietyInfo.Icon;
+            VarietyStatusLabel.Text = $"Variety: {prediction.VarietyLabel.Replace('_', ' ').FirstCharToUpper()}";
+            VarietyStatusLabel.TextColor = varietyInfo.Color;
+            VarietyConfidenceLabel.Text = $"Confidence: {prediction.VarietyConfidence:P0}";
+            VarietyDetailLabel.Text = prediction.VarietyLabel == "green_ice"
+                ? "Green Ice lettuce match"
+                : "Lettuce outside the labeled Green Ice class";
+            VarietyCard.IsVisible = true;
+        }
 
         DetailedPredictionsLabel.IsVisible = true;
         PredictionsList.IsVisible = true;
@@ -270,12 +319,12 @@ public partial class WebcamPage : ContentPage
             });
         }
 
-        foreach (var kv in prediction.AgeScores.OrderByDescending(x => x.Value))
+        foreach (var kv in prediction.VarietyScores.OrderByDescending(x => x.Value))
         {
-            var info = GetAgeInfo(kv.Key);
+            var info = GetVarietyInfo(kv.Key);
             allItems.Add(new PredictionItem
             {
-                Label = $"Age: {kv.Key.FirstCharToUpper()}",
+                Label = $"Variety: {kv.Key.Replace('_', ' ').FirstCharToUpper()}",
                 Icon = info.Icon,
                 Confidence = kv.Value,
                 Color = info.Color
@@ -287,23 +336,23 @@ public partial class WebcamPage : ContentPage
 
     static (Color Color, string Icon) GetHealthInfo(string healthLabel) => healthLabel.ToLower() switch
     {
-        "healthy" => (Color.FromArgb("#5EE0A0"), "H"),
-        "deficient" => (Color.FromArgb("#F4C95D"), "N"),
-        "diseased" => (Color.FromArgb("#FF7185"), "D"),
+        "healthy" => (Color.FromArgb("#74E0A2"), "H"),
+        "deficient" => (Color.FromArgb("#F2C94C"), "N"),
+        "diseased" => (Color.FromArgb("#FF7B86"), "D"),
         _ => (Colors.Gray, "?")
     };
 
-    static (Color Color, string Icon) GetAgeInfo(string ageLabel) => ageLabel.ToLower() switch
+    static (Color Color, string Icon) GetVarietyInfo(string varietyLabel) => varietyLabel.ToLower() switch
     {
-        "seedling" => (Color.FromArgb("#A78BFA"), "S"),
-        "vegetative" => (Color.FromArgb("#5EE0A0"), "V"),
-        "mature" => (Color.FromArgb("#66BFFF"), "M"),
-        "harvest_ready" => (Color.FromArgb("#F4C95D"), "R"),
+        "green_ice" => (Color.FromArgb("#74E0A2"), "GI"),
+        "not_green_ice" => (Color.FromArgb("#67C4F4"), "NG"),
         _ => (Colors.Gray, "?")
     };
 
     void OnClearClicked(object sender, EventArgs e)
     {
+        DeleteTemporaryImage();
+        _lastPrediction = null;
         PreviewImage.Source = null;
         PlaceholderBorder.IsVisible = true;
         ImageBorder.IsVisible = false;
@@ -311,11 +360,60 @@ public partial class WebcamPage : ContentPage
         ClearButton.IsVisible = false;
         ChoosePhotoButton.Text = "CHOOSE PHOTO";
         ResultsCard.IsVisible = false;
+        ScanErrorLabel.IsVisible = false;
     }
 
     async void OnSaveResultClicked(object sender, EventArgs e)
     {
-        await DisplayAlertAsync("Saved", "Classification result saved to history", "OK");
+        if (_lastPrediction == null || string.IsNullOrWhiteSpace(_currentImagePath) || !File.Exists(_currentImagePath))
+        {
+            await DisplayAlertAsync("Nothing to save", "Run a crop scan first.", "OK");
+            return;
+        }
+
+        try
+        {
+            var savedDirectory = Path.Combine(FileSystem.AppDataDirectory, "Scans");
+            Directory.CreateDirectory(savedDirectory);
+            var extension = Path.GetExtension(_currentImagePath);
+            var savedPath = Path.Combine(savedDirectory, $"scan_{DateTime.UtcNow:yyyyMMdd_HHmmssfff}{extension}");
+            File.Copy(_currentImagePath, savedPath, true);
+
+            using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+            var camera = await db.Cameras.OrderBy(item => item.Id).FirstOrDefaultAsync();
+            if (camera == null)
+            {
+                camera = new Camera { Name = "Mobile crop scanner", Model = DeviceInfo.Current.Model };
+                db.Cameras.Add(camera);
+            }
+
+            var predictionLabel = !_lastPrediction.IsLettuce
+                ? "non_lettuce"
+                : string.IsNullOrWhiteSpace(_lastPrediction.VarietyLabel) || _lastPrediction.VarietyLabel == "unknown"
+                    ? _lastPrediction.HealthLabel
+                    : $"{_lastPrediction.VarietyLabel}/{_lastPrediction.HealthLabel}";
+            var confidence = _lastPrediction.IsLettuce && _lastPrediction.HealthConfidence > 0
+                ? _lastPrediction.VarietyConfidence > 0
+                    ? Math.Min(_lastPrediction.VarietyConfidence, _lastPrediction.HealthConfidence)
+                    : _lastPrediction.HealthConfidence
+                : _lastPrediction.LettuceConfidence;
+
+            db.LeafClassifications.Add(new LeafClassification
+            {
+                Camera = camera,
+                Timestamp = DateTime.UtcNow,
+                ImagePath = savedPath,
+                PredictedClass = predictionLabel,
+                Confidence = confidence
+            });
+            await db.SaveChangesAsync();
+            await DisplayAlertAsync("Scan saved", "The classification and image were added to local history.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Save failed", ex.Message, "OK");
+        }
     }
 
     void OnClassifyAnotherClicked(object sender, EventArgs e) => OnClearClicked(sender, e);
@@ -327,6 +425,39 @@ public partial class WebcamPage : ContentPage
         await Task.WhenAll(
             ResultsCard.FadeToAsync(1, 180, Easing.CubicOut),
             ResultsCard.TranslateToAsync(0, 0, 180, Easing.CubicOut));
+    }
+
+    static async Task<string> StageImageAsync(FileResult result)
+    {
+        var scansDirectory = Path.Combine(FileSystem.CacheDirectory, "Scans");
+        Directory.CreateDirectory(scansDirectory);
+
+        var extension = Path.GetExtension(result.FileName);
+        if (string.IsNullOrWhiteSpace(extension) || extension.Length > 8)
+            extension = ".jpg";
+
+        var imagePath = Path.Combine(scansDirectory, $"scan_{Guid.NewGuid():N}{extension.ToLowerInvariant()}");
+        await using var input = await result.OpenReadAsync();
+        await using var output = File.Create(imagePath);
+        await input.CopyToAsync(output);
+        return imagePath;
+    }
+
+    void DeleteTemporaryImage()
+    {
+        try
+        {
+            var scanCache = Path.GetFullPath(Path.Combine(FileSystem.CacheDirectory, "Scans"));
+            var imagePath = string.IsNullOrWhiteSpace(_currentImagePath) ? null : Path.GetFullPath(_currentImagePath);
+            if (imagePath != null && imagePath.StartsWith(scanCache, StringComparison.OrdinalIgnoreCase) && File.Exists(imagePath))
+                File.Delete(imagePath);
+        }
+        catch
+        {
+            // Cache cleanup must never make the scanner unusable.
+        }
+
+        _currentImagePath = null;
     }
 
     static Color GetResourceColor(string key, Color fallback)
