@@ -46,7 +46,17 @@ public sealed class LeafClassifierService : IDisposable
     LeafClassifierService(string modelPath, bool isMultiTask, string? confirmationModelPath)
     {
         _isMultiTask = isMultiTask;
-        _session = new InferenceSession(modelPath);
+        // MAUI hosts can be sensitive to ONNX Runtime's default parallel
+        // memory arenas. Use a conservative sequential CPU session so a photo
+        // scan cannot take down the desktop/mobile process.
+        var sessionOptions = new SessionOptions
+        {
+            GraphOptimizationLevel = GraphOptimizationLevel.ORT_ENABLE_BASIC,
+            ExecutionMode = ExecutionMode.ORT_SEQUENTIAL,
+            EnableCpuMemArena = false,
+            EnableMemoryPattern = false
+        };
+        _session = new InferenceSession(modelPath, sessionOptions);
         _hasVariety = _session.OutputMetadata.ContainsKey("variety_logits");
 
         if (confirmationModelPath != null)
