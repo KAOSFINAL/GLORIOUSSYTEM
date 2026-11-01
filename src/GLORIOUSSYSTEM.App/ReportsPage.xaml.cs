@@ -1,7 +1,11 @@
 using System.Windows.Input;
+using System.Text;
 using GLORIOUSSYSTEM.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
+using Microsoft.Maui.Devices;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Storage;
 
 namespace GLORIOUSSYSTEM.App;
 
@@ -9,8 +13,12 @@ public partial class ReportsPage : ContentPage
 {
     private bool _isRefreshing;
     private bool _isLoading;
+    private bool? _usingWideSummary;
+    private bool _chartSelectionReady;
+    private DateTime _lastLoadedUtc = DateTime.MinValue;
+    private static readonly TimeSpan AutomaticRefreshInterval = TimeSpan.FromSeconds(30);
 
-    private readonly PhChartDrawable _chartDrawable;
+    private readonly SensorChartDrawable _chartDrawable;
 
     public ReportsPage()
     {
@@ -18,12 +26,15 @@ public partial class ReportsPage : ContentPage
         BindingContext = this;
 
         // Native MAUI GraphicsView chart
-        _chartDrawable = new PhChartDrawable();
+        _chartDrawable = new SensorChartDrawable();
         ReadingsChart.Drawable = _chartDrawable;
 
         // Default: 24 Hours
         ChartTimeRangePicker.SelectedIndex = 2;
         ChartTimeRangePicker.SelectedIndexChanged += OnTimeRangeChanged;
+        ChartSensorPicker.SelectedIndexChanged += OnChartSensorChanged;
+        RefreshCommand = new Command(async () => await RefreshAsync());
+        ThemeManager.ThemeChanged += OnThemeChanged;
 
     }
 
@@ -46,8 +57,52 @@ public partial class ReportsPage : ContentPage
     }
 
 
-    public ICommand RefreshCommand =>
-        new Command(async () => await RefreshAsync());
+    public ICommand RefreshCommand { get; }
+
+    private void OnReportsSizeChanged(object? sender, EventArgs e)
+    {
+        if (ReportSummaryGrid.Width <= 0)
+            return;
+
+        var useWideSummary = ReportSummaryGrid.Width >= 780;
+        if (_usingWideSummary == useWideSummary)
+            return;
+
+        _usingWideSummary = useWideSummary;
+        ReportSummaryGrid.RowDefinitions.Clear();
+        ReportSummaryGrid.ColumnDefinitions.Clear();
+
+        if (useWideSummary)
+        {
+            ReportSummaryGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            ReportSummaryGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1.2, GridUnitType.Star)));
+            ReportSummaryGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            ReportSummaryGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+
+            Grid.SetRow(TotalSensorsCard, 0);
+            Grid.SetColumn(TotalSensorsCard, 0);
+            Grid.SetColumnSpan(TotalSensorsCard, 1);
+            Grid.SetRow(ReportingSensorsCard, 0);
+            Grid.SetColumn(ReportingSensorsCard, 1);
+            Grid.SetRow(ExceptionsCard, 0);
+            Grid.SetColumn(ExceptionsCard, 2);
+        }
+        else
+        {
+            ReportSummaryGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            ReportSummaryGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            ReportSummaryGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            ReportSummaryGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+
+            Grid.SetRow(TotalSensorsCard, 0);
+            Grid.SetColumn(TotalSensorsCard, 0);
+            Grid.SetColumnSpan(TotalSensorsCard, 2);
+            Grid.SetRow(ReportingSensorsCard, 1);
+            Grid.SetColumn(ReportingSensorsCard, 0);
+            Grid.SetRow(ExceptionsCard, 1);
+            Grid.SetColumn(ExceptionsCard, 1);
+        }
+    }
 
 
     private async Task RefreshAsync()
@@ -91,6 +146,31 @@ public partial class ReportsPage : ContentPage
                     .AsNoTracking()
                     .ToList();
 
+                var chartSensors = db.Readings
+                    .AsNoTracking()
+                    .Where(reading => reading.Sensor.Enabled == 1)
+                    .Select(reading => new
+                    {
+                        SensorId = reading.SensorId,
+                        reading.Sensor.Name,
+                        reading.Sensor.Type,
+                        reading.Metric
+                    })
+                    .Distinct()
+                    .OrderBy(sensor => sensor.Type)
+                    .ThenBy(sensor => sensor.Name)
+                    .ThenBy(sensor => sensor.Metric)
+                    .ToList()
+                    .Select(sensor => new ChartSensorOption
+                    {
+                        SensorId = sensor.SensorId,
+                        Name = sensor.Name,
+                        DisplayName = $"{sensor.Name} · {sensor.Metric}",
+                        Type = sensor.Type,
+                        Metric = sensor.Metric
+                    })
+                    .ToList();
+
                 var readingsWithData = db.Readings
                     .AsNoTracking()
                     .Select(r => r.SensorId)
@@ -130,7 +210,8 @@ public partial class ReportsPage : ContentPage
                 {
                     TotalSensors = sensors.Count,
                     OnlineSensors = readingsWithData,
-                    Alerts = alertCount
+                    Alerts = alertCount,
+                    ChartSensors = chartSensors
                 };
             });
 
@@ -152,10 +233,23 @@ public partial class ReportsPage : ContentPage
                 AlertCountLabel.Text =
                     result.Alerts.ToString();
 
+                _chartSelectionReady = false;
+                ChartSensorPicker.ItemsSource = result.ChartSensors;
+                if (result.ChartSensors.Count > 0)
+                {
+                    var savedChartKey = Preferences.Get("Reports_ChartKey", "");
+                    var savedIndex = result.ChartSensors.FindIndex(sensor => sensor.Key == savedChartKey);
+                    var phIndex = result.ChartSensors.FindIndex(sensor => sensor.Type.Equals("pH", StringComparison.OrdinalIgnoreCase));
+                    ChartSensorPicker.SelectedIndex = savedIndex >= 0 ? savedIndex : phIndex >= 0 ? phIndex : 0;
+                }
+                _chartSelectionReady = true;
+
             });
 
 
             await LoadChartAsync();
+
+            _lastLoadedUtc = DateTime.UtcNow;
 
             LogToFile("=== ReportsPage Load COMPLETED ===");
         }
@@ -187,6 +281,16 @@ public partial class ReportsPage : ContentPage
         object? sender,
         EventArgs e)
     {
+        if (_chartSelectionReady)
+            _ = LoadChartAsync();
+    }
+
+    private void OnChartSensorChanged(object? sender, EventArgs e)
+    {
+        if (!_chartSelectionReady || ChartSensorPicker.SelectedItem is not ChartSensorOption selected)
+            return;
+
+        Preferences.Set("Reports_ChartKey", selected.Key);
         _ = LoadChartAsync();
     }
 
@@ -205,7 +309,7 @@ public partial class ReportsPage : ContentPage
 
 
     // ============================================================
-    // Load pH Chart Data
+    // Load selected sensor chart data
     // ============================================================
 
     private async Task LoadChartAsync()
@@ -214,6 +318,17 @@ public partial class ReportsPage : ContentPage
 
         try
         {
+            if (ChartSensorPicker.SelectedItem is not ChartSensorOption selectedSensor)
+            {
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    ChartTitleLabel.Text = "Sensor trend";
+                    ChartSubtitleLabel.Text = "No sensors have historical readings yet";
+                    UpdateChart([], GetSelectedTimeRange(), null);
+                });
+                return;
+            }
+
             var timeRange =
                 GetSelectedTimeRange();
 
@@ -233,7 +348,8 @@ public partial class ReportsPage : ContentPage
                 return db.Readings
                     .AsNoTracking()
                     .Where(r =>
-                        r.Metric == "pH" &&
+                        r.SensorId == selectedSensor.SensorId &&
+                        r.Metric == selectedSensor.Metric &&
                         r.Timestamp >= cutoff)
                     .OrderBy(r => r.Timestamp)
                     .ToList();
@@ -242,14 +358,14 @@ public partial class ReportsPage : ContentPage
 
             LogToFile(
                 $"=== ReportsPage LoadChart: " +
-                $"found {readings.Count} pH readings ===");
+                $"found {readings.Count} readings for sensor {selectedSensor.SensorId} ===");
 
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                UpdateChart(
-                    readings,
-                    timeRange);
+                ChartTitleLabel.Text = $"{selectedSensor.Name} trend";
+                ChartSubtitleLabel.Text = $"{selectedSensor.Type} · {selectedSensor.Metric}";
+                UpdateChart(readings, timeRange, selectedSensor);
             });
 
 
@@ -265,7 +381,7 @@ public partial class ReportsPage : ContentPage
             {
                 await DisplayAlertAsync(
                     "Chart Error",
-                    $"Failed to load pH history:\n\n{ex.Message}",
+                    $"Failed to load sensor history:\n\n{ex.Message}",
                     "OK");
             });
         }
@@ -278,11 +394,12 @@ public partial class ReportsPage : ContentPage
 
     private void UpdateChart(
         List<Reading> readings,
-        TimeSpan timeRange)
+        TimeSpan timeRange,
+        ChartSensorOption? selectedSensor)
     {
         var points =
             readings
-                .Select(r => new PhChartPoint
+                .Select(r => new SensorChartPoint
                 {
                     Timestamp = r.Timestamp,
                     Value = r.Value
@@ -290,10 +407,13 @@ public partial class ReportsPage : ContentPage
                 .OrderBy(p => p.Timestamp)
                 .ToList();
 
+        points = Downsample(points, 240);
 
         _chartDrawable.SetData(
             points,
-            timeRange);
+            timeRange,
+            selectedSensor == null ? "No sensor data available" : $"No {selectedSensor.DisplayName} data in this range",
+            GetChartColorResource(selectedSensor?.Type));
 
 
         // Force GraphicsView to redraw
@@ -320,20 +440,20 @@ public partial class ReportsPage : ContentPage
                     .ToList();
 
 
-            CurrentValueLabel.Text =
-                values.Last().ToString("F1");
+            var unit = selectedSensor?.Metric ?? readings.Last().Metric;
+            CurrentValueLabel.Text = FormatChartValue(values.Last(), unit);
 
             MinValueLabel.Text =
-                values.Min().ToString("F1");
+                FormatChartValue(values.Min(), unit);
 
             MaxValueLabel.Text =
-                values.Max().ToString("F1");
+                FormatChartValue(values.Max(), unit);
 
             ChartStats.IsVisible = true;
         }
 
 
-        UpdateLegend(readings);
+        UpdateLegend(readings, selectedSensor);
     }
 
 
@@ -342,7 +462,8 @@ public partial class ReportsPage : ContentPage
     // ============================================================
 
     private void UpdateLegend(
-        List<Reading> readings)
+        List<Reading> readings,
+        ChartSensorOption? selectedSensor)
     {
         ChartLegend.Children.Clear();
 
@@ -352,7 +473,7 @@ public partial class ReportsPage : ContentPage
             ChartLegend.Children.Add(
                 new Label
                 {
-                    Text = "No pH data available",
+                    Text = "No readings in this time range",
                     FontSize = 12,
                     TextColor =
                         GetResourceColor(
@@ -408,7 +529,7 @@ public partial class ReportsPage : ContentPage
             new Label
             {
                 Text =
-                    $"{changeIcon} {Math.Abs(change):F1} pH",
+                    $"{changeIcon} {FormatChartValue(Math.Abs(change), selectedSensor?.Metric ?? latest.Metric)}",
 
                 FontSize = 11,
 
@@ -417,6 +538,34 @@ public partial class ReportsPage : ContentPage
                 FontAttributes =
                     FontAttributes.Bold
             });
+    }
+
+
+    private static List<SensorChartPoint> Downsample(List<SensorChartPoint> points, int maximumPoints)
+    {
+        if (points.Count <= maximumPoints)
+            return points;
+
+        var sampled = new List<SensorChartPoint>(maximumPoints);
+        var stride = (points.Count - 1d) / (maximumPoints - 1d);
+        for (var index = 0; index < maximumPoints; index++)
+            sampled.Add(points[(int)Math.Round(index * stride)]);
+        return sampled;
+    }
+
+    private static string GetChartColorResource(string? sensorType)
+        => sensorType switch
+        {
+            "SolarPower" or "SolarVoltage" => "Secondary",
+            "BatteryPercent" or "BatteryVoltage" => "Tertiary",
+            "WaterTemp" or "UltrasonicLevel" or "FlowRate" => "Tertiary",
+            _ => "Primary"
+        };
+
+    private static string FormatChartValue(double value, string? unit)
+    {
+        var formatted = Math.Abs(value) >= 100 ? value.ToString("F0") : value.ToString("F1");
+        return string.IsNullOrWhiteSpace(unit) ? formatted : $"{formatted} {unit}";
     }
 
 
@@ -442,13 +591,13 @@ public partial class ReportsPage : ContentPage
         var successColor =
             GetResourceColor(
                 "PrimaryContainer",
-                Color.FromArgb("#16382B"));
+                Color.FromArgb("#143A27"));
 
 
         var errorColor =
             GetResourceColor(
                 "ErrorContainer",
-                Color.FromArgb("#3C1C25"));
+                Color.FromArgb("#3D1D25"));
 
 
         try
@@ -482,7 +631,7 @@ public partial class ReportsPage : ContentPage
                 "OK";
 
             ApiStatusIconLabel.TextColor =
-                GetResourceColor("Primary", Color.FromArgb("#5EE0A0"));
+                GetResourceColor("Primary", Color.FromArgb("#74E0A2"));
 
 
             ApiStatusLabel.Text =
@@ -532,7 +681,7 @@ public partial class ReportsPage : ContentPage
                 "ERR";
 
             ApiStatusIconLabel.TextColor =
-                GetResourceColor("Error", Color.FromArgb("#FF7185"));
+                GetResourceColor("Error", Color.FromArgb("#FF7B86"));
 
 
             ApiStatusLabel.Text =
@@ -580,10 +729,53 @@ public partial class ReportsPage : ContentPage
         object sender,
         EventArgs e)
     {
-        await DisplayAlertAsync(
-            "Export Data",
-            "Data export functionality coming soon!",
-            "OK");
+        try
+        {
+            using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+            var cutoff = DateTime.UtcNow.AddDays(-7);
+            var rows = await db.Readings
+                .AsNoTracking()
+                .Where(reading => reading.Timestamp >= cutoff)
+                .OrderBy(reading => reading.Timestamp)
+                .Select(reading => new
+                {
+                    SensorName = reading.Sensor.Name,
+                    reading.Sensor.Type,
+                    reading.Timestamp,
+                    reading.Value,
+                    reading.Metric
+                })
+                .ToListAsync();
+
+            if (rows.Count == 0)
+            {
+                await DisplayAlertAsync("No data", "There are no readings from the last seven days to export.", "OK");
+                return;
+            }
+
+            var csv = new StringBuilder("Sensor,Type,Timestamp UTC,Value,Metric\r\n");
+            foreach (var row in rows)
+            {
+                csv.Append(Csv(row.SensorName)).Append(',')
+                    .Append(Csv(row.Type)).Append(',')
+                    .Append(row.Timestamp.ToUniversalTime().ToString("O")).Append(',')
+                    .Append(row.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)).Append(',')
+                    .Append(Csv(row.Metric ?? "")).Append("\r\n");
+            }
+
+            var exportPath = Path.Combine(FileSystem.CacheDirectory, $"glorious_readings_{DateTime.Now:yyyyMMdd_HHmm}.csv");
+            await File.WriteAllTextAsync(exportPath, csv.ToString());
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Export GLORIOUS SYSTEM readings",
+                File = new ShareFile(exportPath)
+            });
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Export failed", ex.Message, "OK");
+        }
     }
 
 
@@ -591,11 +783,30 @@ public partial class ReportsPage : ContentPage
         object sender,
         EventArgs e)
     {
-        await DisplayAlertAsync(
-            "View Logs",
-            "System logs viewer coming soon!",
-            "OK");
+        try
+        {
+            using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+            var sensorCount = await db.Sensors.CountAsync();
+            var readingCount = await db.Readings.CountAsync();
+            var scanCount = await db.LeafClassifications.CountAsync();
+            var latestReading = await db.Readings.MaxAsync(reading => (DateTime?)reading.Timestamp);
+
+            var lastUpdate = latestReading.HasValue
+                ? latestReading.Value.ToLocalTime().ToString("MMM d, yyyy h:mm tt")
+                : "No readings yet";
+            await DisplayAlertAsync(
+                "System details",
+                $"Platform: {DeviceInfo.Current.Platform}\nSensors: {sensorCount}\nStored readings: {readingCount}\nSaved crop scans: {scanCount}\nLatest reading: {lastUpdate}",
+                "Close");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("System details unavailable", ex.Message, "OK");
+        }
     }
+
+    private static string Csv(string value) => $"\"{value.Replace("\"", "\"\"")}\"";
 
 
     private async void OnCalibrateClicked(
@@ -627,11 +838,17 @@ public partial class ReportsPage : ContentPage
     // Page Lifecycle
     // ============================================================
 
-    protected override async void OnAppearing()
+    private void OnThemeChanged(object? sender, EventArgs e)
+    {
+        _lastLoadedUtc = DateTime.MinValue;
+        Dispatcher.Dispatch(ReadingsChart.Invalidate);
+    }
+
+    protected override void OnAppearing()
     {
         base.OnAppearing();
-        await Task.Yield();
-        await LoadAsync();
+        if (DateTime.UtcNow - _lastLoadedUtc >= AutomaticRefreshInterval)
+            Dispatcher.Dispatch(() => _ = LoadAsync());
     }
 
 
@@ -677,16 +894,28 @@ internal sealed class ReportSummary
     public int OnlineSensors { get; set; }
 
     public int Alerts { get; set; }
+
+    public List<ChartSensorOption> ChartSensors { get; set; } = [];
 }
 
 
 // ====================================================================
-// pH Chart Point
+// Sensor chart models
 // ====================================================================
 
-internal sealed class PhChartPoint
+internal sealed class SensorChartPoint
 {
     public DateTime Timestamp { get; set; }
 
     public double Value { get; set; }
+}
+
+internal sealed class ChartSensorOption
+{
+    public int SensorId { get; set; }
+    public string Name { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string Metric { get; set; } = "";
+    public string Key => $"{SensorId}:{Metric}";
 }

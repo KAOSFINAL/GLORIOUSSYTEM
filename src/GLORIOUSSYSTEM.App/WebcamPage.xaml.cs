@@ -189,11 +189,6 @@ public partial class WebcamPage : ContentPage
 
         try
         {
-            PreviewImage.Source = ImageSource.FromFile(imagePath);
-            PlaceholderBorder.IsVisible = false;
-            ImageBorder.IsVisible = true;
-            ClearButton.IsVisible = true;
-            ChoosePhotoButton.Text = "CHOOSE ANOTHER";
             ResultsCard.IsVisible = false;
 
             LoadingLabel.Text = "Analyzing crop...";
@@ -201,6 +196,15 @@ public partial class WebcamPage : ContentPage
 
             await Task.Yield();
             var prediction = await Task.Run(() => _classifier.Classify(imagePath));
+
+            // Only hand the file to the MAUI image handler after ONNX/Skia has
+            // finished reading it. Some native image handlers can terminate
+            // the host process when they decode the same file concurrently.
+            PreviewImage.Source = ImageSource.FromFile(imagePath);
+            PlaceholderBorder.IsVisible = false;
+            ImageBorder.IsVisible = true;
+            ClearButton.IsVisible = true;
+            ChoosePhotoButton.Text = "CHOOSE ANOTHER";
 
             _lastPrediction = prediction;
             UpdateResults(prediction);
@@ -270,24 +274,28 @@ public partial class WebcamPage : ContentPage
 
         if (!isLettuce) return;
 
-        var healthInfo = GetHealthInfo(prediction.HealthLabel);
+        var healthLabel = string.IsNullOrWhiteSpace(prediction.HealthLabel)
+            ? "unknown"
+            : prediction.HealthLabel;
+        var healthInfo = GetHealthInfo(healthLabel);
         HealthStatusBorder.BackgroundColor = healthInfo.Color;
         HealthStatusIcon.Text = healthInfo.Icon;
-        HealthStatusLabel.Text = $"Health: {prediction.HealthLabel.FirstCharToUpper()}";
+        HealthStatusLabel.Text = $"Health: {healthLabel.FirstCharToUpper()}";
         HealthStatusLabel.TextColor = healthInfo.Color;
         HealthConfidenceLabel.Text = $"Confidence: {prediction.HealthConfidence:P0}";
         HealthDetailLabel.Text = "Nutrient status and disease detection";
         HealthCard.IsVisible = true;
 
-        if (!string.IsNullOrWhiteSpace(prediction.VarietyLabel) && prediction.VarietyLabel != "unknown")
+        var varietyLabel = prediction.VarietyLabel ?? "unknown";
+        if (!string.IsNullOrWhiteSpace(varietyLabel) && !varietyLabel.Equals("unknown", StringComparison.OrdinalIgnoreCase))
         {
-            var varietyInfo = GetVarietyInfo(prediction.VarietyLabel);
+            var varietyInfo = GetVarietyInfo(varietyLabel);
             VarietyStatusBorder.BackgroundColor = varietyInfo.Color;
             VarietyStatusIcon.Text = varietyInfo.Icon;
-            VarietyStatusLabel.Text = $"Variety: {prediction.VarietyLabel.Replace('_', ' ').FirstCharToUpper()}";
+            VarietyStatusLabel.Text = $"Variety: {varietyLabel.Replace('_', ' ').FirstCharToUpper()}";
             VarietyStatusLabel.TextColor = varietyInfo.Color;
             VarietyConfidenceLabel.Text = $"Confidence: {prediction.VarietyConfidence:P0}";
-            VarietyDetailLabel.Text = prediction.VarietyLabel == "green_ice"
+            VarietyDetailLabel.Text = varietyLabel.Equals("green_ice", StringComparison.OrdinalIgnoreCase)
                 ? "Green Ice lettuce match"
                 : "Lettuce outside the labeled Green Ice class";
             VarietyCard.IsVisible = true;
@@ -307,7 +315,7 @@ public partial class WebcamPage : ContentPage
             }
         };
 
-        foreach (var kv in prediction.HealthScores.OrderByDescending(x => x.Value))
+        foreach (var kv in (prediction.HealthScores ?? new Dictionary<string, float>()).OrderByDescending(x => x.Value))
         {
             var info = GetHealthInfo(kv.Key);
             allItems.Add(new PredictionItem
@@ -319,7 +327,7 @@ public partial class WebcamPage : ContentPage
             });
         }
 
-        foreach (var kv in prediction.VarietyScores.OrderByDescending(x => x.Value))
+        foreach (var kv in (prediction.VarietyScores ?? new Dictionary<string, float>()).OrderByDescending(x => x.Value))
         {
             var info = GetVarietyInfo(kv.Key);
             allItems.Add(new PredictionItem

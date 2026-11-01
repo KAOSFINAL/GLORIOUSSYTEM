@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\src",
+    "\\src\\GLORIOUSSYSTEM.Api",
     "\\src\\GLORIOUSSYSTEM.App",
-    "\\src\\GLORIOUSSYSTEM.App\\Resources"
+    "\\src\\GLORIOUSSYSTEM.App\\Resources",
+    "\\src\\GLORIOUSSYSTEM.ConsoleTest"
   ],
   "PreviewInSolutionExplorer": false
 }

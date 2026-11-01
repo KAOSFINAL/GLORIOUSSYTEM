@@ -25,7 +25,6 @@ public class LeafPrediction
 public sealed class LeafClassifierService : IDisposable
 {
     const string MultiTaskModel = "leaf_model_multitask.onnx";
-    const string GreenIceConfirmationModel = "leaf_model_green_ice_v2.onnx";
     const string LegacyModel = "leaf_model.onnx";
 
     static readonly string[] LettuceClasses = { "non_lettuce", "lettuce" };
@@ -35,15 +34,12 @@ public sealed class LeafClassifierService : IDisposable
     static readonly float[] Std = { 0.229f, 0.224f, 0.225f };
 
     readonly InferenceSession _session;
-    readonly InferenceSession? _confirmationSession;
     readonly bool _isMultiTask;
     readonly bool _hasVariety;
 
-    public string ModelKind => _confirmationSession != null
-        ? "GREEN ICE CONSENSUS + HEALTH"
-        : _hasVariety ? "VARIETY + HEALTH" : _isMultiTask ? "MULTITASK" : "HEALTH";
+    public string ModelKind => _hasVariety ? "VARIETY + HEALTH" : _isMultiTask ? "MULTITASK" : "HEALTH";
 
-    LeafClassifierService(string modelPath, bool isMultiTask, string? confirmationModelPath)
+    LeafClassifierService(string modelPath, bool isMultiTask)
     {
         _isMultiTask = isMultiTask;
         // MAUI hosts can be sensitive to ONNX Runtime's default parallel
@@ -58,13 +54,6 @@ public sealed class LeafClassifierService : IDisposable
         };
         _session = new InferenceSession(modelPath, sessionOptions);
         _hasVariety = _session.OutputMetadata.ContainsKey("variety_logits");
-
-        if (confirmationModelPath != null)
-        {
-            _confirmationSession = new InferenceSession(confirmationModelPath);
-            if (!_confirmationSession.OutputMetadata.ContainsKey("variety_logits"))
-                throw new InvalidDataException("The Green Ice confirmation model has no 'variety_logits' output.");
-        }
     }
 
     public static async Task<LeafClassifierService> CreateAsync(CancellationToken cancellationToken = default)
@@ -76,16 +65,8 @@ public sealed class LeafClassifierService : IDisposable
         if (modelPath == null)
             throw new FileNotFoundException("No packaged lettuce model was found. Reinstall the application and try again.");
 
-        // Keep the primary multitask model as the single live inference path.
-        // The optional confirmation model invokes a second native ONNX session
-        // immediately after the first one and can terminate the host process on
-        // some desktop/mobile native runtimes. The primary model already emits
-        // variety logits, so disabling this optional pass preserves scan results
-        // while keeping photo analysis stable.
-        var confirmationModelPath = (string?)null;
-
         return await Task.Run(
-            () => new LeafClassifierService(modelPath, isMultiTask, confirmationModelPath),
+            () => new LeafClassifierService(modelPath, isMultiTask),
             cancellationToken);
     }
 
@@ -160,42 +141,7 @@ public sealed class LeafClassifierService : IDisposable
             ? ProcessMultiTaskOutput(results)
             : ProcessLegacyOutput(results);
 
-        if (_confirmationSession != null && prediction.IsLettuce && prediction.VarietyScores.Count > 0)
-        {
-            using var confirmationResults = _confirmationSession.Run(inputs);
-            ApplyVarietyConsensus(prediction, confirmationResults);
-        }
-
         return prediction;
-    }
-
-    static void ApplyVarietyConsensus(
-        LeafPrediction prediction,
-        IReadOnlyList<DisposableNamedOnnxValue> confirmationResults)
-    {
-        var resultMap = confirmationResults.ToDictionary(result => result.Name, StringComparer.OrdinalIgnoreCase);
-        if (!resultMap.TryGetValue("variety_logits", out var varietyResult))
-            throw new InvalidDataException("The Green Ice confirmation model returned no 'variety_logits' output.");
-
-        var confirmationLogits = varietyResult.AsEnumerable<float>().ToArray();
-        if (confirmationLogits.Length != VarietyClasses.Length)
-            throw new InvalidDataException(
-                $"Confirmation output 'variety_logits' returned {confirmationLogits.Length} values; expected {VarietyClasses.Length}.");
-
-        if (!prediction.VarietyScores.TryGetValue("green_ice", out var primaryGreenProbability))
-            throw new InvalidDataException("The primary model returned no Green Ice probability.");
-
-        // A Green Ice result is allowed only when both independently trained
-        // models put it above 50%. The minimum probability is a conservative,
-        // normalized consensus score; either model can veto a false positive.
-        var confirmationGreenProbability = Softmax(confirmationLogits)[0];
-        var consensusGreenProbability = MathF.Min(primaryGreenProbability, confirmationGreenProbability);
-        var consensusProbabilities = new[] { consensusGreenProbability, 1f - consensusGreenProbability };
-        var consensusIndex = IndexOfMaximum(consensusProbabilities);
-
-        prediction.VarietyLabel = VarietyClasses[consensusIndex];
-        prediction.VarietyConfidence = consensusProbabilities[consensusIndex];
-        prediction.VarietyScores = ToScores(VarietyClasses, consensusProbabilities);
     }
 
     static LeafPrediction ProcessMultiTaskOutput(IReadOnlyList<DisposableNamedOnnxValue> results)
@@ -313,7 +259,6 @@ public sealed class LeafClassifierService : IDisposable
 
     public void Dispose()
     {
-        _confirmationSession?.Dispose();
         _session.Dispose();
     }
 }

@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.Maui.Storage;
 
 namespace GLORIOUSSYSTEM.App;
 
@@ -19,9 +20,20 @@ public class ApiSensorService
 {
     readonly HttpClient _http;
 
-    public ApiSensorService(string baseUrl = "http://localhost:5053/")
+    public ApiSensorService(string? baseUrl = null)
     {
-        _http = new HttpClient { BaseAddress = new Uri(baseUrl) };
+        var platformDefault = OperatingSystem.IsAndroid()
+            ? "http://10.0.2.2:5053/"
+            : "http://localhost:5053/";
+        baseUrl ??= Preferences.Get("Api_BaseUrl", platformDefault);
+        if (!baseUrl.EndsWith('/'))
+            baseUrl += "/";
+
+        _http = new HttpClient
+        {
+            BaseAddress = new Uri(baseUrl),
+            Timeout = TimeSpan.FromSeconds(8)
+        };
     }
 
     public async Task<List<ApiSensorReading>> GetLatestAsync()

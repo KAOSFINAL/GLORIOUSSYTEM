@@ -6,11 +6,12 @@
              x:DataType="local:ReportsPage"
              BackgroundColor="{DynamicResource Surface}"
              Title="Reports"
-             Shell.NavBarIsVisible="False">
-    <Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
+             Shell.NavBarIsVisible="False"
+             SizeChanged="OnReportsSizeChanged">
+    <local:AdaptivePageLayout RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Surface}">
         <RefreshView Grid.Row="0" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" Command="{Binding RefreshCommand}">
             <ScrollView VerticalScrollBarVisibility="Never">
-                <VerticalStackLayout MaximumWidthRequest="1180" HorizontalOptions="Center"
+                <VerticalStackLayout MaximumWidthRequest="1280" HorizontalOptions="Center"
                                      Padding="{OnIdiom Phone='18,24,18,28', Tablet='36,34,36,32', Desktop='48,38,48,36'}"
                                      Spacing="0">
                     <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,22">
@@ -34,8 +35,9 @@
                         </Border>
                     </Grid>
 
-                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="10" ColumnSpacing="10" Margin="0,0,0,22">
-                        <Border Grid.Row="0" Grid.ColumnSpan="2" Padding="16"
+                    <Grid x:Name="ReportSummaryGrid" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*"
+                          RowSpacing="10" ColumnSpacing="10" Margin="0,0,0,22">
+                        <Border x:Name="TotalSensorsCard" Grid.Row="0" Grid.ColumnSpan="2" Padding="16"
                                 BackgroundColor="{DynamicResource SurfaceContainerHigh}"
                                 Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18">
                             <Grid ColumnDefinitions="*,Auto">
@@ -45,10 +47,11 @@
                                     <Label x:Name="TotalSensorsLabel" Text="--" FontSize="31" FontAttributes="Bold"
                                            TextColor="{DynamicResource OnSurface}" />
                                 </VerticalStackLayout>
-                                <Image Grid.Column="1" Source="sensor_environment.svg" WidthRequest="46" HeightRequest="46" VerticalOptions="Center" />
+                                <local:MaterialIcon Grid.Column="1" Kind="Analytics" WidthRequest="46" HeightRequest="46"
+                                                    IconColor="{DynamicResource OnSurfaceVariant}" VerticalOptions="Center" />
                             </Grid>
                         </Border>
-                        <Border Grid.Row="1" Padding="14"
+                        <Border x:Name="ReportingSensorsCard" Grid.Row="1" Padding="14"
                                 BackgroundColor="{DynamicResource PrimaryContainer}"
                                 Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18">
                             <VerticalStackLayout Spacing="2">
@@ -59,7 +62,7 @@
                                 <Label Text="sensors with data" FontSize="9" TextColor="{DynamicResource OnSurfaceVariant}" />
                             </VerticalStackLayout>
                         </Border>
-                        <Border Grid.Row="1" Grid.Column="1" Padding="14"
+                        <Border x:Name="ExceptionsCard" Grid.Row="1" Grid.Column="1" Padding="14"
                                 BackgroundColor="{DynamicResource ErrorContainer}"
                                 Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 18">
                             <VerticalStackLayout Spacing="2">
@@ -76,24 +79,34 @@
                             BackgroundColor="{DynamicResource SurfaceContainer}"
                             Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" StrokeShape="RoundRectangle 20">
                         <VerticalStackLayout Spacing="13">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="12" RowSpacing="12">
                                 <VerticalStackLayout Spacing="2">
-                                    <Label Text="pH trend" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
-                                    <Label Text="Nutrient solution history" FontSize="10" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    <Label x:Name="ChartTitleLabel" Text="Sensor trend" FontSize="19" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                    <Label x:Name="ChartSubtitleLabel" Text="Choose a sensor to review its history" FontSize="10"
+                                           TextColor="{DynamicResource OnSurfaceVariant}" />
                                 </VerticalStackLayout>
-                                <Picker x:Name="ChartTimeRangePicker" Grid.Column="1" Title="Time range"
-                                        WidthRequest="128" HeightRequest="42" FontSize="11"
+                                <Border Grid.Row="1" Grid.ColumnSpan="2" Padding="4" Margin="0"
                                         BackgroundColor="{DynamicResource SurfaceContainerHigh}"
-                                        TextColor="{DynamicResource OnSurface}">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>1 hour</x:String>
-                                            <x:String>6 hours</x:String>
-                                            <x:String>24 hours</x:String>
-                                            <x:String>7 days</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
+                                        Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 16">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                        <Picker x:Name="ChartSensorPicker" Title="Choose sensor" HeightRequest="48" FontSize="11"
+                                                ItemDisplayBinding="{Binding DisplayName, x:DataType=local:ChartSensorOption}"
+                                                BackgroundColor="Transparent" TextColor="{DynamicResource OnSurface}" />
+                                        <Picker x:Name="ChartTimeRangePicker" Grid.Column="1" Title="Time range"
+                                                WidthRequest="128" HeightRequest="48" FontSize="11"
+                                                BackgroundColor="Transparent" TextColor="{DynamicResource OnSurface}">
+                                            <Picker.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>1 hour</x:String>
+                                                    <x:String>6 hours</x:String>
+                                                    <x:String>24 hours</x:String>
+                                                    <x:String>7 days</x:String>
+                                                </x:Array>
+                                            </Picker.ItemsSource>
+                                        </Picker>
+                                    </Grid>
+                                </Border>
                             </Grid>
 
                             <Border Margin="0" Padding="8" HeightRequest="270"
@@ -173,12 +186,12 @@
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="9">
                         <Button Text="Export data" Style="{DynamicResource SecondaryButton}"
                                 Clicked="OnExportDataClicked" HeightRequest="46" />
-                        <Button Grid.Column="1" Text="View system logs" Style="{DynamicResource TertiaryButton}"
+                        <Button Grid.Column="1" Text="System details" Style="{DynamicResource TertiaryButton}"
                                 Clicked="OnViewLogsClicked" HeightRequest="46" />
                     </Grid>
                 </VerticalStackLayout>
             </ScrollView>
         </RefreshView>
         <local:AppSidebar Grid.Row="1" CurrentRoute="reports" />
-    </Grid>
+    </local:AdaptivePageLayout>
 </ContentPage>

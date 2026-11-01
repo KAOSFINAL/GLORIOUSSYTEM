@@ -2,14 +2,20 @@ using Microsoft.Maui.Graphics;
 
 namespace GLORIOUSSYSTEM.App;
 
-internal sealed class PhChartDrawable : IDrawable
+internal sealed class SensorChartDrawable : IDrawable
 {
     private readonly object _lock = new();
 
-    private List<PhChartPoint> _points = new();
+    private List<SensorChartPoint> _points = new();
     private TimeSpan _timeRange = TimeSpan.FromHours(24);
+    private string _emptyMessage = "No sensor data available";
+    private string _lineColorResource = "Primary";
 
-    public void SetData(List<PhChartPoint> points, TimeSpan timeRange)
+    public void SetData(
+        List<SensorChartPoint> points,
+        TimeSpan timeRange,
+        string emptyMessage,
+        string lineColorResource)
     {
         lock (_lock)
         {
@@ -18,35 +24,30 @@ internal sealed class PhChartDrawable : IDrawable
                 .ToList();
 
             _timeRange = timeRange;
+            _emptyMessage = emptyMessage;
+            _lineColorResource = lineColorResource;
         }
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        List<PhChartPoint> points;
+        List<SensorChartPoint> points;
         TimeSpan timeRange;
+        string emptyMessage;
+        string lineColorResource;
 
         lock (_lock)
         {
             points = _points.ToList();
             timeRange = _timeRange;
+            emptyMessage = _emptyMessage;
+            lineColorResource = _lineColorResource;
         }
 
-        var isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
-
-        var background = isDark
-            ? Color.FromArgb("#1C1C1E")
-            : Color.FromArgb("#FAFAFA");
-
-        var textColor = isDark
-            ? Color.FromArgb("#D1D1D6")
-            : Color.FromArgb("#636366");
-
-        var gridColor = isDark
-            ? Color.FromArgb("#38383A")
-            : Color.FromArgb("#E5E5EA");
-
-        var lineColor = Color.FromArgb("#10B981");
+        var background = GetResourceColor("SurfaceDim", Color.FromArgb("#101412"));
+        var textColor = GetResourceColor("OnSurfaceVariant", Color.FromArgb("#68756C"));
+        var gridColor = GetResourceColor("OutlineVariant", Color.FromArgb("#C5D0C7"));
+        var lineColor = GetResourceColor(lineColorResource, Color.FromArgb("#176B3A"));
 
         canvas.FillColor = background;
         canvas.FillRectangle(dirtyRect);
@@ -56,7 +57,7 @@ internal sealed class PhChartDrawable : IDrawable
             canvas.FontColor = textColor;
             canvas.FontSize = 14;
             canvas.DrawString(
-                "No pH data available",
+                emptyMessage,
                 dirtyRect,
                 HorizontalAlignment.Center,
                 VerticalAlignment.Center);
@@ -113,7 +114,7 @@ internal sealed class PhChartDrawable : IDrawable
             var value = maxValue - finalValueRange * i / gridLines;
 
             canvas.DrawString(
-                value.ToString("F1"),
+                FormatValue(value),
                 0,
                 y - 9,
                 left - 7,
@@ -145,7 +146,7 @@ internal sealed class PhChartDrawable : IDrawable
             screenPoints.Add(new PointF(x, y));
         }
 
-        // Draw the pH line.
+        // Draw the selected sensor line.
         canvas.StrokeColor = lineColor;
         canvas.StrokeSize = 3;
         canvas.StrokeLineCap = LineCap.Round;
@@ -158,12 +159,13 @@ internal sealed class PhChartDrawable : IDrawable
                 screenPoints[i]);
         }
 
-        // Draw data points.
-        canvas.FillColor = lineColor;
-
-        foreach (var point in screenPoints)
+        // Individual points remain useful on sparse series, but suppressing
+        // hundreds of circles keeps long ranges smooth on mobile GPUs.
+        if (screenPoints.Count <= 80)
         {
-            canvas.FillCircle(point.X, point.Y, 4);
+            canvas.FillColor = lineColor;
+            foreach (var point in screenPoints)
+                canvas.FillCircle(point.X, point.Y, 3.4f);
         }
 
         // X-axis labels.
@@ -203,4 +205,19 @@ internal sealed class PhChartDrawable : IDrawable
 
         return local.ToString("MM/dd");
     }
+
+    private static string FormatValue(double value)
+    {
+        var absolute = Math.Abs(value);
+        if (absolute >= 1000)
+            return $"{value / 1000:0.#}k";
+        if (absolute >= 100)
+            return value.ToString("F0");
+        return value.ToString("F1");
+    }
+
+    private static Color GetResourceColor(string key, Color fallback)
+        => Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : fallback;
 }

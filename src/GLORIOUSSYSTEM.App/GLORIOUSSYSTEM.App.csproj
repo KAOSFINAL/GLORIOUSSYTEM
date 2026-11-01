@@ -34,14 +34,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#0A0F14" />
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0A0F14" BaseSize="128,128" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#07100C" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#07100C" BaseSize="128,128" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		<MauiAsset Include="appsettings.json" LogicalName="appsettings.json" />
 		<MauiAsset Include="..\..\database\hydroponic.db" LogicalName="database/hydroponic.db" />
+		<MauiAsset Include="Models\leaf_model.onnx" LogicalName="Models/leaf_model.onnx" />
+		<MauiAsset Include="Models\leaf_model.onnx.data" LogicalName="Models/leaf_model.onnx.data" />
+		<MauiAsset Include="Models\leaf_model_multitask.onnx" LogicalName="Models/leaf_model_multitask.onnx" />
+		<MauiAsset Include="Models\leaf_model_multitask.onnx.data" LogicalName="Models/leaf_model_multitask.onnx.data" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -59,13 +63,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\GLORIOUSSYSTEM.Data\GLORIOUSSYSTEM.Data.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="Models\leaf_model.onnx" CopyToOutputDirectory="PreserveNewest" />
-		<None Include="Models\leaf_model.onnx.data" CopyToOutputDirectory="PreserveNewest" />
-		<None Include="Models\leaf_model_multitask.onnx" CopyToOutputDirectory="PreserveNewest" />
-		<None Include="Models\leaf_model_multitask.onnx.data" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 </Project>
