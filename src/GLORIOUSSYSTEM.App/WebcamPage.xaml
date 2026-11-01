@@ -161,8 +161,8 @@
                                     <Label x:Name="DetailedPredictionsLabel" Text="PREDICTION CONFIDENCE"
                                            FontSize="9" FontAttributes="Bold" CharacterSpacing="1.1"
                                            TextColor="{DynamicResource Primary}" Margin="0,14,0,6" IsVisible="False" />
-                                    <CollectionView x:Name="PredictionsList" HeightRequest="180" IsVisible="False" SelectionMode="None">
-                                        <CollectionView.ItemTemplate>
+                                    <VerticalStackLayout x:Name="PredictionsList" IsVisible="False" Spacing="0">
+                                        <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="local:PredictionItem">
                                                 <Grid ColumnDefinitions="*,Auto" Padding="0,5">
                                                     <Label Text="{Binding Label}" FontSize="10" TextColor="{DynamicResource OnSurface}" />
@@ -170,8 +170,8 @@
                                                            FontSize="10" FontAttributes="Bold" TextColor="{Binding Color}" />
                                                 </Grid>
                                             </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
 
                                     <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,14,0,0">
                                         <Button Text="Save result" Style="{DynamicResource SecondaryButton}"

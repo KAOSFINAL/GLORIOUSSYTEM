@@ -259,6 +259,7 @@ public partial class WebcamPage : ContentPage
         VarietyCard.IsVisible = false;
         DetailedPredictionsLabel.IsVisible = false;
         PredictionsList.IsVisible = false;
+        BindableLayout.SetItemsSource(PredictionsList, null);
 
         var isLettuce = prediction.IsLettuce;
         var lettuceColor = isLettuce ? Color.FromArgb("#74E0A2") : Color.FromArgb("#FF7B86");
@@ -339,7 +340,7 @@ public partial class WebcamPage : ContentPage
             });
         }
 
-        PredictionsList.ItemsSource = allItems;
+        BindableLayout.SetItemsSource(PredictionsList, allItems);
     }
 
     static (Color Color, string Icon) GetHealthInfo(string healthLabel) => healthLabel.ToLower() switch
@@ -368,6 +369,7 @@ public partial class WebcamPage : ContentPage
         ClearButton.IsVisible = false;
         ChoosePhotoButton.Text = "CHOOSE PHOTO";
         ResultsCard.IsVisible = false;
+        BindableLayout.SetItemsSource(PredictionsList, null);
         ScanErrorLabel.IsVisible = false;
     }
 
