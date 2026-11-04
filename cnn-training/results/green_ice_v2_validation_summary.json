@@ -1,0 +1,52 @@
+{
+  "model": "leaf_model_green_ice_v2.onnx",
+  "decision_rule": "green_ice only when the existing model and V2 model both predict green_ice",
+  "source_held_out": {
+    "images": 15,
+    "green_ice_images": 5,
+    "not_green_ice_images": 10,
+    "v2_accuracy": 1.0,
+    "v2_green_ice_recall": 1.0,
+    "v2_not_green_ice_recall": 1.0,
+    "consensus_accuracy": 1.0,
+    "consensus_green_ice_recall": 1.0,
+    "consensus_not_green_ice_recall": 1.0
+  },
+  "strict_leakage_audited_benchmark": {
+    "all_task_images": 341,
+    "variety_images": 15,
+    "old_variety_accuracy": 0.6,
+    "old_variety_macro_f1": 0.598,
+    "v2_variety_accuracy": 1.0,
+    "v2_variety_macro_f1": 1.0,
+    "consensus_variety_accuracy": 1.0
+  },
+  "external_iceberg_stress_test": {
+    "dataset": "Project-AgML/ghai_iceberg_lettuce_detection",
+    "dataset_url": "https://huggingface.co/datasets/Project-AgML/ghai_iceberg_lettuce_detection",
+    "source_images": 500,
+    "annotated_boxes": 2476,
+    "evaluated_crops": 2464,
+    "excluded_invalid_crops": 12,
+    "excluded_near_duplicates_dhash_le_4": 0,
+    "training_reference_images": 4179,
+    "v2": {
+      "not_green_ice_specificity": 0.6582792207792207,
+      "green_ice_false_positives": 842,
+      "high_confidence_green_ice_false_positives": 298,
+      "lettuce_detection_recall": 0.9918831168831169
+    },
+    "old": {
+      "not_green_ice_specificity": 0.9955357142857143,
+      "green_ice_false_positives": 11,
+      "high_confidence_green_ice_false_positives": 2,
+      "lettuce_detection_recall": 0.9983766233766234
+    },
+    "consensus": {
+      "not_green_ice_specificity": 0.997564935064935,
+      "green_ice_false_positives": 6,
+      "source_images_with_any_false_positive": 6
+    },
+    "limitation": "This external dataset contains Iceberg negatives only. It measures not-Green-Ice specificity and Green-Ice false positives, not Green-Ice recall or balanced accuracy."
+  }
+}

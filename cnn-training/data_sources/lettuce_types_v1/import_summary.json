@@ -1,0 +1,45 @@
+{
+  "source": "C:\\Users\\akshi\\Downloads\\Lettuce Types.v1i.yolov8",
+  "source_url": "https://universe.roboflow.com/lettuce-classification/lettuce-types/dataset/1",
+  "license": "CC BY 4.0",
+  "class_mapping": {
+    "0": {
+      "source_name": "green ice",
+      "target": "green_ice",
+      "source_tag": "green_ice_rf_v1"
+    },
+    "1": {
+      "source_name": "iceberg",
+      "target": "not_green_ice",
+      "source_tag": "not_green_ice_rf_v1"
+    },
+    "2": {
+      "source_name": "romaine",
+      "target": "not_green_ice",
+      "source_tag": "not_green_ice_rf_v1"
+    }
+  },
+  "assigned_health_label": "healthy",
+  "age_label": "unknown",
+  "padding_fraction": 0.05,
+  "counts": {
+    "train": {
+      "green_ice": 153,
+      "not_green_ice": 303
+    },
+    "val": {
+      "green_ice": 5,
+      "not_green_ice": 21
+    },
+    "test": {
+      "green_ice": 5,
+      "not_green_ice": 10
+    }
+  },
+  "unique_sources": {
+    "test": 5,
+    "train": 33,
+    "val": 10
+  },
+  "cross_split_source_overlap": 0
+}

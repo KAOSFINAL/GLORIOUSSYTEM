@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['green ice', 'iceberg', 'romaine']
+
+roboflow:
+  workspace: lettuce-classification
+  project: lettuce-types
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/lettuce-classification/lettuce-types/dataset/1

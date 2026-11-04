@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>GLORIOUS SYSTEM uses the camera to analyze lettuce health and growth stage.</string>
+	<string>GLORIOUS SYSTEM uses the camera to identify Green Ice lettuce and analyze crop health.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>GLORIOUS SYSTEM uses selected crop photos for on-device lettuce analysis.</string>
 	<key>NSAppTransportSecurity</key>
@@ -11,6 +11,15 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>glorioussystem</string>
+			</array>
+		</dict>
+	</array>
     <!-- The Mac App Store requires you specify if the app uses encryption. -->
     <!-- Please consult https://developer.apple.com/documentation/bundleresources/information_property_list/itsappusesnonexemptencryption -->
     <!-- <key>ITSAppUsesNonExemptEncryption</key> -->

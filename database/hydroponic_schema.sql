@@ -108,7 +108,10 @@ CREATE TABLE Users (
     IsActive INTEGER NOT NULL DEFAULT 1,
     CreatedAt TEXT NOT NULL DEFAULT (datetime('now')),
     LastLoginAt TEXT,
-    Role TEXT DEFAULT 'User'
+    Role TEXT DEFAULT 'User',
+    SessionVersion INTEGER NOT NULL DEFAULT 1,
+    RefreshTokenHash TEXT,
+    RefreshTokenExpiresAt TEXT
 );
 
 -- ==========================================================

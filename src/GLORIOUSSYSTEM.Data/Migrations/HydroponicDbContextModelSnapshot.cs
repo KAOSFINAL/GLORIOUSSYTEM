@@ -310,13 +310,34 @@ namespace GLORIOUSSYSTEM.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("PasswordResetExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordResetTokenHash")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("RefreshTokenExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshTokenHash")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Role")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("SessionVersion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("RefreshTokenHash");
 
                     b.ToTable("Users");
                 });

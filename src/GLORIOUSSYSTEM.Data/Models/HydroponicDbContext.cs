@@ -30,8 +30,12 @@ public partial class HydroponicDbContext : DbContext
             .AddEnvironmentVariables()
             .Build();
 
-        return config.GetConnectionString("HydroponicDb")
-            ?? "Data Source=C:\\Dev\\GLORIOUSSYSTEM\\database\\hydroponic.db";
+        var configuredConnectionString = config.GetConnectionString("HydroponicDb");
+        var databasePath = HydroponicDatabasePath.Resolve(
+            configuredConnectionString,
+            basePath,
+            Directory.GetCurrentDirectory());
+        return $"Data Source={databasePath}";
     }
 
     public virtual DbSet<Actuator> Actuators { get; set; }
@@ -147,6 +151,8 @@ public partial class HydroponicDbContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.SessionVersion).HasDefaultValue(1);
+            entity.HasIndex(e => e.RefreshTokenHash);
             entity.HasIndex(e => e.Email).IsUnique();
         });
 

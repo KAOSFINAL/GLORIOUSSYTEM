@@ -1,0 +1,26 @@
+{
+  "scheme": {
+    "green_ice": "explicit folder provenance: green_ice_rf_v1",
+    "not_green_ice": "explicit Iceberg/Romaine provenance merged under not_green_ice_rf_v1",
+    "unlabelled": "non-lettuce or lettuce without explicit cultivar provenance"
+  },
+  "counts": {
+    "train": {
+      "green_ice": 153,
+      "not_green_ice": 303,
+      "unlabelled": 3305
+    },
+    "val": {
+      "green_ice": 5,
+      "not_green_ice": 21,
+      "unlabelled": 377
+    },
+    "test": {
+      "green_ice": 5,
+      "not_green_ice": 10,
+      "unlabelled": 0
+    }
+  },
+  "expert_review_required": 0,
+  "total_images": 4179
+}

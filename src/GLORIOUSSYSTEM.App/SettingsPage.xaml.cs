@@ -253,6 +253,13 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         ApiBaseUrlEntry.Text = Preferences.Get("Api_BaseUrl", OperatingSystem.IsAndroid()
             ? "http://10.0.2.2:5053/"
             : "http://localhost:5053/");
+        LoadGoogleAuthPreferences();
+    }
+
+    private void LoadGoogleAuthPreferences()
+    {
+        GoogleClientIdEntry.Text = Preferences.Get("Google_ClientId", string.Empty);
+        GoogleWindowsClientIdEntry.Text = Preferences.Get("Google_WindowsClientId", string.Empty);
     }
 
     private void LoadThemePreferences()
@@ -428,7 +435,79 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         value = value.EndsWith('/') ? value : value + "/";
         ApiBaseUrlEntry.Text = value;
         Preferences.Set("Api_BaseUrl", value);
-        await DisplayAlertAsync("Address saved", "Reports will use this sensor API address for new connection tests.", "OK");
+
+        var apiKey = ApiKeyEntry.Text?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(apiKey))
+            SecureStorage.Default.Remove(ApiSensorService.ApiKeyStorageKey);
+        else
+            await SecureStorage.Default.SetAsync(ApiSensorService.ApiKeyStorageKey, apiKey);
+
+        await DisplayAlertAsync("Connection saved", "Reports will use this API address and key for new connection tests.", "OK");
+    }
+
+    private async void OnTestApiConnection(object? sender, EventArgs e)
+    {
+        TestApiConnectionButton.IsEnabled = false;
+        ApiConnectionStatusLabel.Text = "Testing...";
+        ApiConnectionStatusLabel.TextColor = GetResourceColor("OnSurfaceVariant", Colors.Gray);
+
+        try
+        {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var healthy = await new ApiSensorService().CheckHealthAsync();
+            stopwatch.Stop();
+
+            if (healthy)
+            {
+                ApiConnectionStatusLabel.Text = $"Connected · {stopwatch.ElapsedMilliseconds} ms";
+                ApiConnectionStatusLabel.TextColor = GetResourceColor("Primary", Colors.Green);
+            }
+            else
+            {
+                ApiConnectionStatusLabel.Text = "API responded as unavailable";
+                ApiConnectionStatusLabel.TextColor = GetResourceColor("Error", Colors.Red);
+            }
+        }
+        catch (HttpRequestException)
+        {
+            ApiConnectionStatusLabel.Text = "Could not reach the API";
+            ApiConnectionStatusLabel.TextColor = GetResourceColor("Error", Colors.Red);
+        }
+        catch (TaskCanceledException)
+        {
+            ApiConnectionStatusLabel.Text = "Connection timed out";
+            ApiConnectionStatusLabel.TextColor = GetResourceColor("Error", Colors.Red);
+        }
+        finally
+        {
+            TestApiConnectionButton.IsEnabled = true;
+        }
+    }
+
+    private async void OnSaveGoogleAuth(object? sender, EventArgs e)
+    {
+        var clientId = GoogleClientIdEntry.Text?.Trim() ?? string.Empty;
+        var windowsClientId = GoogleWindowsClientIdEntry.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(clientId) && string.IsNullOrWhiteSpace(windowsClientId))
+        {
+            Preferences.Remove("Google_ClientId");
+            Preferences.Remove("Google_WindowsClientId");
+            await DisplayAlertAsync("Google sign-in cleared", "Google sign-in will remain unavailable until an OAuth client ID is configured.", "OK");
+            return;
+        }
+
+        if ((!string.IsNullOrWhiteSpace(clientId)
+                && !clientId.Contains(".apps.googleusercontent.com", StringComparison.OrdinalIgnoreCase))
+            || (!string.IsNullOrWhiteSpace(windowsClientId)
+                && !windowsClientId.Contains(".apps.googleusercontent.com", StringComparison.OrdinalIgnoreCase)))
+        {
+            await DisplayAlertAsync("Check client ID", "Google OAuth client IDs normally end with .apps.googleusercontent.com. Check the values from Google Cloud before saving.", "OK");
+            return;
+        }
+
+        Preferences.Set("Google_ClientId", clientId);
+        Preferences.Set("Google_WindowsClientId", windowsClientId);
+        await DisplayAlertAsync("Google sign-in saved", "The next Google sign-in will use these OAuth client IDs.", "OK");
     }
 
     private void UpdateColorPreviews()
@@ -463,16 +542,36 @@ public partial class SettingsPage : ContentPage, INotifyPropertyChanged
         Preferences.Set("Theme_BackgroundIndex", 0);
         Preferences.Set("Theme_DarkMode", true);
         Preferences.Remove("Api_BaseUrl");
+        Preferences.Remove("Google_ClientId");
+        Preferences.Remove("Google_WindowsClientId");
+        Preferences.Remove("Google_RedirectUri");
+        SecureStorage.Default.Remove(ApiSensorService.ApiKeyStorageKey);
+        SecureStorage.Default.Remove(ApiSensorService.SessionTokenStorageKey);
+        SecureStorage.Default.Remove(ApiSensorService.RefreshTokenStorageKey);
         ApiBaseUrlEntry.Text = OperatingSystem.IsAndroid() ? "http://10.0.2.2:5053/" : "http://localhost:5053/";
+        ApiKeyEntry.Text = "";
+        GoogleClientIdEntry.Text = "";
+        GoogleWindowsClientIdEntry.Text = "";
 
         ThemeManager.Apply();
         UpdateColorPreviews();
         await LoadAsync();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
+        try
+        {
+            ApiKeyEntry.Text = await SecureStorage.Default.GetAsync(ApiSensorService.ApiKeyStorageKey) ?? "";
+        }
+        catch
+        {
+            ApiKeyEntry.Text = "";
+        }
+
+        LoadGoogleAuthPreferences();
+
         UpdateColorPreviews();
         if (!_hasLoaded)
             Dispatcher.Dispatch(() => _ = LoadAsync());

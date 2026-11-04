@@ -12,6 +12,7 @@ public partial class LoginPage : ContentPage
 {
     bool? _usingDesktopLayout;
     bool _isCreateAccountMode;
+    bool _googleSignInBusy;
 
     public LoginPage()
     {
@@ -137,6 +138,7 @@ public partial class LoginPage : ContentPage
     {
         ErrorLabel.IsVisible = false;
         LoginButton.IsEnabled = false;
+        GoogleLoginButton.IsEnabled = false;
         LoginButton.Text = _isCreateAccountMode ? "Creating account..." : "Signing in...";
 
         try
@@ -166,11 +168,49 @@ public partial class LoginPage : ContentPage
         finally
         {
             LoginButton.IsEnabled = true;
+            GoogleLoginButton.IsEnabled = true;
             LoginButton.Text = _isCreateAccountMode ? "Create account" : "Sign in";
         }
     }
 
-    void CompleteLogin(User user, bool rememberEmail)
+    async void OnGoogleSignInClicked(object? sender, EventArgs e)
+    {
+        if (_googleSignInBusy)
+            return;
+
+        _googleSignInBusy = true;
+        ErrorLabel.IsVisible = false;
+        LoginButton.IsEnabled = false;
+        GoogleLoginButton.IsEnabled = false;
+        GoogleLoginButton.Text = "Opening Google...";
+
+        try
+        {
+            var account = await new GoogleAuthService().SignInAsync();
+            await new ApiSensorService().ExchangeGoogleTokenAsync(account.AccessToken);
+            var user = await UpsertGoogleUserAsync(account);
+            CompleteLogin(user, RememberMeCheckBox.IsChecked, preserveApiSession: true);
+        }
+        catch (GoogleAuthException ex)
+        {
+            ErrorLabel.Text = ex.Message;
+            ErrorLabel.IsVisible = true;
+        }
+        catch (Exception)
+        {
+            ErrorLabel.Text = "Google sign-in could not be completed. Please try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        finally
+        {
+            _googleSignInBusy = false;
+            LoginButton.IsEnabled = true;
+            GoogleLoginButton.IsEnabled = true;
+            GoogleLoginButton.Text = "Continue with Google";
+        }
+    }
+
+    void CompleteLogin(User user, bool rememberEmail, bool preserveApiSession = false)
     {
         if (rememberEmail)
         {
@@ -184,6 +224,11 @@ public partial class LoginPage : ContentPage
         }
 
         Preferences.Remove("SavedPassword");
+        if (!preserveApiSession)
+        {
+            SecureStorage.Default.Remove(ApiSensorService.SessionTokenStorageKey);
+            SecureStorage.Default.Remove(ApiSensorService.RefreshTokenStorageKey);
+        }
         Preferences.Set("CurrentUserId", user.Id);
         Preferences.Set("CurrentUserEmail", user.Email);
         Preferences.Set("CurrentUserName", user.Name);
@@ -275,6 +320,37 @@ public partial class LoginPage : ContentPage
         }
     }
 
+    async Task<User> UpsertGoogleUserAsync(GoogleAccount account)
+    {
+        using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+        var user = await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == account.Email);
+
+        if (user == null)
+        {
+            user = new User
+            {
+                Name = account.Name,
+                Email = account.Email,
+                // Google owns the credential; this local hash is intentionally unusable for password sign-in.
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword($"google:{account.Subject}:{Guid.NewGuid():N}", workFactor: 12),
+                IsActive = 1,
+                CreatedAt = DateTime.UtcNow,
+                Role = "User"
+            };
+            db.Users.Add(user);
+        }
+        else if (user.IsActive != 1)
+        {
+            throw new GoogleAuthException("This account is disabled. Contact the system owner.");
+        }
+
+        user.Name = account.Name;
+        user.LastLoginAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+        return user;
+    }
+
     static string NormalizeEmail(string email) => email.Trim().ToLowerInvariant();
 
     static bool IsValidEmail(string email)
@@ -304,6 +380,6 @@ public partial class LoginPage : ContentPage
 
     async void OnForgotPasswordClicked(object? sender, EventArgs e)
     {
-        await DisplayAlertAsync("Password reset", "Password-reset email is not configured for this local app yet. Create another account or ask the device owner for help.", "OK");
+        await Navigation.PushModalAsync(new PasswordResetPage());
     }
 }

@@ -30,4 +30,17 @@ public class User
     public DateTime? LastLoginAt { get; set; }
 
     public string? Role { get; set; } = "User";
+
+    // Incrementing this value invalidates every previously issued API session.
+    public int SessionVersion { get; set; } = 1;
+
+    [MaxLength(128)]
+    public string? RefreshTokenHash { get; set; }
+
+    public DateTime? RefreshTokenExpiresAt { get; set; }
+
+    [MaxLength(128)]
+    public string? PasswordResetTokenHash { get; set; }
+
+    public DateTime? PasswordResetExpiresAt { get; set; }
 }

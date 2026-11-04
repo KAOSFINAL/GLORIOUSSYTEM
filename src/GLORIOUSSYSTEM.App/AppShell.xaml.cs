@@ -4,37 +4,11 @@ namespace GLORIOUSSYSTEM.App;
 
 public partial class AppShell : Shell
 {
-    bool _hasWarmedSecondaryPages;
-
     public AppShell()
     {
         InitializeComponent();
 
-        // Render the first frame with only the initial destination. The other
-        // cached pages are warmed just after the shell becomes visible, so the
-        // splash logo is not held on screen while their XAML and model load.
         DashboardContent.Content = new MainPage();
-        Loaded += OnShellLoaded;
-    }
-
-    void OnShellLoaded(object? sender, EventArgs e)
-    {
-        Loaded -= OnShellLoaded;
-        Dispatcher.Dispatch(() => _ = WarmSecondaryPagesAsync());
-    }
-
-    async Task WarmSecondaryPagesAsync()
-    {
-        if (_hasWarmedSecondaryPages)
-            return;
-
-        _hasWarmedSecondaryPages = true;
-        await Task.Delay(120);
-        EnsureContent("reports");
-        await Task.Delay(60);
-        EnsureContent("settings");
-        await Task.Delay(60);
-        EnsureContent("webcam");
     }
 
     void EnsureContent(string route)

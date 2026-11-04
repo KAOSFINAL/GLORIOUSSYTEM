@@ -114,6 +114,6 @@ public partial class AppSidebar : ContentView
     {
         bool confirm = await Shell.Current.DisplayAlertAsync("Sign Out", "Are you sure you want to sign out?", "Yes", "Cancel");
         if (confirm)
-            App.Logout();
+            await App.LogoutAsync();
     }
 }

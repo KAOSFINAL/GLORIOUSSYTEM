@@ -46,6 +46,8 @@
 		<MauiAsset Include="Models\leaf_model.onnx.data" LogicalName="Models/leaf_model.onnx.data" />
 		<MauiAsset Include="Models\leaf_model_multitask.onnx" LogicalName="Models/leaf_model_multitask.onnx" />
 		<MauiAsset Include="Models\leaf_model_multitask.onnx.data" LogicalName="Models/leaf_model_multitask.onnx.data" />
+		<MauiAsset Include="Models\leaf_model_green_ice_v2.onnx" LogicalName="Models/leaf_model_green_ice_v2.onnx" />
+		<MauiAsset Include="Models\leaf_model_green_ice_v2.onnx.data" LogicalName="Models/leaf_model_green_ice_v2.onnx.data" />
 	</ItemGroup>
 
 	<ItemGroup>

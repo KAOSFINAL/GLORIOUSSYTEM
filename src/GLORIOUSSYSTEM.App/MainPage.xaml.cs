@@ -54,6 +54,7 @@ public class SensorGroup : ObservableCollection<SensorDisplayItem>
     public int WarningCount { get; set; }
     public int CriticalCount { get; set; }
     public int OfflineCount { get; set; }
+    public int StaleCount { get; set; }
 
     public bool HasOnline => OnlineCount > 0;
     public bool HasWarning => WarningCount > 0;
@@ -147,6 +148,7 @@ public partial class MainPage : ContentPage
             var noDataColor = GetResourceColor("StatusOffline", Colors.Gray);
             var warningColor = GetResourceColor("StatusWarning", Colors.Orange);
             var criticalColor = GetResourceColor("StatusCritical", Colors.Red);
+            var nowUtc = DateTime.UtcNow;
 
             using var scope = (App.Services ?? throw new InvalidOperationException("Application services are unavailable.")).CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
@@ -181,6 +183,18 @@ public partial class MainPage : ContentPage
                     SubText = s.Model ?? s.Type,
                     UnitText = latest?.Metric ?? ""
                 };
+
+                if (latest != null && SensorFreshnessPolicy.GetState(latest.Timestamp, nowUtc) == SensorFreshnessState.Stale)
+                {
+                    item.ValueText = latest.Value.ToString("F1");
+                    item.UnitText = latest.Metric ?? "";
+                    item.State = SensorDisplayState.Stale;
+                    item.StatusColor = warningColor;
+                    item.ValueColor = warningColor;
+                    item.ThresholdProgressColor = warningColor;
+                    item.StatusText = "Stale";
+                    return item;
+                }
 
                 if (latest != null)
                 {
@@ -230,7 +244,7 @@ public partial class MainPage : ContentPage
                                 item.StatusColor = hasDataColor;
                                 item.ValueColor = hasDataColor;
                                 item.ThresholdProgressColor = hasDataColor;
-                                item.StatusText = "In range";
+                                item.StatusText = "Live";
                             }
                         }
                     }
@@ -292,9 +306,12 @@ public partial class MainPage : ContentPage
                 BatteryUnitLabel.Text = batteryReading?.Metric ?? "";
                 BatterySourceLabel.Text = batterySensor == null ? "Add battery sensor" : batterySensor.Name;
                 var latestTimestamp = sensors.Where(s => s.Latest != null).Select(s => s.Latest!.Timestamp).DefaultIfEmpty().Max();
+                var freshCount = sensors.Count(s => SensorFreshnessPolicy.GetState(s.Latest?.Timestamp, nowUtc) == SensorFreshnessState.Fresh);
+                var staleCount = sensors.Count(s => SensorFreshnessPolicy.GetState(s.Latest?.Timestamp, nowUtc) == SensorFreshnessState.Stale);
+                var offlineCount = sensors.Count(s => SensorFreshnessPolicy.GetState(s.Latest?.Timestamp, nowUtc) == SensorFreshnessState.Missing);
                 LastUpdatedLabel.Text = latestTimestamp == default
                     ? "No readings yet"
-                    : $"Updated {latestTimestamp.ToLocalTime():HH:mm}";
+                    : $"Fresh {freshCount} · Stale {staleCount} · Offline {offlineCount} · {latestTimestamp.ToLocalTime():HH:mm}";
                 _lastLoadedUtc = DateTime.UtcNow;
             });
         }
@@ -323,7 +340,8 @@ public partial class MainPage : ContentPage
             OnlineCount = items.Count(i => i.State == SensorDisplayState.Online),
             WarningCount = items.Count(i => i.State == SensorDisplayState.Warning),
             CriticalCount = items.Count(i => i.State == SensorDisplayState.Critical),
-            OfflineCount = items.Count(i => i.State == SensorDisplayState.Offline)
+            OfflineCount = items.Count(i => i.State == SensorDisplayState.Offline),
+            StaleCount = items.Count(i => i.State == SensorDisplayState.Stale)
         };
     }
 
@@ -347,5 +365,6 @@ public enum SensorDisplayState
     Online,
     Warning,
     Critical,
-    Offline
+    Offline,
+    Stale
 }

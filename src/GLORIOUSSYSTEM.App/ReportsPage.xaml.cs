@@ -146,6 +146,30 @@ public partial class ReportsPage : ContentPage
                     .AsNoTracking()
                     .ToList();
 
+                var nowUtc = DateTime.UtcNow;
+                var sensorSnapshots = db.Sensors
+                    .AsNoTracking()
+                    .Select(sensor => new
+                    {
+                        LatestTimestamp = sensor.Readings
+                            .OrderByDescending(reading => reading.Timestamp)
+                            .Select(reading => (DateTime?)reading.Timestamp)
+                            .FirstOrDefault()
+                    })
+                    .ToList();
+
+                var freshSensors = sensorSnapshots.Count(sensor =>
+                    SensorFreshnessPolicy.GetState(sensor.LatestTimestamp, nowUtc) == SensorFreshnessState.Fresh);
+                var staleSensors = sensorSnapshots.Count(sensor =>
+                    SensorFreshnessPolicy.GetState(sensor.LatestTimestamp, nowUtc) == SensorFreshnessState.Stale);
+                var offlineSensors = sensorSnapshots.Count(sensor =>
+                    SensorFreshnessPolicy.GetState(sensor.LatestTimestamp, nowUtc) == SensorFreshnessState.Missing);
+                var latestTimestamp = sensorSnapshots
+                    .Where(sensor => sensor.LatestTimestamp.HasValue)
+                    .Select(sensor => sensor.LatestTimestamp!.Value)
+                    .DefaultIfEmpty()
+                    .Max();
+
                 var chartSensors = db.Readings
                     .AsNoTracking()
                     .Where(reading => reading.Sensor.Enabled == 1)
@@ -170,12 +194,6 @@ public partial class ReportsPage : ContentPage
                         Metric = sensor.Metric
                     })
                     .ToList();
-
-                var readingsWithData = db.Readings
-                    .AsNoTracking()
-                    .Select(r => r.SensorId)
-                    .Distinct()
-                    .Count();
 
                 var alertCount = db.Sensors
                     .AsNoTracking()
@@ -209,7 +227,10 @@ public partial class ReportsPage : ContentPage
                 return new ReportSummary
                 {
                     TotalSensors = sensors.Count,
-                    OnlineSensors = readingsWithData,
+                    OnlineSensors = freshSensors,
+                    StaleSensors = staleSensors,
+                    OfflineSensors = offlineSensors,
+                    LatestTimestamp = latestTimestamp == default ? null : latestTimestamp,
                     Alerts = alertCount,
                     ChartSensors = chartSensors
                 };
@@ -229,6 +250,10 @@ public partial class ReportsPage : ContentPage
 
                 OnlineSensorsLabel.Text =
                     result.OnlineSensors.ToString();
+
+                DataStatusLabel.Text = result.LatestTimestamp.HasValue
+                    ? $"Fresh {result.OnlineSensors} · Stale {result.StaleSensors} · Offline {result.OfflineSensors} · Latest {result.LatestTimestamp.Value.ToLocalTime():HH:mm}"
+                    : "No sensor readings yet";
 
                 AlertCountLabel.Text =
                     result.Alerts.ToString();
@@ -892,6 +917,12 @@ internal sealed class ReportSummary
     public int TotalSensors { get; set; }
 
     public int OnlineSensors { get; set; }
+
+    public int StaleSensors { get; set; }
+
+    public int OfflineSensors { get; set; }
+
+    public DateTime? LatestTimestamp { get; set; }
 
     public int Alerts { get; set; }
 

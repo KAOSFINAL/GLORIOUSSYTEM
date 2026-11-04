@@ -11,6 +11,7 @@ namespace GLORIOUSSYSTEM.App;
 public partial class App : Application
 {
     public static IServiceProvider? Services { get; private set; }
+    LocalApiProcessManager? _localApiProcessManager;
 
     public App()
     {
@@ -29,6 +30,7 @@ public partial class App : Application
             Preferences.Set("Theme_BackgroundIndex", 0);
 
         ThemeManager.Initialize();
+        _ = _localApiProcessManager?.StartAsync();
     }
 
     private void ConfigureServices()
@@ -44,15 +46,28 @@ public partial class App : Application
             .AddEnvironmentVariables()
             .Build();
 
-        var connStr = config.GetConnectionString("HydroponicDb");
+        _localApiProcessManager = new LocalApiProcessManager(
+            config["LocalApi:ProjectPath"],
+            config["LocalApi:Url"]);
+
+        var configuredConnectionString = config.GetConnectionString("HydroponicDb");
+        var databasePath = HydroponicDatabasePath.Resolve(
+            configuredConnectionString,
+            AppContext.BaseDirectory,
+            Environment.CurrentDirectory);
+        var connStr = $"Data Source={databasePath}";
 
         // The desktop configuration points to the development database on the
         // Windows machine. Android uses a private writable copy of that database.
         if (OperatingSystem.IsAndroid())
         {
-            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "hydroponic.db");
-            InitializeAndroidDatabase(databasePath);
-            connStr = $"Data Source={databasePath}";
+            var androidDatabasePath = Path.Combine(FileSystem.AppDataDirectory, "hydroponic.db");
+            InitializeAndroidDatabase(androidDatabasePath);
+            connStr = $"Data Source={androidDatabasePath}";
+        }
+        else if (!File.Exists(databasePath))
+        {
+            InitializePackagedDatabase(databasePath);
         }
 
         services.AddDbContext<HydroponicDbContext>(options =>
@@ -62,6 +77,7 @@ public partial class App : Application
 
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<HydroponicDbContext>();
+        db.Database.Migrate();
         SensorHardwareCatalog.Reconcile(db);
         RemoveLegacyDemoAccount(db);
         db.SaveChanges();
@@ -90,6 +106,19 @@ public partial class App : Application
 
         if (File.Exists(databasePath))
             File.Delete(databasePath);
+
+        using var source = FileSystem.OpenAppPackageFileAsync("database/hydroponic.db")
+            .GetAwaiter()
+            .GetResult();
+        using var destination = File.Create(databasePath);
+        source.CopyTo(destination);
+    }
+
+    private static void InitializePackagedDatabase(string databasePath)
+    {
+        var directory = Path.GetDirectoryName(databasePath);
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
 
         using var source = FileSystem.OpenAppPackageFileAsync("database/hydroponic.db")
             .GetAwaiter()
@@ -129,11 +158,15 @@ public partial class App : Application
             window = new Window(new LoginPage());
         }
 
+        window.Destroying += (_, _) => _localApiProcessManager?.Dispose();
+
         return window;
     }
 
-    public static void Logout()
+    public static async Task LogoutAsync()
     {
+        var refreshToken = await SecureStorage.Default.GetAsync(ApiSensorService.RefreshTokenStorageKey);
+
         Preferences.Remove("IsLoggedIn");
         Preferences.Remove("CurrentUserId");
         Preferences.Remove("CurrentUserEmail");
@@ -141,11 +174,17 @@ public partial class App : Application
         Preferences.Remove("RememberMe");
         Preferences.Remove("SavedEmail");
         Preferences.Remove("SavedPassword");
+        SecureStorage.Default.Remove(ApiSensorService.SessionTokenStorageKey);
+        SecureStorage.Default.Remove(ApiSensorService.RefreshTokenStorageKey);
 
         if (Current?.Windows.Count > 0)
         {
             var window = Current.Windows[0];
             window.Page = new LoginPage();
         }
+
+        _ = new ApiSensorService().LogoutAsync(refreshToken);
     }
+
+    public static void Logout() => _ = LogoutAsync();
 }

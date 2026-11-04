@@ -83,7 +83,7 @@ python evaluate.py
 ### Data Layer (`src/GLORIOUSSYSTEM.Data/Models/`)
 - `HydroponicDbContext` — EF Core context with all DbSets and Fluent API configuration
 - Domain models: `Node`, `Pipe`, `Sensor`, `Reading`, `Camera`, `LeafClassification`, `Actuator`, `ActuatorEvent`
-- Sensor types: pH, TDS, WaterTemp, UltrasonicLevel, BME280, BH1750, FlowRate
+- Sensor types: pH, TDS, WaterTemp, UltrasonicLevel, BME680, BH1750, FlowRate
 - Readings indexed on (SensorId, Timestamp)
 
 ### API (`src/GLORIOUSSYSTEM.Api/`)
@@ -96,17 +96,17 @@ python evaluate.py
 ### MAUI App (`src/GLORIOUSSYSTEM.App/`)
 - **Pages**: MainPage (sensor dashboard), WebcamPage (leaf classification), ReportsPage (charts + API test), SettingsPage, AppShell (navigation)
 - **Services**:
-  - `LeafClassifierService` — ONNX Runtime inference (MobileNetV2, 224x224, ImageNet normalization), loads `Models/leaf_model.onnx` + `.data`
+  - `LeafClassifierService` — ONNX Runtime inference (MobileNetV2, 224x224, ImageNet normalization), preferring `Models/leaf_model_multitask.onnx` with a legacy health-model fallback
   - `ApiSensorService` — HttpClient wrapper calling API at `http://localhost:5053/`
 - **Models**: `LeafPrediction` (label, confidence, all scores), `ApiSensorReading` (DTO matching API response)
 - **UI**: CollectionView grouped by category (Water Quality / Environmental / Water Flow), color-coded status indicators, Microcharts line chart for pH history
 
 ### CNN Training (`cnn-training/`)
-- **Data layout**: `data/train/{deficient,diseased,healthy}/`, `data/val/{deficient,diseased,healthy}/`
-- **Model**: MobileNetV2 (ImageNet pretrained) → 3-class classifier
-- **Training**: 15 epochs, batch 16, Adam lr=0.0005, CrossEntropyLoss
-- **Export**: ONNX opset 18, dynamic batch axis, input `1x3x224x224`, classes: `["deficient", "diseased", "healthy"]` (alphabetical = ImageFolder order)
-- **Artifacts**: `leaf_model.pth` (PyTorch), `leaf_model.onnx` + `leaf_model.onnx.data` (copied to App/Models/)
+- **Data layout**: `data/{train,val,test}/{deficient,diseased,healthy,non_lettuce}/`; Green Ice crops retain source provenance below `healthy/unknown_age/green_ice_rf_v1/`
+- **Model**: MobileNetV2 (ImageNet pretrained) with three heads: lettuce/non-lettuce, Green Ice/other lettuce, and deficient/diseased/healthy. There is no age head.
+- **Training**: 15 epochs in the Colab notebook, batch 16, Adam, class-weighted variety cross-entropy
+- **Export**: ONNX opset 18, dynamic batch axis, input `1x3x224x224`, outputs `lettuce_logits`, `variety_logits`, and `health_logits`
+- **Artifacts**: `leaf_model_multitask.pth`, `leaf_model_multitask.onnx`, and optional external `.onnx.data` copied to App/Models/
 
 ## Common Tasks
 
@@ -116,8 +116,8 @@ python evaluate.py
 3. Add threshold logic if needed
 
 ### Retraining CNN
-1. Add images to `cnn-training/data/train/{class}/` and `data/val/{class}/`
-2. Run `python train.py` then `python export_onnx.py`
+1. Add images to the appropriate health/non-lettuce folders and preserve known variety provenance.
+2. Run `python build_variety_manifest.py`, `python train_multitask.py`, then `python export_onnx_multitask.py`.
 3. Copy new `.onnx` + `.onnx.data` to `src/GLORIOUSSYSTEM.App/Models/`
 
 ### Changing API base URL in App
